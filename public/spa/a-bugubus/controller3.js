@@ -150,9 +150,9 @@ app
             }, errorFn);
         } else {
             clearTimeout(slideImageTimer);
-            if($rootScope.recommendProducts2.length > 0) {
-                $scope.showDefaultImg = false;
-            }
+            // if($rootScope.recommendProducts2.length > 0) {
+            //     $scope.showDefaultImg = false;
+            // }
         }
         
         $rootScope.recommendProducts2Index = 0;
