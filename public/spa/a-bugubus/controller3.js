@@ -305,7 +305,7 @@ app
             var selectTime = $scope.goDate.time.getTime();
             if(selectTime > compareTime) {
                 layer.open({
-                    content: '不在销售范围内，预售期为60天，请重新选择',
+                    content: '不在预售范围内，预售期为60天，请重新选择',
                     btn: '确定'
                 });
                 $scope.goDate.time = new Date();
@@ -369,7 +369,7 @@ app
                         $scope.noticeInfo = data.products[0].productinfo;                        
                     } else {
                         layer.open({
-                            content: '当前班次，今日已售完，请选择往后日期',
+                            content: '您选择的推荐主题路线，今日已售完或已发车',
                             btn: '确定'
                         });
                     }
@@ -415,7 +415,7 @@ app
                         $scope.noticeInfo = data.products[0].productinfo;                    
                     } else {
                         layer.open({
-                            content: '当前班次，今日已售完，请选择往后日期',
+                            content: '您选择的推荐主题路线，今日已售完或已发车',
                             btn: '确定'
                         });
                     }                 
