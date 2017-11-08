@@ -75,10 +75,10 @@ app.use(express.static(path.join(__dirname, 'public'), [{
 );
 
 //过滤掉前缀是api的服务接口
-app.use('/spa/api', api); // 挂载至'/spa/api'的中间件，任何指向'/spa/api'的请求都会执行它，api是一个函数
+app.use('/spatest/api', api); // 挂载至'/spatest/api'的中间件，任何指向'/spatest/api'的请求都会执行它，api是一个函数
 
 // 使用模块化的路由
-app.use('/spa/auth', auth); 
+app.use('/spatest/auth', auth); 
 app.use('/', routes); 
 
 //app.use('/users', users);

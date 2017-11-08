@@ -4,7 +4,7 @@ var filter = function(req, res, next) { // 定义了一个过滤函数，在应�
 	//获取完整目录名
 	var url = req.originalUrl; //var url = req._parsedUrl.pathname;  截取完整目录名
 	//截取请求网关后的目录名
-	var serviceUrl = url.substring("/spa/api".length, url.length);
+	var serviceUrl = url.substring("/spatest/api".length, url.length);
 	httpProxy(serviceUrl, req.body, function(data) {
 		res.send(data);
 		res.end();
