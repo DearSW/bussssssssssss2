@@ -1,10 +1,10 @@
 <ui-view ng-controller="City_select">
 
-    <ion-content scroll="false" has-bouncing="false">
+    <ion-content>
 
         <!-- 动画加载 -->
         <div class="showDefaultImg" ng-if="showDefaultImg" style="z-index: 999;">
-                <div class='base'>
+                <!-- <div class='base'>
                     <div class='cube'></div>
                     <div class='cube'></div>
                     <div class='cube'></div>
@@ -14,7 +14,7 @@
                     <div class='cube'></div>
                     <div class='cube'></div>
                     <div class='cube'></div>
-                </div>
+                </div> -->
                 <div id="counter2">
                      <span style="color: whitesmoke;">努力加载中...</span>
                 </div>
@@ -25,7 +25,7 @@
 
             <ion-slide  class="showDefaultImg2" ng-repeat="item in recommendProducts2 track by $index" ng-click="recommendProductsDetail(item, $index)">
                 <div class="showDefaultImg2">
-                        <img ng-if="item.photoPath" ng-src="{{item.photoPath}}" alt="贵旅直通车为您服务" err-src="images/month-bus.png" />
+                        <img ng-if="item.photoPath" ng-src="{{item.photoPath}}" alt="景区直通车为您服务" err-src="images/month-bus.png" />
                         <div class="imgTitle">
                             <span style="color: whitesmoke;">{{item.titleName}}</span>
                         </div>
