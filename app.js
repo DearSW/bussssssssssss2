@@ -59,7 +59,7 @@ app.use(session({
 
 // 处理静态资源，语法 express.static(静态目录, [options])，内置中间件
 //设置浏览器缓存
-app.use(express.static(path.join(__dirname, 'public/spatest'), [{ 
+app.use(express.static(path.join(__dirname, 'public/'), [{ 
 				dotfiles: 'ignore',
 				etag: false,
 				extensions: ['css','png','gif','jpg','js'],
