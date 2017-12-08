@@ -2,19 +2,20 @@ angular
 .module('app', [
         'ionic',
         'ion-datetime-picker',
-        'ngAnimate'
+        'ngAnimate',
+        'ionic-datepicker'
 ])
-// run  方法初始化全局的数据 , 只对全局作用域起作用  如 $rootScope，局部的$scope不管用
+// @run  方法初始化全局的数据 , 只对全局作用域起作用  如 $rootScope，局部的$scope不管用
 .run(function($rootScope, $ionicPlatform, $ionicPickerI18n, $location, $state) {
 
-    //初始化页面相关的配置信息
+    // @初始化页面相关的配置信息
     $rootScope.session = {
-        user: window.global.config.user // 获取放在Express的session中的用户信息，在index.ejs中已经把user的信息放在了window.global上
+        user: window.global.config.user // @获取放在Express的session中的用户信息，在index.ejs中已经把user的信息放在了window.global上
     };
 
     $ionicPlatform.ready(function() {
         /**
-         * date time picker选择器国际化
+         * @date time picker选择器国际化
          */
         $ionicPickerI18n.weekdays = ["日", "一", "二", "三", "四", "五", "六"];
         $ionicPickerI18n.months = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"];
@@ -24,15 +25,16 @@ angular
         $ionicPickerI18n.cancelClass = "button-stable";
     });
 
-    // $on 订阅、监听，监听 路由改变开始，相当于路由监听过滤器
+    // @$on 订阅、监听，监听 路由改变开始，相当于路由监听过滤器
     $rootScope.$on('$stateChangeStart', function(event, toState, toStateParams, fromState) {
-        console.log('>>>>>>>>路由监听中>>>>>>>>');
+        console.log('>>>>>>>>>>>>>>>>路由切换>>>>>>>>>>>>>>>>');
         console.log(toState);
         console.log(toStateParams);
+        // console.log($rootScope.session.user.userInfo);
         if((toState.name.indexOf("i.") !=-1 || toState.name.indexOf("search") !=-1 || toState.name.indexOf("myplan") !=-1 ||  toState.name.indexOf("bus_service1") !=-1 || toState.name.indexOf("bus_service_history") !=-1 ) && $rootScope.session.user.userInfo == undefined) {
 
-            event.preventDefault();//取消默认跳转行为
-            //截取字符串
+            event.preventDefault(); // @取消默认跳转行为
+            // @截取字符串
             var url = "/" + toState.name.replace('.', '/');
             if(toStateParams) {
                 var paramStr = "", i = 0;
@@ -53,9 +55,29 @@ angular
     });
 
 })
-.config( // 配置
-    function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) { 
-        // 跨平台配置
+
+.config( // @项目配置
+    function ($stateProvider, $urlRouterProvider, $ionicConfigProvider, ionicDatePickerProvider) { 
+
+        // @ionic-datepicker 日期选择配置项
+        var datePickerObj = {
+            inputDate: new Date(),
+            titleLabel: '选择日期',
+            setLabel: '选择',
+            todayLabel: '今天',
+            closeLabel: '返回',
+            mondayFirst: false,
+            weeksList: ["日", "一", "二", "三", "四", "五", "六"],
+            monthsList: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
+            templateType: 'popup',
+            showTodayButton: false,
+            dateFormat: 'yyyy-MM-dd',
+            closeOnSelect: true,
+            disableWeekdays: []
+        };
+        ionicDatePickerProvider.configDatePicker(datePickerObj);
+
+        // @跨平台配置
         $ionicConfigProvider.platform.ios.tabs.style('standard'); 
         $ionicConfigProvider.platform.ios.tabs.position('top');
         $ionicConfigProvider.platform.android.tabs.style('standard');
@@ -67,7 +89,8 @@ angular
         $ionicConfigProvider.platform.ios.views.transition('ios'); 
         $ionicConfigProvider.platform.android.views.transition('android');
 
-        // 把$stateprovider和$urlrouterprovider路由引擎作为函数参数传入,为应用程序配置路由
+        // @把$stateprovider和$urlrouterprovider路由引擎作为函数参数传入
+        // @路由 配置
         var basePath = "a-bugubus/";
 
         $urlRouterProvider.otherwise('/search');
@@ -76,7 +99,7 @@ angular
 
             /************************ 
              * 
-             ****** 登录注册   开始
+             * @登录注册   开始
              * 
              ************************/
 
@@ -93,13 +116,13 @@ angular
 
             /************************ 
              * 
-             ****** 登录注册 结束
+             * @登录注册 结束
              * 
              ************************/
 
             /************************ 
              * 
-             ****** 选择地址 开始
+             * @选择地址 开始
              * 
              ************************/
             .state('select_location',{
@@ -112,14 +135,14 @@ angular
             })
             /************************ 
              * 
-             ****** 选择地址 结束
+             * @选择地址 结束
              * 
              ************************/
 
 
             /************************ 
              * 
-             ****** 发起新线路 开始
+             * @发起新线路 开始
              * 
              ************************/
             //发起新线路
@@ -196,13 +219,13 @@ angular
             })
             /************************ 
              * 
-             ****** 发起新线路 结束
+             * @发起新线路 结束
              * 
              ************************/
 
             /************************ 
              * 
-             ****** 我的账户  开始
+             * @我的账户  开始
              * 
              ************************/
 
@@ -222,7 +245,7 @@ angular
 
             /************************ 
              * 
-             ****** 我的账户 结束
+             * @我的账户 结束
              * 
              ************************/
 
@@ -393,15 +416,6 @@ angular
                 templateUrl: basePath + 'tpl/jqztc_order_check_comment.html'
             })
 
-            /*景区直通车：订单退款中*/
-            .state('order_refunding', {
-                url: '/order_refunding',
-                params: {
-                    data: null
-                },
-                templateUrl: basePath + 'tpl/jqztc_order_refunding.html'
-            })
-
             /*景区直通车：我的行程*/
             .state('myplan', {
                 url: '/myplan',
@@ -440,9 +454,19 @@ angular
                 templateUrl: basePath + 'tpl/jqztc_bus_position.html'
             })
 
+            /*景区直通车：门票详情*/
+            .state('ticket_admission_detail', {
+                url: '/ticket_admission_detail', 
+                params: {
+                    data: null
+                },
+                templateUrl: basePath + 'tpl/jqztc_admission_ticket_detail.html'
+            })
+            
+
             /***********************************
              * 
-             ****** 景区直通车 、我的行程 结束
+             * @景区直通车 、我的行程 结束
              * 
              ***********************************/
 
@@ -450,3 +474,26 @@ angular
     }
 )
 
+/**
+ *                              _ooOoo_
+ *                            o8888888o
+ *                            88"   .   "88
+ *                             (|   -_-   |)
+ *                             o\   =   /o
+ *                         ____/`---'\____
+ *                      .'  \\|              |//  `.
+ *                    /  \\|||       :        |||//  \
+ *                   /  _|||||       _:_        |||||-  \
+ *                   |   | \\\     - -      /// |   |
+ *                    | \_|  ''\   ----   /''  |   |
+ *                     \  .-\__  `-`  ___/-. /
+ *                   ___`. .'   /--.--\    `. . __
+ *                ."" '<  `.___\_<|> _/___.'    >'"".
+ *               | | :  `- \`.;`\    _     /`;.`/ - ` : | |
+ *               \  \ `-.   \_ __\ /__ _/   .-` /  /
+ *   ======`-.____`-.___\_____/___.-`____.-'======
+ *                               `=---='
+ *   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ *                     佛祖保佑        永无BUG
+ *                     佛祖保佑        永无BUG
+ */

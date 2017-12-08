@@ -306,7 +306,7 @@ app.directive('my-ng-model', function() {
 //=====
 // 放大图片指令
 // enlargePic指令名称，写在需要用到的地方img中即可实现放大图片  
-// 使用方式 <div class="icon-arrow-title title-color-2" enlargePic />
+// 使用方式 <div class="icon-arrow-title title-color-2" enlarge-pic />
 app.directive('enlargePic', function() { 
     return {    
         restrict: "AE",    
@@ -347,6 +347,7 @@ app.directive('errSrc', function() {
         }
     }
 });
+
 //=====
 // 图片加载动画
 // 使用方式  <loadinganimation ></loadinganimation>
@@ -435,3 +436,62 @@ app.directive('loadinganimation', function() {
     }
     return directive;
 });
+
+//=====
+// tag小标签
+// 
+app.directive('myTag', function() {
+
+    var directive = {
+        restrict: 'A',
+        replace: true, 
+        template: '<div class="btnfont"><span ng-repeat="t in tags track by $index" class="{{tag(t)}}">{{t}}</span></div>',
+        scope: {
+            myTags: '='
+        },
+        link: function(scope, element, attrs) {
+            scope.tags = scope.myTags.split('&');
+            scope.tag = function(t) {
+                switch(t) {
+                    case '单程':
+                        return 'btnfontgreen';
+                    case '单程 + 门票':
+                        return 'btnfontgreen';
+                    case '往返':
+                        return 'btnfontorange';
+                    case '往返+门票':
+                        return 'btnfontorange';
+                    case '门票':
+                        return 'btnfontblue';
+                    default: 
+                        return 'btnfontred';
+                }
+            }
+        }
+    };
+    return directive;
+});
+
+/**
+ *                              _ooOoo_
+ *                            o8888888o
+ *                            88"   .   "88
+ *                             (|   -_-   |)
+ *                             o\   =   /o
+ *                         ____/`---'\____
+ *                      .'  \\|              |//  `.
+ *                    /  \\|||       :        |||//  \
+ *                   /  _|||||       _:_        |||||-  \
+ *                   |   | \\\     - -      /// |   |
+ *                    | \_|  ''\   ----   /''  |   |
+ *                     \  .-\__  `-`  ___/-. /
+ *                   ___`. .'   /--.--\    `. . __
+ *                ."" '<  `.___\_<|> _/___.'    >'"".
+ *               | | :  `- \`.;`\    _     /`;.`/ - ` : | |
+ *               \  \ `-.   \_ __\ /__ _/   .-` /  /
+ *   ======`-.____`-.___\_____/___.-`____.-'======
+ *                               `=---='
+ *   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ *                     佛祖保佑        永无BUG
+ *                     佛祖保佑        永无BUG
+ */
