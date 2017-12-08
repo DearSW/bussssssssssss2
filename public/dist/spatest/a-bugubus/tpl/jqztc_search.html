@@ -1,5 +1,19 @@
 <ui-view ng-controller="City_select">
-<ion-content>
+<style>
+        .modal {
+            background: rgba(225, 228, 230, 0);
+        }
+        .modal-one {
+            margin-top: 300px;
+            background: #E3E4E5;
+            box-shadow: 0px -6px 9px 0px rgba(191, 188, 188, 0.85);
+            border: none;
+        }
+       .item.activated {
+           background: #ffffff;
+        }
+    </style>
+<ion-content style="background: #E3E4E5;">
 <div class="showDefaultImg" ng-if="showDefaultImg" style="z-index: 999;">
 <div id="counter2">
 <span style="color: whitesmoke;">努力加载中...</span>
@@ -8,24 +22,32 @@
 <ion-slide-box  class="jqztc" show-pager="true" auto-play="true" does-continue="true" delegate-handle="adBanner">
 <ion-slide  class="showDefaultImg2" ng-repeat="item in recommendProducts2 track by $index" ng-click="recommendProductsDetail(item, $index)">
 <div class="showDefaultImg2">
-<img ng-if="item.photoPath" ng-src="{{item.photoPath}}" alt="景区直通车为您服务" err-src="images/month-bus.png" />
+<img ng-if="item.photoPath != null" ng-src="{{item.photoPath}}" alt="景区直通车为您服务" err-src="images/month-bus.png" />
 <div class="imgTitle">
-<span style="color: whitesmoke;">{{item.titleName}}</span>
+<span style="
+                            background: red;
+                            display: inline-block;
+                            height: 27px;
+                            width: 70px;
+                            color: white;
+                            margin: 7px 10px 3px 10px;
+                            text-align: center;
+                            border-radius: 3px;
+                            font-size: 14px;
+                        " >热门推荐</span><span style="color: whitesmoke;">{{item.titleName}}</span>
 </div>
 </div>
 </ion-slide>
 </ion-slide-box>
-<form style="padding: 5px" >
+<form style="padding: 5px;background: #E3E4E5;" >
 <div class="row">
-<div class="col col-33">
-<i class="button icon-left icon ion-ios-arrow-down button-clear button-dark" ng-click="show()" style="cursor: default;width: 100%;color: #4CAF50;">
-<span style="color: #444;;">{{cityssss}}</span>
-</i>
-</div>
-<div class="col col-66">
+<div class="col">
 <div class="list list-inset">
-<label class="item item-input" style="border-radius: 5px;">
-<input type="text" ng-model="dataContainer.input" ng-change="btnCheck()" placeholder="目的地/主题/路线">
+<label ng-click="openRoadLine()" class="item item-input" style="border-radius: 5px;border: none;margin: 8px 0;">
+<div>
+<span ng-if="isSelectedRoadLineBoolean" style="color: #a2a2a2;">目的地/主题/路线</span>
+<span ng-if="!isSelectedRoadLineBoolean" style="color: #111;">{{isSelectedRoadLine}}</span>
+</div>
 </label>
 </div>
 </div>
@@ -33,8 +55,9 @@
 <div class="row">
 <div class="col">
 <div class="list padding-top gray f14">
-<div style="border-radius: 5px;" class="item" title="goDate.title" ion-datetime-picker date button-ok  only-valid="{'after': 'today', 'inclusive': true}"  ng-change="detectionDate()"  ng-model="goDate.time">
-出发日期<span class="item-note" >{{ goDate.time | date: "yyyy-MM-dd"}}<i class="icon ion-chevron-right padding-left"></i>
+<div style="border-radius: 3px; border: none;color: #ADADAD;" class="item" ng-click="openDatePicker()" ng-model="goDate.time">
+出发时间<span class="item-note">
+{{ goDate.time | date: "yyyy-MM-dd"}}<i class="icon ion-chevron-right padding-left" style="color: #c7c5c5;padding-left: 3px;"></i>
 </span>
 </div>
 </div>
@@ -42,7 +65,7 @@
 </div>
 </form>
 <div style="padding: 10px 15px;">
-<button style="transition: all linear 1s;" ng-disabled="dataContainer.btnDisabled" class="button button-block button-positive" ng-click="goTabs()">搜索</button>
+<button style="transition: all linear 1s;margin: 10px auto;width: 30%;background: #0F50FB;border-radius: 3px;" ng-disabled="isSearchBtnDisabled" class="button button-block button-positive" ng-click="goTabs()">搜索</button>
 </div>
 </ion-content>
 </ui-view>
