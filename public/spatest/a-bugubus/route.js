@@ -2,7 +2,6 @@ angular
 .module('app', [
         'ionic',
         'ion-datetime-picker',
-        'ngAnimate',
         'ionic-datepicker'
 ])
 // @run  方法初始化全局的数据 , 只对全局作用域起作用  如 $rootScope，局部的$scope不管用
