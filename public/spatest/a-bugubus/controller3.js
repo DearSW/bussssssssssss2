@@ -3083,7 +3083,7 @@ app
      /**
       * @测试 控制器
       */
-    .controller('test', function($rootScope, $scope, $state, $timeout, $myLocationService, $myHttpService, $ionicLoading, $ionicScrollDelegate, $ionicActionSheet, $selectCity, $filter, ionicDatePicker) {
+    .controller('test', function($rootScope, $scope, $state, $timeout, $myLocationService, $myHttpService, $ionicLoading, $ionicScrollDelegate, $ionicActionSheet, $selectCity, $filter, ionicDatePicker, City, $location,$anchorScroll) {
 
         $scope.selectedDate1;
         $scope.selectedDate2;
@@ -3242,14 +3242,114 @@ app
                 $scope.showMiddle=false;
             },300); 
         };
+
         function loadData(){//从本地的一个包含全国各城市的json文件中加载数据
             $ionicLoading.show(); 
             $http.get("json/city.json").success(function(data) {
-             $scope.cityDatas=data.dataList;
-             $ionicLoading.hide();
-         });
+                $scope.cityDatas=data.dataList;
+                $ionicLoading.hide();
+            });
         } 
 
+
+        $scope.data={
+            search:''
+        }
+        //接收一个拼音，返回首字母大写
+        $scope.getFirstLetter = function (word, fn) {
+            fn(word.charAt(0).toUpperCase());
+        }
+
+        $scope.cityList = City.all();
+        var map = {};
+
+        //读取城市信息后，进行格式化
+        angular.forEach($scope.cityList, function (value, key) {
+            title = value.pinyin;
+            $scope.getFirstLetter(title, function (ret) {
+                if (map[ret]) {
+                    map[ret].push(value);
+                } else {
+                    map[ret] = [value]
+                }
+            });
+        });
+
+
+        //由于html中循环不能按首字母排序所以重新定义一个新数组
+        $scope.citys = [];
+        angular.forEach(map, function (value, key) {
+            $scope.citys.push({
+                'letter': key,
+                'list': value
+            });
+        });
+        console.log($scope.citys);
+
+
+        //跳转到点击字母位置并显示点击的字母，如果点击#号则跳到顶部
+        $scope.showLetter = false;
+        $scope.jumper = function (key) {
+            if (key == '#') {
+                $ionicScrollDelegate.scrollTop();
+                return;
+            } else {
+                $scope.letter = key;
+                //点击侧边字母后屏幕中间的字母也显示,500毫秒隐藏
+                if ($scope.showLetter == false) {
+                    $scope.showLetter = true;
+                    setTimeout(function () {
+                        $scope.showLetter = false;
+                        $scope.$apply();
+                    }, 500)
+                } else {
+                    $scope.showLetter = false;
+                }
+                var el = document.getElementById('city-' + key);
+                if (el) {
+                    var scrollPosition = el.offsetTop;
+                    //滚动到点击字母的位置。由于上面多了一个搜索框，所以y坐标高度要稍微加一点
+                    $ionicScrollDelegate.scrollTo(0, scrollPosition + 80);
+                }
+            }
+        }
+        //城市搜索
+        $scope.searchCity = function () {
+            //搜索框搜索之后又清空列表数据为初始数据
+            if ($scope.data.search == null || $scope.data.search == '') {
+                $scope.citys = [];
+
+                angular.forEach(map, function (value, key) {
+                    $scope.citys.push({
+                        'letter': key,
+                        'list': value
+                    });
+                });
+            } else {
+                $scope.citys = [];
+                var newList = [];
+                var count = 0;
+                angular.forEach($scope.cityList, function (value, key) {
+                    if (value.city.indexOf($scope.data.search) > -1 || value.pinyin.charAt(0).indexOf($scope.data.search) > -1) {
+                        count++;
+                        newList.push(value);
+                        if (count == 1) {
+                            $scope.citys.push({
+                                'letter': value.pinyin.charAt(0).toUpperCase(),
+                                'list': newList
+                            });
+                        }
+                    }
+                });
+                console.log($scope.citys);
+            }
+        }
+      
+      
+        //选择城市
+        $scope.chooseCity=function(city){
+            alert(city);
+        }
 
     })
 
