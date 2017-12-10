@@ -3252,18 +3252,22 @@ app
         // } 
 
 
-        $scope.data={
-            search:''
+        // @城市搜索变量，由于是input元素中双向绑定，所以需要使用对象来传递！
+        $scope.data = {
+            search: ''
         }
-        //接收一个拼音，返回首字母大写
+        $scope.current = ''; // @当前城市
+
+        // @接收一个拼音，返回首字母大写
         $scope.getFirstLetter = function (word, fn) {
             fn(word.charAt(0).toUpperCase());
         }
 
-        $scope.cityList = City.all();
+        $scope.cityList = City.all(); // @从服务中获取城市数据
+
         var map = {};
 
-        //读取城市信息后，进行格式化
+        // @读取城市信息后，进行格式化
         angular.forEach($scope.cityList, function (value, key) {
             title = value.pinyin;
             $scope.getFirstLetter(title, function (ret) {
@@ -3275,8 +3279,7 @@ app
             });
         });
 
-
-        //由于html中循环不能按首字母排序所以重新定义一个新数组
+        // @由于html中循环不能按首字母排序所以重新定义一个新数组
         $scope.citys = [];
         angular.forEach(map, function (value, key) {
             $scope.citys.push({
@@ -3286,16 +3289,19 @@ app
         });
         console.log($scope.citys);
 
-
-        //跳转到点击字母位置并显示点击的字母，如果点击#号则跳到顶部
+        // @跳转到点击字母位置并显示点击的字母，如果点击#号则跳到顶部
         $scope.showLetter = false;
         $scope.jumper = function (key) {
+
             if (key == '#') {
-                $ionicScrollDelegate.scrollTop();
+
+                $ionicScrollDelegate.scrollTop(); // @返回顶部
                 return;
+
             } else {
+
                 $scope.letter = key;
-                //点击侧边字母后屏幕中间的字母也显示,500毫秒隐藏
+                // @点击侧边字母后屏幕中间的字母也显示,500毫秒隐藏
                 if ($scope.showLetter == false) {
                     $scope.showLetter = true;
                     setTimeout(function () {
@@ -3305,18 +3311,22 @@ app
                 } else {
                     $scope.showLetter = false;
                 }
-                var el = document.getElementById('city-' + key);
+
+                var el = document.getElementById('city-' + key); // @这个代码最骚，获取元素
+
                 if (el) {
-                    var scrollPosition = el.offsetTop;
-                    //滚动到点击字母的位置。由于上面多了一个搜索框，所以y坐标高度要稍微加一点
-                    $ionicScrollDelegate.scrollTo(0, scrollPosition + 80);
+                    var scrollPosition = el.offsetTop; // @返回当前元素的y坐标
+                    // @滚动到点击字母的位置。由于上面多了一个搜索框，所以y坐标高度要稍微加一点
+                    $ionicScrollDelegate.scrollTo(0, scrollPosition + 80, true); // @scrollTo(left, top, [shouldAnimate])
                 }
             }
         }
-        //城市搜索
+
+        // @城市搜索函数
         $scope.searchCity = function () {
-            //搜索框搜索之后又清空列表数据为初始数据
+            // @搜索框搜索之后又清空列表数据为初始数据
             if ($scope.data.search == null || $scope.data.search == '') {
+
                 $scope.citys = [];
 
                 angular.forEach(map, function (value, key) {
@@ -3325,7 +3335,9 @@ app
                         'list': value
                     });
                 });
+
             } else {
+
                 $scope.citys = [];
                 var newList = [];
                 var count = 0;
@@ -3341,14 +3353,16 @@ app
                         }
                     }
                 });
+
                 console.log($scope.citys);
+
             }
         }
       
-      
-        //选择城市
-        $scope.chooseCity=function(city){
-            alert(city);
+        // @选择城市
+        $scope.chooseCity = function(city){
+            console.log(city);
+            $scope.current = city;
         }
 
     })
