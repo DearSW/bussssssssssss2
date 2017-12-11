@@ -476,9 +476,8 @@ app.directive('scrollpin', function() {
 
     return {
         restrict: 'A',
-        replace: true, 
         link: function(scope, element, attrs) {
-            angular.element(document.body).on('scroll', onScroll);
+            angular.element(element[0]).on('scroll', onScroll);
             function onScroll() {
                 var p = document.body.scrollTop;
                 var c = element[0].scrollTop;
