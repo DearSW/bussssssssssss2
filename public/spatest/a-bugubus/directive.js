@@ -487,7 +487,7 @@ app.directive('scrollpin', function() {
 
                 if(c >= 5) {
 
-                    aim.style.boxShadow = '0 0 5px 3px #ddd';
+                    aim.style.boxShadow = '0 0 5px 5px #ADADAD';
 
                 } else {
                     aim.style.boxShadow = 'none';
