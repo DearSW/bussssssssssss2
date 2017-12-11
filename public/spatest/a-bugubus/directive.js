@@ -479,28 +479,19 @@ app.directive('scrollpin', function() {
         link: function(scope, element, attrs) {
             angular.element(element[0]).on('scroll', onScroll);
             function onScroll() {
-                var p = document.body.scrollTop;
-                var c = element[0].scrollTop;
 
-                console.log("p的scrollTop");
-                console.log(p);
-                console.log("c的scrollTop");                
-                console.log(c);
+                var c = element[0].scrollTop;
 
                 // var before = element[0].previousElementSibling;
 
-                // if(p >= 1) {
-                //     var move = parseInt(attrs.scrollpin||0)+offsetTop-offset;
-                //     before.style.position = 'fixed';
-                //     if(move<0&&-move<parseInt(attrs.scrollpin)){
-                //         before.style.top = move+'px';
-                //     } else {
-                //         before.style.top = '0';
-                //     }
-                // } else {
-                //     before.style.position = 'absolute';
-                //     before.style.top = '';
-                // }
+                if(c >= 5) {
+
+                    c.style.cssText += 'box-shadow: 0 0 5px 3px #ddd;';
+
+                } else {
+                    c.style.cssText += 'box-shadow: none;';
+
+                }
             }
         }
     };
