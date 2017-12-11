@@ -486,10 +486,10 @@ app.directive('scrollpin', function() {
 
                 if(c >= 5) {
 
-                    angular.element(element[0]).style.boxShadow = '0 0 5px 3px #ddd';
+                    element[0].style.boxShadow = '0 0 5px 3px #ddd';
 
                 } else {
-                    angular.element(element[0]).style.boxShadow = 'none';
+                    element[0].style.boxShadow = 'none';
 
                 }
             }
