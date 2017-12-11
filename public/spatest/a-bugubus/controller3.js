@@ -3327,8 +3327,6 @@ app
             console.log(event);
             var positionX = event.gesture.center.pageX;
             var positioinY = event.gesture.center.pageY;
-            // var positionX = event.pageX || event.touches[0].pageX;
-            // var positioinY = event.pageY || event.touches[0].pageY;
 
             var ele = document.elementFromPoint(positionX, positioinY);
             if (!ele) {
@@ -3340,13 +3338,38 @@ app
                 return;
             }
 
-            $scope.hint = key;
-            $scope.showLetter = true;
+            if (key == '#') {
 
-            var scroll = document.getElementById("city-" + $scope.hint).offsetTop - $ionicScrollDelegate.getScrollPosition().top;
-            $ionicScrollDelegate.scrollBy(0, scroll, true);
-            var ele = document.getElementsByTagName("ion-content");
-            ele[0].style.overflow = "auto";  //解决滑动右边的导航字母后，左边不能再滚动的bug，可以试着注释这两句来测试这个问题
+                $ionicScrollDelegate.scrollTop(); // @返回顶部
+                return;
+
+            } else {
+
+                $scope.letter = key;
+                // @点击侧边字母后屏幕中间的字母也显示,500毫秒隐藏
+                if ($scope.showLetter == false) {
+                    $scope.showLetter = true;
+                    setTimeout(function () {
+                        $scope.showLetter = false;
+                        $scope.$apply();
+                    }, 500)
+                } else {
+                    $scope.showLetter = false;
+                }
+
+                var el = document.getElementById('city-' + key); // @这个代码最骚，获取元素
+
+                if (el) {
+                    var scrollPosition = el.offsetTop; // @返回当前元素的y坐标
+                    // @滚动到点击字母的位置。由于上面多了一个搜索框，所以y坐标高度要稍微加一点
+                    $ionicScrollDelegate.scrollTo(0, scrollPosition + 80, true); // @scrollTo(left, top, [shouldAnimate])
+                }
+            }
+
+            // var scroll = document.getElementById("city-" + $scope.hint).offsetTop - $ionicScrollDelegate.getScrollPosition().top;
+            // $ionicScrollDelegate.scrollBy(0, scroll, true);
+            // var ele = document.getElementsByTagName("ion-content");
+            // ele[0].style.overflow = "auto";  //解决滑动右边的导航字母后，左边不能再滚动的bug，可以试着注释这两句来测试这个问题
 
         };
 
