@@ -472,6 +472,38 @@ app.directive('myTag', function() {
     return directive;
 });
 
+app.directive('scrollpin', function($window) {
+    return {
+        link: function(scope, element, attrs) {
+            angular.element($window).on('scroll', onScroll);
+            function onScroll() {
+                var p = $window.scrollTop;
+                var c = element[0].scrollTop;
+
+                console.log("p的scrollTop");
+                console.log(p);
+                console.log("c的scrollTop");                
+                console.log(c);
+
+                // var before = element[0].previousElementSibling;
+
+                // if(p >= 1) {
+                //     var move = parseInt(attrs.scrollpin||0)+offsetTop-offset;
+                //     before.style.position = 'fixed';
+                //     if(move<0&&-move<parseInt(attrs.scrollpin)){
+                //         before.style.top = move+'px';
+                //     } else {
+                //         before.style.top = '0';
+                //     }
+                // } else {
+                //     before.style.position = 'absolute';
+                //     before.style.top = '';
+                // }
+            }
+        }
+    };
+})
+
 /**
  *                              _ooOoo_
  *                            o8888888o

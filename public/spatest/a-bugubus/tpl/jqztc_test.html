@@ -107,7 +107,7 @@
                 </div>
             </ion-header-bar>
 
-            <ion-content>
+            <ion-content scrollpin>
 
                 <ion-refresher pulling-text="下拉刷新" pulling-icon="ion-ios-refresh-empty" spinner="ripple" on-refresh="doRefresh()" refreshing-text="正在刷新..."></ion-refresher>
 
@@ -139,7 +139,7 @@
             </div> 
 
             <div class="city-letterList">
-                <a ng-repeat=" city in citys | orderBy:'letter' "  style="display: block" on-release="mRelease()" on-tap="mTouch($event)" ng-click="jumper(city.letter)">{{city.letter}}</a>
+                <a ng-repeat=" city in citys | orderBy:'letter' "  style="display: block" ng-click="jumper(city.letter)">{{city.letter}}</a>
                 <a style="display: block"  ng-click="jumper('#')">#</a>
             </div>
 
