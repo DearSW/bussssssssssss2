@@ -3319,6 +3319,8 @@ app
                     // @滚动到点击字母的位置。由于上面多了一个搜索框，所以y坐标高度要稍微加一点
                     $ionicScrollDelegate.scrollTo(0, scrollPosition + 80, true); // @scrollTo(left, top, [shouldAnimate])
                 }
+                var ele = document.getElementsByTagName("ion-content");
+                ele[0].style.overflow = "auto !important"; 
             }
         }
 
@@ -3368,8 +3370,8 @@ app
 
             // var scroll = document.getElementById("city-" + $scope.hint).offsetTop - $ionicScrollDelegate.getScrollPosition().top;
             // $ionicScrollDelegate.scrollBy(0, scroll, true);
-            // var ele = document.getElementsByTagName("ion-content");
-            // ele[0].style.overflow = "auto";  //解决滑动右边的导航字母后，左边不能再滚动的bug，可以试着注释这两句来测试这个问题
+            var ele = document.getElementsByTagName("ion-content");
+            ele[0].style.overflow = "auto !important";  //解决滑动右边的导航字母后，左边不能再滚动的bug，可以试着注释这两句来测试这个问题
 
         };
 
