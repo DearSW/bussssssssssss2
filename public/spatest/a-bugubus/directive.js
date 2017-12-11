@@ -472,12 +472,15 @@ app.directive('myTag', function() {
     return directive;
 });
 
-app.directive('scrollpin', function($window) {
+app.directive('scrollpin', function() {
+
     return {
+        restrict: 'A',
+        replace: true, 
         link: function(scope, element, attrs) {
-            angular.element($window).on('scroll', onScroll);
+            angular.element(document.body).on('scroll', onScroll);
             function onScroll() {
-                var p = $window.scrollTop;
+                var p = document.body.scrollTop;
                 var c = element[0].scrollTop;
 
                 console.log("p的scrollTop");
@@ -502,7 +505,7 @@ app.directive('scrollpin', function($window) {
             }
         }
     };
-})
+});
 
 /**
  *                              _ooOoo_
