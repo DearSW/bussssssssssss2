@@ -3322,7 +3322,7 @@ app
                 var ele = angular.element(document.getElementsByTagName("ion-content"));
                 console.log(ele);            
                 // ele[0].style.overflow = "auto !important"; 
-                els[0].style.cssText = "overflow: auto !important";
+                ele[0].style.cssText = "overflow: auto !important";
             }
         }
 
@@ -3376,7 +3376,7 @@ app
             var ele = angular.element(document.getElementsByTagName("ion-content"));            
             console.log(ele);
             // ele[0].style.overflow = "auto !important";  //解决滑动右边的导航字母后，左边不能再滚动的bug，可以试着注释这两句来测试这个问题
-            els[0].style.cssText = "overflow: auto !important";
+            ele[0].style.cssText = "overflow: auto !important";
             
         };
 
