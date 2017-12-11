@@ -3252,7 +3252,7 @@ app
         // } 
 
 
-        // @城市搜索变量，由于是input元素中双向绑定，所以需要使用对象来传递！
+        // @城市搜索变量，由于是input元素中的双向绑定，所以需要使用对象来传递！
         $scope.data = {
             search: ''
         }
@@ -3321,6 +3321,35 @@ app
                 }
             }
         }
+
+        $scope.mTouch = function (event) {
+            var positionX = event.pageX || event.touches[0].pageX;
+            var positioinY = event.pageY || event.touches[0].pageY;
+            var ele = document.elementFromPoint(positionX, positioinY);
+            if (!ele) {
+                return;
+            }
+            var key = ele.innerText;
+
+            if (!key || key == " " || key.length != 1 || key == "#") {
+                return;
+            }
+
+            $scope.hint = key;
+            $scope.showLetter = true;
+
+            var scroll = document.getElementById("city-" + $scope.hint).offsetTop - $ionicScrollDelegate.getScrollPosition().top;
+            $ionicScrollDelegate.scrollBy(0, scroll, true);
+            var ele = document.getElementsByTagName("ion-content");
+            ele[0].style.overflow = "auto";  //解决滑动右边的导航字母后，左边不能再滚动的bug，可以试着注释这两句来测试这个问题
+
+        };
+
+        $scope.mRelease = function () {
+            $timeout(function () {
+                $scope.showLetter = false;
+            }, 300);
+        };
 
         // @城市搜索函数
         $scope.searchCity = function () {
