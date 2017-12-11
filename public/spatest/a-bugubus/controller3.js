@@ -3325,8 +3325,8 @@ app
         $scope.mTouch = function (event) {
 
             console.log(event);
-            var positionX = event.pageX;
-            var positioinY = event.pageY;
+            var positionX = event.gesture.center.pageX;
+            var positioinY = event.gesture.center.pageY;
             // var positionX = event.pageX || event.touches[0].pageX;
             // var positioinY = event.pageY || event.touches[0].pageY;
 
@@ -3335,7 +3335,7 @@ app
                 return;
             }
             var key = ele.innerText;
-
+            console.log(key);
             if (!key || key == " " || key.length != 1 || key == "#") {
                 return;
             }
