@@ -3323,8 +3323,13 @@ app
         }
 
         $scope.mTouch = function (event) {
-            var positionX = event.pageX || event.touches[0].pageX;
-            var positioinY = event.pageY || event.touches[0].pageY;
+
+            console.log(event);
+            var positionX = event.pageX;
+            var positioinY = event.pageY;
+            // var positionX = event.pageX || event.touches[0].pageX;
+            // var positioinY = event.pageY || event.touches[0].pageY;
+
             var ele = document.elementFromPoint(positionX, positioinY);
             if (!ele) {
                 return;
