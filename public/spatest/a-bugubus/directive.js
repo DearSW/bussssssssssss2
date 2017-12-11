@@ -477,6 +477,7 @@ app.directive('scrollpin', function() {
     return {
         restrict: 'A',
         link: function(scope, element, attrs) {
+            var aim = document.getElementById("search");
             angular.element(element[0]).on('scroll', onScroll);
             function onScroll() {
 
@@ -486,10 +487,10 @@ app.directive('scrollpin', function() {
 
                 if(c >= 5) {
 
-                    element[0].style.boxShadow = '0 0 5px 3px #ddd';
+                    aim.style.boxShadow = '0 0 5px 3px #ddd';
 
                 } else {
-                    element[0].style.boxShadow = 'none';
+                    aim.style.boxShadow = 'none';
 
                 }
             }
