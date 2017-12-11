@@ -94,28 +94,22 @@
 
         <ion-view view-title="城市选择" hide-tabs="true"> 
 
-            <ion-header-bar align-title="left" class="bar-positive">
-                <div class="buttons">
-                    <button class="button" ng-click="doSomething()">Left Button</button>
-                </div>
-                <h1 class="title">Title!</h1>
-                <div class="buttons">
-                    <button class="button">Right Button</button>
+            <ion-header-bar style="padding: 0;">
+                <div style="width: 100%;">
+                    <div class="list list-inset">
+                            
+                        <label class="item item-input">
+                            <i class="icon ion-search placeholder-icon"></i>
+                            <input type="text" placeholder="搜索城市" ng-model="data.search" ng-change="searchCity()">
+                        </label>
+    
+                    </div>
                 </div>
             </ion-header-bar>
 
             <ion-content>
 
                 <ion-refresher pulling-text="下拉刷新" pulling-icon="ion-ios-refresh-empty" spinner="ripple" on-refresh="doRefresh()" refreshing-text="正在刷新..."></ion-refresher>
-
-                <div class="list list-inset">
-                        
-                    <label class="item item-input">
-                        <i class="icon ion-search placeholder-icon"></i>
-                        <input type="text" placeholder="Search" ng-model="data.search" ng-change="searchCity()">
-                    </label>
-
-                </div>
 
                 <p style="margin: 10px 0 0 20px">你所在的地区<span style="color: red">{{current}}</span></p>
                 <p style="margin: 10px 0 0 20px">历史访问目的地<span style="color: red">{{current}}</span></p>
