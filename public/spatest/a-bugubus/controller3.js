@@ -3350,11 +3350,14 @@ app
             }, 300);
         };
 
+        $scope.clearInputSearch = false;
         // @城市搜索函数
         $scope.searchCity = function () {
             // @搜索框搜索之后又清空列表数据为初始数据
             if ($scope.data.search == null || $scope.data.search == '') {
 
+                $scope.clearInputSearch = false;
+                
                 $scope.citys = [];
 
                 angular.forEach(map, function (value, key) {
@@ -3365,6 +3368,8 @@ app
                 });
 
             } else {
+
+                $scope.clearInputSearch = true;
 
                 $scope.citys = [];
                 var newList = [];
@@ -3386,12 +3391,25 @@ app
 
             }
         }
+
+        // @城市聚焦函数
+        $scope.searchCityFocus = function() {
+            $ionicScrollDelegate.scrollTop(true); // @返回顶部
+            return;
+        }
+
+        // @城市input清空函数
+        $scope.searchCityClear = function() {
+            $scope.data.search = '';
+            return;
+        }
       
         // @选择城市
         $scope.chooseCity = function(city){
             console.log(city);
             $scope.current = city;
         }
+
 
     })
 
