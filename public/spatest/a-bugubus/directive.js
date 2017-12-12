@@ -505,14 +505,13 @@ app.directive('scrollpin', function($window) {
     };
 });
 
-app.directive('scrollpin2', function () {  
+app.directive('slc', function () {  
     return {  
-        restrict: 'A',  
-        scope: {},  
+        restrict: 'A',
         link: function ($scope, $element, $attrs) {  
             var elem = $element[0];  
 
-            console.log("我是指令scrollpin2");
+            console.log("我是指令slc");
 
             var startY, endY, startTime, endTime;  
             var speedDecay = 0.02;//速度衰减量  
@@ -586,7 +585,7 @@ app.directive('scrollpin2', function () {
 
         }  
     };  
-})  
+});
 
 /**
  *                              _ooOoo_
