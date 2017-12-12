@@ -3284,6 +3284,14 @@ app
 
             console.log("mTouch执行了");
             console.log(event);
+            
+            //提示
+            layer.open({
+                content: 'hello layer'
+                ,skin: 'msg'
+                ,time: 2 //2秒后自动关闭
+            });
+
             var positionX = event.gesture.center.pageX;
             var positioinY = event.gesture.center.pageY;
 
