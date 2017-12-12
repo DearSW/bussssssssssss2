@@ -3266,6 +3266,20 @@ app
             }
         }
 
+        var aim = document.getElementById("search");
+        $scope.scrollpin = function() {
+
+            var scrollTop = $ionicScrollDelegate.getScrollPosition().top;
+            console.log(scrollTop);
+
+            if(scrollTop > 10) {
+                aim.style.boxShadow = '0 0 5px 5px #ADADAD';                
+            } else {
+                aim.style.boxShadow = 'none';                
+            }
+
+        }
+
         $scope.mTouch = function (event) {
 
             console.log(event);
