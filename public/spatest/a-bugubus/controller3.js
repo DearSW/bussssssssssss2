@@ -3413,6 +3413,8 @@ app
 
         $scope.searchCityEmpty2 = function() {
             console.log("searchCityEmpty2");
+            $scope.clearInputSearch = false;        
+            $scope.data.search = '';
         }
 
         // @选择城市
