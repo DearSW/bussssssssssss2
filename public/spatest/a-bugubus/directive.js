@@ -505,14 +505,14 @@ app.directive('scrollpin', function($window) {
     };
 });
 
-app.directive('inertiaScroll', function () {  
+app.directive('inertiascroll', function () {  
     return {  
         restrict: 'A',  
         scope: {},  
         link: function ($scope, $element, $attrs) {  
             var elem = $element[0];  
 
-            console.log("我是指令inertiaScroll");
+            console.log("我是指令inertiascroll");
 
             var startY, endY, startTime, endTime;  
             var speedDecay = 0.02;//速度衰减量  
