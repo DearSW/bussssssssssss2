@@ -478,10 +478,13 @@ app.directive('scrollpin', function() {
         restrict: 'A',
         link: function(scope, element, attrs) {
             var aim = document.getElementById("search");
+            console.log("我是指令");
             angular.element(element[0]).on('scroll', onScroll);
             function onScroll() {
 
                 var c = element[0].scrollTop;
+
+                console.log(c);
 
                 // var before = element[0].previousElementSibling;
 
