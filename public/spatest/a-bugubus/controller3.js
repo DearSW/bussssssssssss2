@@ -3400,7 +3400,9 @@ app
 
         // @城市input清空函数
         $scope.searchCityClear = function() {
+            console.log("searchCityClear");
             $scope.data.search = '';
+            console.log($scope.data.search);
             return;
         }
       
