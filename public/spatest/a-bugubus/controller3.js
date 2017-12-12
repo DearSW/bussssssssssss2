@@ -3266,7 +3266,7 @@ app
             }
         }
 
-        var aim = document.getElementById("search");
+        var aim = document.getElementById("search"); // @搜索框对象
         $scope.scrollpin = function() {
 
             var scrollTop = $ionicScrollDelegate.getScrollPosition().top;
