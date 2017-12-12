@@ -3282,6 +3282,7 @@ app
 
         $scope.mTouch = function (event) {
 
+            console.log("mTouch执行了");
             console.log(event);
             var positionX = event.gesture.center.pageX;
             var positioinY = event.gesture.center.pageY;
@@ -3335,6 +3336,7 @@ app
         };
 
         $scope.mRelease = function () {
+            console.log("mRelease执行了");
             $timeout(function () {
                 $scope.showLetter = false;
             }, 300);
