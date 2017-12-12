@@ -3354,6 +3354,9 @@ app
         // @城市搜索函数
         $scope.searchCity = function () {
             // @搜索框搜索之后又清空列表数据为初始数据
+
+            $ionicScrollDelegate.scrollTop(true); // @返回顶部            
+
             if ($scope.data.search == null || $scope.data.search == '') {
 
                 $scope.clearInputSearch = false;
@@ -3399,8 +3402,9 @@ app
         }
 
         // @城市input清空函数
-        $scope.searchCityClear = function() {
-            console.log("searchCityClear");
+        $scope.searchCityEmpty = function() {
+            console.log("searchCityEmpty");
+            $scope.clearInputSearch = false;        
             $scope.data.search = '';
             console.log($scope.data.search);
             return;
@@ -3411,7 +3415,6 @@ app
             console.log(city);
             $scope.current = city;
         }
-
 
     })
 
