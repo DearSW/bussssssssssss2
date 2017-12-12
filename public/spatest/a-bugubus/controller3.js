@@ -3404,9 +3404,9 @@ app
         // @城市input清空函数
         $scope.chooseCity2 = function() {
             console.log("searchCityEmpty");
-            // $scope.clearInputSearch = false;        
-            // $scope.data.search = '';
-            // console.log($scope.data.search);
+            $scope.clearInputSearch = false;        
+            $scope.data.search = '';
+            console.log($scope.data.search);
         }
       
         // @选择城市
