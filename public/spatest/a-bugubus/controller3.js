@@ -3411,6 +3411,10 @@ app
       
         $scope.searchCityEmpty();
 
+        $scope.searchCityEmpty2 = function() {
+            console.log("searchCityEmpty2");
+        }
+
         // @选择城市
         $scope.chooseCity = function(city){
             console.log(city);
