@@ -478,11 +478,12 @@ app.directive('scrollpin', function() {
         restrict: 'A',
         link: function(scope, element, attrs) {
             var aim = document.getElementById("search");
-            console.log("我是指令");
+            console.log("我是指令scrollpin");
             angular.element(element[0]).on('scroll', onScroll);
             function onScroll() {
 
-                var c = element[0].scrollTop;
+                // var c = element[0].scrollTop;
+                var c = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
 
                 console.log(c);
 
