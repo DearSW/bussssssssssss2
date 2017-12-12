@@ -472,7 +472,7 @@ app.directive('myTag', function() {
     return directive;
 });
 
-app.directive('scrollpin', function() {
+app.directive('scrollpin', function($window) {
 
     return {
         restrict: 'A',
@@ -483,7 +483,10 @@ app.directive('scrollpin', function() {
             function onScroll() {
 
                 // var c = element[0].scrollTop;
-                var c = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
+                var c = $window.pageYOffset   
+                || document.documentElement.scrollTop    
+                || document.body.scrollTop    
+                || 0;  
 
                 console.log(c);
 
