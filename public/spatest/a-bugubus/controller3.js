@@ -3318,7 +3318,7 @@ app
                 // aim.style,boxShadow = 'none';
                 
             }
-            $scope.apply();
+            $scope.$apply();
 
         }, 500, 1000);
         
