@@ -3241,6 +3241,39 @@ app
                 $ionicScrollDelegate.scrollTop(true); // @返回顶部
                 return;
 
+            } else  if(key == 'current') {
+
+                var el = document.getElementById('current'); // @这个代码最骚，获取元素
+                
+                if (el) {
+                    var scrollPosition = el.offsetTop; // @返回当前元素的y坐标
+                    // @滚动到点击热门的位置。由于上面多了一个搜索框，所以y坐标高度要稍微加一点
+                    $ionicScrollDelegate.scrollTo(0, scrollPosition + 80, true); // @scrollTo(left, top, [shouldAnimate])
+                }
+                return;
+
+            } else if(key == 'history') {
+
+                var el = document.getElementById('history'); // @这个代码最骚，获取元素
+                
+                if (el) {
+                    var scrollPosition = el.offsetTop; // @返回当前元素的y坐标
+                    // @滚动到点击热门的位置。由于上面多了一个搜索框，所以y坐标高度要稍微加一点
+                    $ionicScrollDelegate.scrollTo(0, scrollPosition + 80, true); // @scrollTo(left, top, [shouldAnimate])
+                }
+                return;
+
+            } else if(key == 'hot') {
+
+                var el = document.getElementById('hot'); // @这个代码最骚，获取元素
+                
+                if (el) {
+                    var scrollPosition = el.offsetTop; // @返回当前元素的y坐标
+                    // @滚动到点击热门的位置。由于上面多了一个搜索框，所以y坐标高度要稍微加一点
+                    $ionicScrollDelegate.scrollTo(0, scrollPosition + 80, true); // @scrollTo(left, top, [shouldAnimate])
+                }
+                return;
+
             } else {
 
                 $scope.letter = key;
