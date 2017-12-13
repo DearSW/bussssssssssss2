@@ -3248,7 +3248,7 @@ app
                 if (el) {
                     var scrollPosition = el.offsetTop; // @返回当前元素的y坐标
                     // @滚动到点击热门的位置。由于上面多了一个搜索框，所以y坐标高度要稍微加一点
-                    $ionicScrollDelegate.scrollTo(0, scrollPosition + 80, true); // @scrollTo(left, top, [shouldAnimate])
+                    $ionicScrollDelegate.scrollTo(0, scrollPosition, true); // @scrollTo(left, top, [shouldAnimate])
                 }
                 return;
 
@@ -3259,7 +3259,7 @@ app
                 if (el) {
                     var scrollPosition = el.offsetTop; // @返回当前元素的y坐标
                     // @滚动到点击热门的位置。由于上面多了一个搜索框，所以y坐标高度要稍微加一点
-                    $ionicScrollDelegate.scrollTo(0, scrollPosition + 80, true); // @scrollTo(left, top, [shouldAnimate])
+                    $ionicScrollDelegate.scrollTo(0, scrollPosition, true); // @scrollTo(left, top, [shouldAnimate])
                 }
                 return;
 
@@ -3270,7 +3270,7 @@ app
                 if (el) {
                     var scrollPosition = el.offsetTop; // @返回当前元素的y坐标
                     // @滚动到点击热门的位置。由于上面多了一个搜索框，所以y坐标高度要稍微加一点
-                    $ionicScrollDelegate.scrollTo(0, scrollPosition + 80, true); // @scrollTo(left, top, [shouldAnimate])
+                    $ionicScrollDelegate.scrollTo(0, scrollPosition, true); // @scrollTo(left, top, [shouldAnimate])
                 }
                 return;
 
