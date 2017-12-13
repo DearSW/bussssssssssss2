@@ -59,9 +59,11 @@
                         <label class="item item-input">
                             <i class="icon ion-search placeholder-icon"></i>
                             <input type="text" placeholder="搜索城市" ng-focus="searchCityFocus()" ng-model="data.search" ng-change="searchCity()">
-                            <!-- display:{{clearInputSearch ? 'block' : 'none'}};  -->
-                            <i class="icon ion-close-circled animate" ng-click="searchCityEmpty()" style="margin-right: 18px;font-size: 16px;color: #a2a2a2;line-height: 1;padding: 0 2px;"></i>
+                            <!--   -->
                         </label>
+                        <span>
+                                <i class="icon ion-close-circled animate" ng-click="searchCityEmpty()" style="margin-right: 18px;font-size: 16px;color: #a2a2a2;line-height: 1;padding: 0 2px;display:{{clearInputSearch ? 'block' : 'none'}};"></i>                                
+                        </span>
     
                     </div>
 
@@ -76,7 +78,6 @@
                 <p style="margin: 10px 0 0 20px">你所在的地区<span style="color: red">{{current}}</span></p>
                 <p style="margin: 10px 0 0 20px">历史访问目的地<span style="color: red">{{current}}</span></p>
                 <p style="margin: 10px 0 0 20px">热门城市<span style="color: red">{{current}}</span></p>
-                <p style="margin: 10px 0 0 20px" ng-click="searchCityEmpty()" >清空城市</p>
 
                 <div class="list card" ng-if="citys.length>0">
 

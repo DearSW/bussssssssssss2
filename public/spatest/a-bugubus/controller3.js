@@ -3403,18 +3403,18 @@ app
 
         // @城市input清空函数
         $scope.searchCityEmpty = function() {
-            console.log("searchCityEmpty");
-            $scope.clearInputSearch = false;        
+            console.log("searchCityEmpty");   
             $scope.data.search = '';
-            console.log($scope.data.search);
-        }
-      
-        $scope.searchCityEmpty();
+            $scope.clearInputSearch = false;
+            
+            $scope.citys = [];
 
-        $scope.searchCityEmpty2 = function() {
-            console.log("searchCityEmpty2");
-            $scope.clearInputSearch = false;        
-            $scope.data.search = '';
+            angular.forEach(map, function (value, key) {
+                $scope.citys.push({
+                    'letter': key,
+                    'list': value
+                });
+            });
         }
 
         // @选择城市
