@@ -26,6 +26,15 @@
             text-align: center;
             font-weight: bold;
         } 
+
+        .city-button {
+            min-width: 0;
+            min-height: 0;
+            height: 30px;
+            line-height: 1;
+            padding: 0px 5px;
+            border-radius: 3px;
+        }
     
     </style>
 
@@ -60,21 +69,21 @@
 
                 <div style="margin: 10px 0 0 20px">
                     <div style="color: #989393;" id="current">你所在的地区</div>
-                    <button ng-if="current != null || current != '' " class="button button-balanced" style="min-width: 0;min-height: 0;height: 30px;line-height: 1;padding: 0px 1px;border-radius: 3px;">{{current}}</button>
+                    <button ng-if="current != ''" class="button button-balanced city-button"  >{{current}}</button>
                 </div>
                 <div style="margin: 10px 0 0 20px">
                     <div style="color: #989393;" id="history">历史访问目的地</div>
-                    <button class="button button-balanced" style="min-width: 0;min-height: 0;height: 30px;line-height: 1;padding: 0px 1px;border-radius: 3px;">武汉</button>
-                    <button class="button button-balanced" style="min-width: 0;min-height: 0;height: 30px;line-height: 1;padding: 0px 1px;border-radius: 3px;">贵阳</button>
-                    <button class="button button-balanced" style="min-width: 0;min-height: 0;height: 30px;line-height: 1;padding: 0px 1px;border-radius: 3px;">铜仁</button>                    
+                    <button class="button button-balanced city-button"  >武汉</button>
+                    <button class="button button-balanced city-button"  >贵阳</button>
+                    <button class="button button-balanced city-button"  >铜仁</button>                    
                 </div>
                 <div style="margin: 10px 0 0 20px">
-                    <div style="color: #989393;" id="hot">热门城市</div>>
-                    <button class="button button-balanced" style="min-width: 0;min-height: 0;height: 30px;line-height: 1;padding: 0px 1px;border-radius: 3px;">北京</button>
-                    <button class="button button-balanced" style="min-width: 0;min-height: 0;height: 30px;line-height: 1;padding: 0px 1px;border-radius: 3px;">广州</button>
-                    <button class="button button-balanced" style="min-width: 0;min-height: 0;height: 30px;line-height: 1;padding: 0px 1px;border-radius: 3px;">杭州</button>
-                    <button class="button button-balanced" style="min-width: 0;min-height: 0;height: 30px;line-height: 1;padding: 0px 1px;border-radius: 3px;">上海</button>
-                    <button class="button button-balanced" style="min-width: 0;min-height: 0;height: 30px;line-height: 1;padding: 0px 1px;border-radius: 3px;">深圳</button>                    
+                    <div style="color: #989393;" id="hot">热门城市</div>
+                    <button class="button button-balanced city-button"  >北京</button>
+                    <button class="button button-balanced city-button"  >广州</button>
+                    <button class="button button-balanced city-button"  >杭州</button>
+                    <button class="button button-balanced city-button"  >上海</button>
+                    <button class="button button-balanced city-button"  >深圳</button>                    
                 </div>
 
                 <div class="list card" ng-if="citys.length>0">
