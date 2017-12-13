@@ -3300,8 +3300,9 @@ app
         }
 
         // @搜索框样式动态渲染
+        // var aim = document.getElementById('searchHeader');
         $scope.searchCityBoxShadow = false;
-        $scope.scrollpin = function() { // @在滚动事件中移除dom操作
+        $scope.scrollpin = throttle(function() { // @在滚动事件中移除dom操作
             // @on-scroll="scrollpin()"
             var scrollTop = $ionicScrollDelegate.getScrollPosition().top;
             console.log(scrollTop);
@@ -3309,14 +3310,39 @@ app
             if(scrollTop > 10) {
                 
                 $scope.searchCityBoxShadow = true;
+                // aim.style.boxShadow = '0 0 5px 5px #ADADAD';
         
             } else {
                 
                 $scope.searchCityBoxShadow = false;
+                // aim.style,boxShadow = 'none';
                 
             }
+            $scope.apply();
 
-        }
+        }, 500, 1000);
+        
+        // 简单的节流函数
+        function throttle(func, wait, mustRun) {
+            var timeout,
+                startTime = new Date();
+        
+            return function() {
+                var context = this,
+                    args = arguments,
+                    curTime = new Date();
+        
+                clearTimeout(timeout);
+                // 如果达到了规定的触发时间间隔，触发 handler
+                if(curTime - startTime >= mustRun){
+                    func.apply(context,args);
+                    startTime = curTime;
+                // 没达到触发间隔，重新设定定时器
+                }else{
+                    timeout = setTimeout(func, wait);
+                }
+            };
+        };
 
         $scope.mTouch = function (event) {
 
