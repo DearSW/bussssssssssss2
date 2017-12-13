@@ -3248,7 +3248,7 @@ app
                 if (el) {
                     var scrollPosition = el.offsetTop; // @返回当前元素的y坐标
                     // @滚动到点击热门的位置。由于上面多了一个搜索框，所以y坐标高度要稍微加一点
-                    $ionicScrollDelegate.scrollTo(0, scrollPosition, true); // @scrollTo(left, top, [shouldAnimate])
+                    $ionicScrollDelegate.scrollTo(0, scrollPosition + 5, true); // @scrollTo(left, top, [shouldAnimate])
                 }
                 return;
 
@@ -3259,7 +3259,7 @@ app
                 if (el) {
                     var scrollPosition = el.offsetTop; // @返回当前元素的y坐标
                     // @滚动到点击热门的位置。由于上面多了一个搜索框，所以y坐标高度要稍微加一点
-                    $ionicScrollDelegate.scrollTo(0, scrollPosition, true); // @scrollTo(left, top, [shouldAnimate])
+                    $ionicScrollDelegate.scrollTo(0, scrollPosition + 5, true); // @scrollTo(left, top, [shouldAnimate])
                 }
                 return;
 
@@ -3270,7 +3270,7 @@ app
                 if (el) {
                     var scrollPosition = el.offsetTop; // @返回当前元素的y坐标
                     // @滚动到点击热门的位置。由于上面多了一个搜索框，所以y坐标高度要稍微加一点
-                    $ionicScrollDelegate.scrollTo(0, scrollPosition, true); // @scrollTo(left, top, [shouldAnimate])
+                    $ionicScrollDelegate.scrollTo(0, scrollPosition + 5, true); // @scrollTo(left, top, [shouldAnimate])
                 }
                 return;
 
@@ -3299,16 +3299,21 @@ app
             }
         }
 
-        var aim = document.getElementById("search"); // @搜索框对象
-        $scope.scrollpin = function() {
-
+        // @搜索框样式动态渲染
+        $scope.searchCityBoxShadow = false;
+        $scope.scrollpin = function() { // @在滚动事件中移除dom操作
+            // @on-scroll="scrollpin()"
             var scrollTop = $ionicScrollDelegate.getScrollPosition().top;
             console.log(scrollTop);
 
             if(scrollTop > 10) {
-                aim.style.boxShadow = '0 0 5px 5px #ADADAD';                
+                
+                $scope.searchCityBoxShadow = true;
+        
             } else {
-                aim.style.boxShadow = 'none';                
+                
+                $scope.searchCityBoxShadow = false;
+                
             }
 
         }
