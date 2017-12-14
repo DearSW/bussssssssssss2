@@ -3363,9 +3363,9 @@ app
 
             //提示
             layer.open({
-                content: key
-                ,skin: 'msg'
-                ,time: 2 //2秒后自动关闭
+                content: key,
+                skin: 'msg',
+                time: 2 //2秒后自动关闭
             });
 
             $scope.letter = key;
@@ -3373,7 +3373,7 @@ app
             $scope.showLetter=true;    
           
             var scroll = document.getElementById("city-" + $scope.letter).offsetTop - $ionicScrollDelegate.getScrollPosition().top; 
-            $ionicScrollDelegate.scrollBy(0,scroll,true);
+            $ionicScrollDelegate.scrollBy(0, scroll, true);
 
             var ele = angular.element(document.getElementsByTagName("ion-content"));
             ele[0].style.cssText = "overflow: auto !important";
