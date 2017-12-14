@@ -3348,8 +3348,8 @@ app
 
             console.log(event);
 
-            var positionX = event.gesture.center.pageX;
-            var positioinY = event.gesture.center.pageY;
+            var positionX = event.changedTouches[0].pageX;
+            var positioinY = event.changedTouches[0].pageY;
 
             var ele = document.elementFromPoint(positionX, positioinY);
             if (!ele) {
