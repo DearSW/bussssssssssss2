@@ -3346,16 +3346,6 @@ app
 
         $scope.mTouch = function (event) {
 
-            console.log("mTouch执行了");
-            console.log(event);
-            
-            //提示
-            layer.open({
-                content: 'hello layer'
-                ,skin: 'msg'
-                ,time: 2 //2秒后自动关闭
-            });
-
             var positionX = event.gesture.center.pageX;
             var positioinY = event.gesture.center.pageY;
 
@@ -3364,18 +3354,23 @@ app
                 return;
             }
             var key = ele.innerText;
-            console.log(key);
 
             if (!key || key == " " || key.length != 1 || key == "#") {
                 return;
             }
 
+            //提示
+            layer.open({
+                content: key
+                ,skin: 'msg'
+                ,time: 2 //2秒后自动关闭
+            });
 
             $scope.letter = key;
 
             $scope.showLetter=true;    
           
-            var scroll = document.getElementById("city_" + $scope.letter).offsetTop - $ionicScrollDelegate.getScrollPosition().top; 
+            var scroll = document.getElementById("city-" + $scope.letter).offsetTop - $ionicScrollDelegate.getScrollPosition().top; 
             $ionicScrollDelegate.scrollBy(0,scroll,true);
 
             var ele = angular.element(document.getElementsByTagName("ion-content"));
