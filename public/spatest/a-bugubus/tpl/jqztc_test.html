@@ -113,7 +113,7 @@
                 <a style="display: block"  ng-click="jumper('current')">当前</a>
                 <a style="display: block"  ng-click="jumper('history')">历史</a>
                 <a style="display: block"  ng-click="jumper('hot')">热门</a>
-                <a ng-repeat=" city in citys | orderBy:'letter' "  style="display: block" ng-click="jumper(city.letter)">{{city.letter}}</a>
+                <a ng-repeat=" city in citys | orderBy:'letter' "  style="display: block" on-touch="mTouch()" on-release="mRelease()"  ng-click="jumper(city.letter)">{{city.letter}}</a>
                 <a style="display: block"  ng-click="jumper('#')">Top</a>
             </div>
 
