@@ -3346,6 +3346,8 @@ app
 
         $scope.mTouch = function (event) {
 
+            console.log(event);
+
             var positionX = event.gesture.center.pageX;
             var positioinY = event.gesture.center.pageY;
 
