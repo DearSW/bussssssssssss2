@@ -3370,39 +3370,15 @@ app
                 return;
             }
 
-            if (key == '#') {
 
-                $ionicScrollDelegate.scrollTop(); // @返回顶部
-                return;
+            $scope.letter = key;
 
-            } else {
+            $scope.showLetter=true;    
+          
+            var scroll = document.getElementById("city_" + $scope.letter).offsetTop - $ionicScrollDelegate.getScrollPosition().top; 
+            $ionicScrollDelegate.scrollBy(0,scroll,true);
 
-                $scope.letter = key;
-                // @点击侧边字母后屏幕中间的字母也显示,500毫秒隐藏
-                if ($scope.showLetter == false) {
-                    $scope.showLetter = true;
-                    setTimeout(function () {
-                        $scope.showLetter = false;
-                        $scope.$apply();
-                    }, 500)
-                } else {
-                    $scope.showLetter = false;
-                }
-
-                var el = document.getElementById('city-' + key); // @这个代码最骚，获取元素
-
-                if (el) {
-                    var scrollPosition = el.offsetTop; // @返回当前元素的y坐标
-                    // @滚动到点击字母的位置。由于上面多了一个搜索框，所以y坐标高度要稍微加一点
-                    $ionicScrollDelegate.scrollTo(0, scrollPosition + 80, true); // @scrollTo(left, top, [shouldAnimate])
-                }
-            }
-
-            // var scroll = document.getElementById("city-" + $scope.hint).offsetTop - $ionicScrollDelegate.getScrollPosition().top;
-            // $ionicScrollDelegate.scrollBy(0, scroll, true);
-            var ele = angular.element(document.getElementsByTagName("ion-content"));            
-            console.log(ele);
-            // ele[0].style.overflow = "auto !important";  //解决滑动右边的导航字母后，左边不能再滚动的bug，可以试着注释这两句来测试这个问题
+            var ele = angular.element(document.getElementsByTagName("ion-content"));
             ele[0].style.cssText = "overflow: auto !important";
             
         };
