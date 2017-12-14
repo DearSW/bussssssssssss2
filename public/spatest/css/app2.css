@@ -960,5 +960,5 @@ input[disabled], select[disabled], textarea[disabled], input[readonly]:not(.clon
 }
 
 .animate {
-    transition: all linear 0.7s;
+    transition: all linear .5s;
 }
