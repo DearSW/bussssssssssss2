@@ -428,6 +428,151 @@ app
 
         }
 
+        // @判断当前年份是否是闰年(闰年2月份有29天，平年2月份只有28天)
+        function isLeap(year) {
+            return year % 4 == 0 ? (year % 100 != 0 ? 1 : (year % 400 == 0 ? 1 : 0)) : 0;
+        }
+  
+        function _getDateRegionArray(y, m, dateArr, compareDate, flag) {
+    
+            if (m > 11) {
+                y += 1;
+                m = 0;
+            }
+    
+            var i, k,
+                firstday = new Date(y, m, 1), // @获取当月的第一天
+                dayOfWeek = firstday.getDay(), // @判断第一天是星期几(返回[0-6]中的一个，0代表星期天，1代表星期一，以此类推)
+                days_per_month = new Array(31, 28 + isLeap(y), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31), // @创建月份数组
+                str_nums = Math.ceil((dayOfWeek + days_per_month[m]) / 7); // @确定日期表格所需的行数
+    
+            for (i = 0; i < str_nums; i += 1) { // @二维数组创建日期表格
+    
+                for (k = 0; k < 7; k++) {
+                    var idx = 7 * i + k; // @为每个表格创建索引,从0开始
+                    var date = idx - dayOfWeek + 1; // @将当月的1号与星期进行匹配
+    
+                    var temp_date = idx - dayOfWeek + 1;
+    
+                    if (temp_date <= 0 || temp_date > days_per_month[m]) { // @无效的时间
+    
+                    } else { // @有效的时间
+    
+    
+                        if(flag == 0) { // @start日期
+    
+                            var temp_m = Number.parseInt(m) + 1;
+                            var temp_date_str = y + '-' + temp_m + '-' + temp_date;
+    
+                            if(new Date(temp_date_str) >= compareDate) {
+                                // $filter('date')(new Date(temp_date_str), 'yyyy-MM-dd')
+                                dateArr.push($filter('date')(new Date(temp_date_str), 'yyyy-MM-dd'));
+                            }
+
+                        } else if(flag == 1) { // @截止日期
+    
+                            var temp_m = Number.parseInt(m) + 1;
+                            var temp_date_str = y + '-' + temp_m + '-' + temp_date;
+    
+                            if(new Date(temp_date_str) <= compareDate) {
+                                dateArr.push($filter('date')(new Date(temp_date_str), 'yyyy-MM-dd'));
+                            }
+    
+                        } else { // @无限制
+    
+                            var temp_m = Number.parseInt(m) + 1;
+                            var temp_date_str = y + '-' + temp_m + '-' + temp_date;
+                            
+                            dateArr.push($filter('date')(new Date(temp_date_str), 'yyyy-MM-dd'));
+    
+                        }
+    
+                    }
+    
+                }
+            }
+            console.log(dateArr);
+        }
+    
+        // @从今天往后推两个月时间
+        function getTodayToAfterTwoMonthRegionArray(dateArr) {
+    
+            // @初始化数据
+            var today = new Date(); // @获取当前日期
+            var y = today.getFullYear(); // @获取日期中的年份
+            var m = today.getMonth(); // @获取日期中的月份(需要注意的是：月份是从0开始计算，获取的值比正常月份的值少1)
+            var d = today.getDate(); // @获取日期中的日(方便在建立日期表格时高亮显示当天)
+            var temp_days_per_month = new Array(31, 28 + isLeap(y), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31); // @创建月份数组 
+    
+            var compareTime = new Date().getTime() + (60 * 86400000); // @60天时间的时间段，用来比较的
+    
+            if(dateArr.length == 0) {
+    
+                dateArr.push($filter('date')(today, 'yyyy-MM-dd'));
+    
+                _getDateRegionArray(y, m, dateArr, new Date(), 0);
+            }
+    
+            if(dateArr.length < temp_days_per_month[m]) {
+    
+                var y2 = y;
+                var m2 = m + 1;
+    
+                if(m2 > 11) {
+    
+                    y2 += 1;
+                    m2 = 0;
+    
+                }
+    
+                _getDateRegionArray(y2, m2, dateArr, new Date(), 3);
+    
+                if(dateArr.length < 60) {
+                    
+                    var y3 = y2;
+                    var m3 = m2 + 1;
+    
+                    if(m3 > 11) {
+                        
+                        y3 += 1;
+                        m3 = 0;
+    
+                    }
+    
+                    _getDateRegionArray(y3, m3, dateArr, new Date(compareTime), 1);
+    
+                }
+    
+                
+            } else if(dateArr.length == temp_days_per_month[m]) {
+    
+                var y2 = y;
+                var m2 = m + 1;
+    
+                if(m2 > 11) {
+    
+                    y2 += 1;
+                    m2 = 0;
+    
+                }
+    
+                _getDateRegionArray(y2, m2, dateArr, new Date(), 3);
+    
+            }
+    
+        }
+
+        $scope.dateArr = [];
+        getTodayToAfterTwoMonthRegionArray($scope.dateArr);
+
+        function removeByValue(arr, val) {
+            for(var i=0; i<arr.length; i++) { if(arr[i]==val) { arr.splice(i, 1); break; } }
+        }
+      
+        removeByValue(dateArr, $filter('date')(new Date('2017-12-25'), 'yyyy-MM-dd'));
+        console.log("删除日期了的数组");
+        console.log($scope.dateArr);
+
         // @时间选择的默认操作
         if(sessionStorage.getItem('jqztc_search_time') != null) {
 
@@ -457,6 +602,7 @@ app
               closeLabel: '返回',
               from: new Date(),
               to: new Date(compareTime), // @11对应十二月，差1
+              disabledDates: ,
               dateFormat: 'yyyy-MM-dd', // @可选
               closeOnSelect: true, // @可选,设置选择日期后是否要关掉界面。呵呵，原本是false。
               inputDate: new Date(),
@@ -3222,7 +3368,7 @@ app
             });
         });
 
-        // @由于html中循环不能按首字母排序所以重新定义一个新数组
+        // @由于html中循环不能按首字母排序所以重新定义一个城市数组
         $scope.citys = [];
         angular.forEach(map, function (value, key) {
             $scope.citys.push({
@@ -3230,10 +3376,10 @@ app
                 'list': value
             });
         });
-        console.log($scope.citys);
+
+        $scope.showLetter = false; // @字母modal的显示或者隐藏布尔值
 
         // @跳转到点击字母位置并显示点击的字母，如果点击#号则跳到顶部
-        $scope.showLetter = false;
         $scope.jumper = function (key) {
 
             if (key == '#') {
@@ -3298,10 +3444,8 @@ app
 
             }
         }
-
-        // @搜索框样式动态渲染
-        // var aim = document.getElementById('searchHeader');
-        $scope.searchCityBoxShadow = false;
+        
+        $scope.searchCityBoxShadow = false; // @搜索框样式动态渲染布尔值
         $scope.scrollpin = throttle(function() { // @在滚动事件中移除dom操作
             // @on-scroll="scrollpin()"
             var scrollTop = $ionicScrollDelegate.getScrollPosition().top;
@@ -3322,7 +3466,7 @@ app
 
         }, 500, 1000);
         
-        // 简单的节流函数
+        // @简单的节流函数
         function throttle(func, wait, mustRun) {
             var timeout,
                 startTime = new Date();
@@ -3344,6 +3488,7 @@ app
             };
         };
 
+        // @滑动选择城市函数，滑动字母进行城市选择
         $scope.mTouch = function (event) {
 
             console.log(event);
@@ -3380,6 +3525,7 @@ app
             
         };
 
+        // @滑动结束函数，做一些清理工作，隐藏字母modal
         $scope.mRelease = function () {
             console.log("mRelease执行了");
             $timeout(function () {
@@ -3387,7 +3533,8 @@ app
             }, 300);
         };
 
-        $scope.clearInputSearch = false;
+        $scope.clearInputSearch = false; // @清空搜索框的布尔值
+
         // @城市搜索函数
         $scope.searchCity = function () {
             // @搜索框搜索之后又清空列表数据为初始数据
@@ -3432,13 +3579,13 @@ app
             }
         }
 
-        // @城市聚焦函数
+        // @城市聚焦函数，搜索框聚焦后返回首页
         $scope.searchCityFocus = function() {
             $ionicScrollDelegate.scrollTop(true); // @返回顶部
             return;
         }
 
-        // @城市input清空函数
+        // @城市搜索框清空函数
         $scope.searchCityEmpty = function() {
             console.log("searchCityEmpty");   
             $scope.data.search = '';
