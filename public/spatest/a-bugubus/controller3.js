@@ -570,6 +570,10 @@ app
         }
       
         removeByValue($scope.dateArr, $filter('date')(new Date('2017-12-25'), 'yyyy-MM-dd'));
+        removeByValue($scope.dateArr, $filter('date')(new Date('2017-12-24'), 'yyyy-MM-dd'));
+        removeByValue($scope.dateArr, $filter('date')(new Date('2017-12-26'), 'yyyy-MM-dd'));
+        removeByValue($scope.dateArr, $filter('date')(new Date('2017-12-28'), 'yyyy-MM-dd'));
+        removeByValue($scope.dateArr, $filter('date')(new Date('2017-12-29'), 'yyyy-MM-dd'));
         console.log("删除日期了的数组");
         console.log($scope.dateArr);
 
@@ -602,7 +606,7 @@ app
               closeLabel: '返回',
               from: new Date(),
               to: new Date(compareTime), // @11对应十二月，差1
-            //   disabledDates: ,
+              disabledDates: $scope.dateArr,
               dateFormat: 'yyyy-MM-dd', // @可选
               closeOnSelect: true, // @可选,设置选择日期后是否要关掉界面。呵呵，原本是false。
               inputDate: new Date(),
