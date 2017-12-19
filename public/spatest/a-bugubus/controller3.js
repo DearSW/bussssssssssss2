@@ -602,7 +602,7 @@ app
               closeLabel: '返回',
               from: new Date(),
               to: new Date(compareTime), // @11对应十二月，差1
-              disabledDates: ,
+            //   disabledDates: ,
               dateFormat: 'yyyy-MM-dd', // @可选
               closeOnSelect: true, // @可选,设置选择日期后是否要关掉界面。呵呵，原本是false。
               inputDate: new Date(),
