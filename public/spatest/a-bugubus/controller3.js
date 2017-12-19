@@ -569,7 +569,7 @@ app
             for(var i=0; i<arr.length; i++) { if(arr[i]==val) { arr.splice(i, 1); break; } }
         }
       
-        removeByValue(dateArr, $filter('date')(new Date('2017-12-25'), 'yyyy-MM-dd'));
+        removeByValue($scope.dateArr, $filter('date')(new Date('2017-12-25'), 'yyyy-MM-dd'));
         console.log("删除日期了的数组");
         console.log($scope.dateArr);
 
