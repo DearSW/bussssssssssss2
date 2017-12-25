@@ -461,9 +461,9 @@ app
     
                         if(flag == 0) { // @start日期
     
-                            var temp_m = Number.parseInt(m);
-                            // var temp_m = Number.parseInt(m) + 1;
-                            var temp_date_str = y + '-' + temp_m + '-' + temp_date;
+                            // var temp_m = Number.parseInt(m);
+                            var temp_m = Number.parseInt(m) + 1;
+                            var temp_date_str = y + '/' + temp_m + '/' + temp_date;
     
                             if(new Date(temp_date_str) >= compareDate) {
                                 // $filter('date')(new Date(temp_date_str), 'yyyy-MM-dd')
@@ -472,9 +472,9 @@ app
 
                         } else if(flag == 1) { // @截止日期
     
-                            var temp_m = Number.parseInt(m);
-                            // var temp_m = Number.parseInt(m) + 1;
-                            var temp_date_str = y + '-' + temp_m + '-' + temp_date;
+                            // var temp_m = Number.parseInt(m);
+                            var temp_m = Number.parseInt(m) + 1;
+                            var temp_date_str = y + '/' + temp_m + '/' + temp_date;
     
                             if(new Date(temp_date_str) <= compareDate) {
                                 dateArr.push($filter('date')(new Date(temp_date_str), 'yyyy-MM-dd'));
@@ -482,9 +482,9 @@ app
     
                         } else { // @无限制
     
-                            var temp_m = Number.parseInt(m);
-                            // var temp_m = Number.parseInt(m) + 1;
-                            var temp_date_str = y + '-' + temp_m + '-' + temp_date;
+                            // var temp_m = Number.parseInt(m);
+                            var temp_m = Number.parseInt(m) + 1;
+                            var temp_date_str = y + '/' + temp_m + '/' + temp_date;
                             
                             dateArr.push($filter('date')(new Date(temp_date_str), 'yyyy-MM-dd'));
     
@@ -616,15 +616,15 @@ app
               closeLabel: '返回',
               from: new Date(),
               to: new Date(compareTime), // @11对应十二月，差1
-              disabledDates: [
+            //   disabledDates: [
 
-                new Date("2017/12/30"),
-                new Date("2017/12/31"),
-                new Date("2018/1/01"),
-                new Date("2018/1/02"),
-                new Date("2018/01-03")
-              ],
-            //  disabledDates: $scope.dateArr,
+            //     new Date("2017/12/30"),
+            //     new Date("2017/12/31"),
+            //     new Date("2018/1/01"),
+            //     new Date("2018/1/02"),
+            //     new Date("2018/01-03")
+            //   ],
+             disabledDates: $scope.dateArr,
               dateFormat: 'yyyy-MM-dd', // @可选
               closeOnSelect: true, // @可选,设置选择日期后是否要关掉界面。呵呵，原本是false。
               inputDate: new Date(),
