@@ -511,7 +511,7 @@ app
     
             if(dateArr.length == 0) {
     
-                dateArr.push($filter('date')(today, 'yyyy-MM-dd'));
+                dateArr.push($filter('date')(today, 'yyyy/MM/dd'));
     
                 _getDateRegionArray(y, m, dateArr, new Date(), 0);
             }
@@ -577,7 +577,7 @@ app
         removeByValue($scope.dateArr, $filter('date')(new Date('2017/12/28'), 'yyyy/MM/dd'));
         removeByValue($scope.dateArr, $filter('date')(new Date('2017/12/29'), 'yyyy/MM/dd'));
         removeByValue($scope.dateArr, $filter('date')(new Date('2018/01/01'), 'yyyy/MM/dd'));
-        removeByValue($scope.dateArr, $filter('date')(new Date('2018/01-02'), 'yyyy/MM/dd'));
+        removeByValue($scope.dateArr, $filter('date')(new Date('2018/01/02'), 'yyyy/MM/dd'));
 
         console.log("删除日期了的数组");
         console.log($scope.dateArr);
