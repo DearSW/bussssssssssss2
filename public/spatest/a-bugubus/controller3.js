@@ -467,7 +467,7 @@ app
     
                             if(new Date(temp_date_str) >= compareDate) {
                                 // $filter('date')(new Date(temp_date_str), 'yyyy-MM-dd')
-                                dateArr.push($filter('date')(new Date(temp_date_str), 'yyyy-MM-dd'));
+                                dateArr.push($filter('date')(new Date(temp_date_str), 'yyyy/MM/dd'));
                             }
 
                         } else if(flag == 1) { // @截止日期
@@ -477,7 +477,7 @@ app
                             var temp_date_str = y + '/' + temp_m + '/' + temp_date;
     
                             if(new Date(temp_date_str) <= compareDate) {
-                                dateArr.push($filter('date')(new Date(temp_date_str), 'yyyy-MM-dd'));
+                                dateArr.push($filter('date')(new Date(temp_date_str), 'yyyy/MM/dd'));
                             }
     
                         } else { // @无限制
@@ -486,7 +486,7 @@ app
                             var temp_m = Number.parseInt(m) + 1;
                             var temp_date_str = y + '/' + temp_m + '/' + temp_date;
                             
-                            dateArr.push($filter('date')(new Date(temp_date_str), 'yyyy-MM-dd'));
+                            dateArr.push($filter('date')(new Date(temp_date_str), 'yyyy/MM/dd'));
     
                         }
     
@@ -572,13 +572,12 @@ app
             for(var i=0; i<arr.length; i++) { if(arr[i]==val) { arr.splice(i, 1); break; } }
         }
       
-        removeByValue($scope.dateArr, $filter('date')(new Date('2017-11-25'), 'yyyy-MM-dd'));
-        removeByValue($scope.dateArr, $filter('date')(new Date('2017-11-24'), 'yyyy-MM-dd'));
-        removeByValue($scope.dateArr, $filter('date')(new Date('2017-11-26'), 'yyyy-MM-dd'));
-        removeByValue($scope.dateArr, $filter('date')(new Date('2017-11-28'), 'yyyy-MM-dd'));
-        removeByValue($scope.dateArr, $filter('date')(new Date('2017-11-29'), 'yyyy-MM-dd'));
-        removeByValue($scope.dateArr, $filter('date')(new Date('2018-00-01'), 'yyyy-MM-dd'));
-        removeByValue($scope.dateArr, $filter('date')(new Date('2018-00-02'), 'yyyy-MM-dd'));
+        removeByValue($scope.dateArr, $filter('date')(new Date('2017/12/24'), 'yyyy/MM/dd'));
+        removeByValue($scope.dateArr, $filter('date')(new Date('2017/12/26'), 'yyyy/MM/dd'));
+        removeByValue($scope.dateArr, $filter('date')(new Date('2017/12/28'), 'yyyy/MM/dd'));
+        removeByValue($scope.dateArr, $filter('date')(new Date('2017/12/29'), 'yyyy/MM/dd'));
+        removeByValue($scope.dateArr, $filter('date')(new Date('2018/01/01'), 'yyyy/MM/dd'));
+        removeByValue($scope.dateArr, $filter('date')(new Date('2018/01-02'), 'yyyy/MM/dd'));
 
         console.log("删除日期了的数组");
         console.log($scope.dateArr);
