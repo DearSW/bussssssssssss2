@@ -618,12 +618,11 @@ app
               to: new Date(compareTime), // @11对应十二月，差1
               disabledDates: [
 
-                new Date("2017-11-30"),
-                new Date("2017-11-31"),
-                new Date("2018-0-01"),
-                new Date("2018-0-02"),
-                new Date("2018-1-01"),
-                new Date("12-29-2017"), //Short format
+                new Date("2017/12/30"),
+                new Date("2017/12/31"),
+                new Date("2018/1/01"),
+                new Date("2018/1/02"),
+                new Date("2018/01-03")
               ],
             //  disabledDates: $scope.dateArr,
               dateFormat: 'yyyy-MM-dd', // @可选
