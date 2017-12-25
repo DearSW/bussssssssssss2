@@ -461,7 +461,8 @@ app
     
                         if(flag == 0) { // @start日期
     
-                            var temp_m = Number.parseInt(m) + 1;
+                            var temp_m = Number.parseInt(m);
+                            // var temp_m = Number.parseInt(m) + 1;
                             var temp_date_str = y + '-' + temp_m + '-' + temp_date;
     
                             if(new Date(temp_date_str) >= compareDate) {
@@ -471,7 +472,8 @@ app
 
                         } else if(flag == 1) { // @截止日期
     
-                            var temp_m = Number.parseInt(m) + 1;
+                            var temp_m = Number.parseInt(m);
+                            // var temp_m = Number.parseInt(m) + 1;
                             var temp_date_str = y + '-' + temp_m + '-' + temp_date;
     
                             if(new Date(temp_date_str) <= compareDate) {
@@ -480,7 +482,8 @@ app
     
                         } else { // @无限制
     
-                            var temp_m = Number.parseInt(m) + 1;
+                            var temp_m = Number.parseInt(m);
+                            // var temp_m = Number.parseInt(m) + 1;
                             var temp_date_str = y + '-' + temp_m + '-' + temp_date;
                             
                             dateArr.push($filter('date')(new Date(temp_date_str), 'yyyy-MM-dd'));
@@ -569,13 +572,13 @@ app
             for(var i=0; i<arr.length; i++) { if(arr[i]==val) { arr.splice(i, 1); break; } }
         }
       
-        removeByValue($scope.dateArr, $filter('date')(new Date('2017-12-25'), 'yyyy-MM-dd'));
-        removeByValue($scope.dateArr, $filter('date')(new Date('2017-12-24'), 'yyyy-MM-dd'));
-        removeByValue($scope.dateArr, $filter('date')(new Date('2017-12-26'), 'yyyy-MM-dd'));
-        removeByValue($scope.dateArr, $filter('date')(new Date('2017-12-28'), 'yyyy-MM-dd'));
-        removeByValue($scope.dateArr, $filter('date')(new Date('2017-12-29'), 'yyyy-MM-dd'));
-        removeByValue($scope.dateArr, $filter('date')(new Date('2018-01-01'), 'yyyy-MM-dd'));
-        removeByValue($scope.dateArr, $filter('date')(new Date('2018-1-02'), 'yyyy-MM-dd'));
+        removeByValue($scope.dateArr, $filter('date')(new Date('2017-11-25'), 'yyyy-MM-dd'));
+        removeByValue($scope.dateArr, $filter('date')(new Date('2017-11-24'), 'yyyy-MM-dd'));
+        removeByValue($scope.dateArr, $filter('date')(new Date('2017-11-26'), 'yyyy-MM-dd'));
+        removeByValue($scope.dateArr, $filter('date')(new Date('2017-11-28'), 'yyyy-MM-dd'));
+        removeByValue($scope.dateArr, $filter('date')(new Date('2017-11-29'), 'yyyy-MM-dd'));
+        removeByValue($scope.dateArr, $filter('date')(new Date('2018-00-01'), 'yyyy-MM-dd'));
+        removeByValue($scope.dateArr, $filter('date')(new Date('2018-00-02'), 'yyyy-MM-dd'));
 
         console.log("删除日期了的数组");
         console.log($scope.dateArr);
@@ -613,14 +616,15 @@ app
               closeLabel: '返回',
               from: new Date(),
               to: new Date(compareTime), // @11对应十二月，差1
-              disabledDates: [
+            //   disabledDates: [
 
-                new Date(2017, 11, 30),
-                new Date(2017, 11, 31),
-                new Date(2018, 0, 01),
-                new Date(2018, 0, 02),
-                new Date(2018, 1, 01),
-              ],
+            //     new Date(2017, 11, 30),
+            //     new Date(2017, 11, 31),
+            //     new Date(2018, 0, 01),
+            //     new Date(2018, 0, 02),
+            //     new Date(2018, 1, 01),
+            //   ],
+             disabledDates: $scope.dateArr,
               dateFormat: 'yyyy-MM-dd', // @可选
               closeOnSelect: true, // @可选,设置选择日期后是否要关掉界面。呵呵，原本是false。
               inputDate: new Date(),
