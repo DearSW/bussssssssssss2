@@ -615,11 +615,11 @@ app
               to: new Date(compareTime), // @11对应十二月，差1
               disabledDates: [
 
-                new Date(2017, 12, 30),
-                new Date(2017, 12, 31),
+                new Date(2017, 11, 30),
+                new Date(2017, 11, 31),
+                new Date(2018, 0, 01),
+                new Date(2018, 0, 02),
                 new Date(2018, 1, 01),
-                new Date(2018, 01, 02),
-                new Date(2018, 2, 01),
               ],
               dateFormat: 'yyyy-MM-dd', // @可选
               closeOnSelect: true, // @可选,设置选择日期后是否要关掉界面。呵呵，原本是false。
