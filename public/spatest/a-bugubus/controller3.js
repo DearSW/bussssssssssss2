@@ -580,6 +580,10 @@ app
         console.log("删除日期了的数组");
         console.log($scope.dateArr);
 
+        for(var i = 0; i < $scope.dateArr.length; i++) {
+            $scope.dateArr[i] = new Date($scope.dateArr[i]);
+        }
+
         // @时间选择的默认操作
         if(sessionStorage.getItem('jqztc_search_time') != null) {
 
