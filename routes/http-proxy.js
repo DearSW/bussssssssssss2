@@ -11,7 +11,8 @@ var httpProxy = function(url, data, success, error) {
   
     //定义主机
     // var host = "http://192.168.5.223:8080/bus/wechat" + url;
-    var host = "http://111.230.129.41:8080/guizhoubus/wechat" + url;
+    var host = "http://wxcdtest.happyev.com/bus/wechat" + url;
+    // var host = "http://111.230.129.41:8080/guizhoubus/wechat" + url;
     var header = {
         'Content-Type': 'application/x-www-form-urlencoded'
     };
