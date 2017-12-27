@@ -10,19 +10,19 @@ router.get('/spatest', function(req, res, next) {
     res.redirect('/spatest/index?');
 });
 router.get('/spatest/index', function(req, res, next) {
-    // req.session.user = {
-    //     "userInfo":{
-    //         "userid":"2017062210241666105334",
-    //         "phone":"13016487540",
-    //         "sex":"0",
-    //         "userStatus":1,
-    //         "balance":0.0,
-    //         "openid":"osvsPw4_JbCNjxGZyZ4lj-0rhK2c",
-    //         "talSpendind":0.0,
-    //         "tripCount":0,
-    //         "type":0
-    //     }
-    // };
+    req.session.user = {
+        "userInfo":{
+            "userid":"2017120514584241037118",
+            "phone":"18585830057",
+            "sex":"0",
+            "userStatus":1,
+            "balance":0.0,
+            "openid":"o5mL51Jzzud0npqbG9u-nrK8M9cc",
+            "talSpendind":0.0,
+            "tripCount":0,
+            "type":0
+        }
+    };
     console.log("ZW: Get the Code (/spatest/index)");    
     if(req.session.user == undefined) {
         console.log("ZW:Get Code, start to redirect (/spatest/index)");    

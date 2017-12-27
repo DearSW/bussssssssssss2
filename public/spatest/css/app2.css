@@ -958,7 +958,3 @@ input[disabled], select[disabled], textarea[disabled], input[readonly]:not(.clon
     line-height: 1;
     vertical-align: text-top;
 }
-
-.animate {
-    transition: all linear .5s;
-}

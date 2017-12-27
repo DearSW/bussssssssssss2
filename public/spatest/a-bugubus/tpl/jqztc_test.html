@@ -1,124 +1,32 @@
 <ui-view>
+<div ng-controller="test">
 
     <style>
-    
-        .city-showLetter{
-            position: relative;
-            width: 80px;
-            height: 80px;
-            left: 45%;
-            top: 40%;
-            background-color: #e5e5e5;
-            text-align: center;
-            color: #28a54c;
-            font-size: 25px;
-            line-height: 3;
-            border-radius: 50%;
-            vertical-align: middle;
+        ._720kb-datepicker-calendar-day._720kb-datepicker-today {
+            background:red;
+            color:white;
         }
-        .city-letterList{
-            width: 10%;
-            height: auto;
-            position: absolute;
-            float: right;
-            right: 0px;
-            top: 15%;
-            text-align: center;
-            font-weight: bold;
-        } 
-
-        .city-button {
-            min-width: 0;
-            min-height: 0;
-            height: 30px;
-            line-height: 1;
-            padding: 0px 5px;
-            border-radius: 3px;
-        }
-    
     </style>
 
-    <div ng-controller="test">
 
-        <ion-view view-title="城市选择" hide-tabs="true"> 
+    <div class="jqztc-order-detail">
 
-            <ion-header-bar style="padding: 0; box-shadow:{{searchCityBoxShadow ? '0 0 5px 5px #ADADAD' : 'none'}};" class="animate" id="searchHeader">
+        <ion-content has-tabs="true">
 
-                <div style="width: 100%;height:100%;">
-
-                    <div class="list list-inset" style="border-radius: 0;padding:0;margin:0;border:none;">
-                            
-                        <label class="item item-input" style="padding-left: 21px;border-radius:0;margin:0;">
-                            <i class="icon ion-search placeholder-icon" style="font-size: 18px;"></i>
-                            <input type="text" placeholder="搜索城市" ng-focus="searchCityFocus()" ng-model="data.search" ng-change="searchCity()">
-                            <!--   -->
-                        </label>
-                        <span>
-                                <i class="icon ion-close-circled animate" ng-click="searchCityEmpty()" style="margin-right: 10px;font-size: 20px;color: #a2a2a2;line-height: 1;position: fixed;right: 0;top: 15px;z-index: 999;padding: 0 2px; display:{{clearInputSearch ? 'block' : 'none'}};"></i>                                
-                        </span>
-    
-                    </div>
-
-                </div>
-
-            </ion-header-bar>
-
-            <ion-content on-scroll="scrollpin()">
-
-                <ion-refresher pulling-text="下拉刷新" pulling-icon="ion-ios-refresh-empty" spinner="ripple" on-refresh="doRefresh()" refreshing-text="正在刷新..."></ion-refresher>
-
-                <div style="margin: 10px 0 0 20px">
-                    <div style="color: #989393;" id="current">你所在的地区</div>
-                    <button ng-if="current != ''" class="button button-balanced city-button"  >{{current}}</button>
-                </div>
-                <div style="margin: 10px 0 0 20px">
-                    <div style="color: #989393;" id="history">历史访问目的地</div>
-                    <button class="button button-balanced city-button"  >武汉</button>
-                    <button class="button button-balanced city-button"  >贵阳</button>
-                    <button class="button button-balanced city-button"  >铜仁</button>                    
-                </div>
-                <div style="margin: 10px 0 0 20px">
-                    <div style="color: #989393;" id="hot">热门城市</div>
-                    <button class="button button-balanced city-button"  >北京</button>
-                    <button class="button button-balanced city-button"  >广州</button>
-                    <button class="button button-balanced city-button"  >杭州</button>
-                    <button class="button button-balanced city-button"  >上海</button>
-                    <button class="button button-balanced city-button"  >深圳</button>                    
-                </div>
-
-                <div class="list card" ng-if="citys.length>0">
-
-                    <div  ng-repeat="city in citys | orderBy:'letter'">
-                        <div class="item item-divider" id="city-{{city.letter}}">
-                            {{city.letter}}
-                        </div>
-                        <div class="item item-text-wrap" ng-repeat="item in city.list" ng-click="chooseCity(item.city)">
-                            {{item.city}}
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="list card" ng-if="citys.length==0">
-                    当前没有数据
-                </div>
-
-            </ion-content>
-
-            <div ng-show="showLetter" class="city-showLetter">
-                <strong>{{letter}}</strong>
-            </div> 
-
-            <div class="city-letterList">
-                <a style="display: block"  ng-click="jumper('current')">当前</a>
-                <a style="display: block"  ng-click="jumper('history')">历史</a>
-                <a style="display: block"  ng-click="jumper('hot')">热门</a>
-                <a ng-repeat=" city in citys | orderBy:'letter' "  style="display: block" ng-touchmove="mTouch($event)" ng-touchend="mRelease()" ng-click="jumper(city.letter)">{{city.letter}}</a>
-                <a style="display: block"  ng-click="jumper('#')">Top</a>
+            <!-- 1  -->
+            <div class="notice2" >
+                <p>* 订单开始前12小时无法退订，退款将在15个工作日内到账，请谨慎操作。</p>
+                <p>* 更多已购信息请在<span style="color:#47bd4c">我的行程</span>中查看。</p>
             </div>
+            <h1>
+                Hello
+            </h1>
+            
+            <button class="button button-block button-positive" ng-click="openDatePickerOne()">openDatePickerOne</button>
+            <button class="button button-block button-positive" ng-click="openDatePickerTwo()">openDatePickerTwo</button>
 
-        </ion-view>
-
+        </ion-content>
     </div>
+</div>
     
 </ui-view>
