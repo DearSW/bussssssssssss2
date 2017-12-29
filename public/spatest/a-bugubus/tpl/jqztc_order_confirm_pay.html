@@ -39,15 +39,15 @@
 
             .btnfoot6 {
                 background-color: #E8E9EA;
-                border-radius: 0;
+                border-radius: 2px;
                 border-width: 1px;
                 border-color: #D3D4D5;
                 margin-right: -3px;
                 min-width: 0;
                 min-height: 0;
                 line-height: 1;
-                height: 40px;
-                width: 40px;
+                height: 45px;
+                width: 45px;
                 margin-left: 5px;
             }
 
@@ -59,8 +59,8 @@
                 border-width: 1px;
                 border-radius: 0;
                 margin: 0 -3px;
-                height: 40px;
-                width: 40px;
+                height: 45px;
+                width: 45px;
                 min-width: 0;
                 min-height: 0;
                 line-height: 1;
@@ -68,7 +68,7 @@
 
             .btnfont8 {
                 background-color: #E8E9EA;
-                border-radius: 0;
+                border-radius: 2px;
                 padding: 0;
                 border-width: 1px;
                 border-color: #D3D4D5;
@@ -76,8 +76,8 @@
                 min-width: 0;
                 min-height: 0;
                 line-height: 1;
-                height: 40px;
-                width: 40px;
+                height: 45px;
+                width: 45px;
             }
             .station-go-address2 {
                 display: inline-block;
@@ -152,8 +152,7 @@
                                     <!-- 去程票 -->
                                     <div ng-if="ticketInfo.plans[0] != null">
 
-                                        <div style="border-bottom: 1px solid #D3D4D5;">
-
+                                        <div style="border-bottom: 1px solid rgba(211, 212, 213, 0.68);">
 
                                                 <div class="row">
                                                         
@@ -185,8 +184,7 @@
                                     <!-- 返程票 -->
                                     <div ng-if="ticketInfo.plans[1] != null">
 
-                                        <div style="border-bottom: 1px solid #D3D4D5;">
-
+                                        <div style="border-bottom: 1px solid rgba(211, 212, 213, 0.68);">
 
                                                 <div class="row">
                                                         
@@ -220,7 +218,7 @@
                                 <!-- 有门票 -->
                                 <div ng-if="ticketInfo.viewInfo != null">
 
-                                    <div style="border-bottom: 1px solid #D3D4D5;">
+                                    <div style="border-bottom: 1px solid rgba(211, 212, 213, 0.68);">
 
                                         <div class="row">
                                                 
@@ -230,8 +228,6 @@
                                                     </span>
                                                     
                                                     <span style="font-size: 17px;">有效时间：{{currentSelectedDateOrTime}}</span>
-                                                    
-                                                    <!-- <span style="font-size: 17px;" class="btnfont4">{{ ticketInfo.plans[1].departtime}}</span> -->
                                                     
                                             </div>
 
@@ -354,6 +350,13 @@
 
                         </div>
 
+                    </div>
+
+
+                    <!-- 占位元素 -->
+                    <div class="row" style="padding-top: 50px;padding-bottom: 0;">
+                        <div class="col" style="padding-bottom: 0;">
+                        </div>
                     </div>
                     
                 </div>

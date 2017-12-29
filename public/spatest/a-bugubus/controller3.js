@@ -965,7 +965,7 @@ app
                 } else {
 
                     $ionicLoading.show({
-                        template: '<ion-spinner icon="ios-small"></ion-spinner><div style="font-weight: bold;font-size: 14px;">进入订单页</div>',
+                        template: '<ion-spinner icon="ios-small"></ion-spinner><div style="font-weight: bold;font-size: 14px;">生成订单</div>',
                         hideOnStateChange: true
                     });
 
@@ -981,7 +981,7 @@ app
             } else { // @单独的门票
 
                 $ionicLoading.show({
-                    template: '<ion-spinner icon="ios-small"></ion-spinner><div style="font-weight: bold;font-size: 14px;">进入订单页</div>',
+                    template: '<ion-spinner icon="ios-small"></ion-spinner><div style="font-weight: bold;font-size: 14px;">生成订单</div>',
                     hideOnStateChange: true
                 });
 
