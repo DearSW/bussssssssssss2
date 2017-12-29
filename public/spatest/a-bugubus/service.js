@@ -108,7 +108,7 @@ app
 
         // $ionicLoading，用一个覆盖层表示当前处于活动状态，来阻止用户的交互动作。
         $ionicLoading.show({
-            template: '<ion-spinner icon="circles" class="spinner-balanced"></ion-spinner>',
+            template: '<ion-spinner icon="ios-small"></ion-spinner><div style="font-weight: bold;font-size: 14px;">加载中</div>',
             noBackdrop: true
         });
 
