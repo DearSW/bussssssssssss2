@@ -714,7 +714,7 @@ app
 
         } else { // @进入产品页 没有参数时
 
-            $scope.commentsInfo = []; // @点评 数据
+            $scope.commentsInfo = []; // @点评 数据，由于评论并未保存，所以需要再次重置
 
             console.log("产品页：无参数的流程。");            
 
@@ -814,7 +814,7 @@ app
 
             // @首先判断当前的点击对象是不是单独的门票，不是单独的门票的话，再判断余票是不是为零，为零的话弹出对应时间的日期选择框，不为零，进入购买页面。
 
-            if(item.plans != null) { // @不是单独的门票
+            if(item.plans != null) { // @车票、车票+门票
 
                 if(item.leftTickets == 0) {
 
@@ -971,12 +971,14 @@ app
 
                     console.log("产品页：点击购买按钮传递的参数");
                     console.log(item);
-                    $state.go('order_confirm_pay', {data: JSON.stringify(item)});
+                    $timeout(function() {
+                        $state.go('order_confirm_pay', {data: JSON.stringify(item)});
+                    }, 250);
     
                 }
 
 
-            } else { // @是单独的门票
+            } else { // @单独的门票
 
                 $ionicLoading.show({
                     template: '<ion-spinner icon="ios-small"></ion-spinner><div style="font-weight: bold;font-size: 14px;">进入订单页</div>',
@@ -985,7 +987,10 @@ app
 
                 console.log("产品页：点击购买按钮传递的参数");
                 console.log(item);
-                $state.go('order_confirm_pay', {data: JSON.stringify(item)});
+
+                $timeout(function() {
+                    $state.go('order_confirm_pay', {data: JSON.stringify(item)});
+                }, 250);
 
             }
 
