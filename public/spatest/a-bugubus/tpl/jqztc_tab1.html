@@ -58,7 +58,7 @@
                         left: 0;
                         width: 100%;
                         white-space: normal;
-                        border-bottom: 1px solid #ccc;
+                        border-bottom: 1px solid #e8e7e7;
                     ">
 
                         <div class="notice">
@@ -79,9 +79,9 @@
             
                             <div class="row" style="margin-top: 5px;font-size: 15px;">
         
-                                <div class="col col-30" ng-click="prevDay()">
+                                <div class="col col-30" ng-click="prevDay()" style="text-align: left;">
         
-                                    <i class="icon ion-ios-arrow-left"></i>
+                                    <i class="icon ion-ios-arrow-left" style="margin-left: 10px;"></i>
                                     
                                     <span style="display: inline-block;margin-left: 15px;">前一天</span>
                                 </div>
@@ -90,13 +90,14 @@
                                     background: #F2F2F2;
                                     border-radius: 5px;
                                     padding: 5px;
+                                    text-align: center;
                                     ">
                                     <span>{{currentSelectedDate}} {{currentSelectedDate2}}</span>
                                 </div>
                         
-                                <div class="col col-30" ng-click="nextDay()">
+                                <div class="col col-30" ng-click="nextDay()" style="text-align:right;">
                                     <span style="display: inline-block;/* margin: 0 15px; */margin-right: 15px;">后一天</span>
-                                    <i class="icon ion-ios-arrow-right"></i>
+                                    <i class="icon ion-ios-arrow-right" style="margin-right: 10px;"></i>
                                 </div>
         
                             </div>
@@ -165,7 +166,7 @@
                                                 </div>
 
                                                 <div class="col col-bottom">
-                                                        <div ng-click="purchase(ticketsInfo1, i)">
+                                                        <div ng-click="purchase(ticketsInfo1, i)" style="    text-align: right;">
                                                             <span style="color: #FC6E2B;font-size: 13px;">￥</span><span style="color: #FC6E2B;font-size: 23px;">{{ticketsInfo1.productPrice}}</span>
                                                         </div>
                                                 </div>
@@ -184,40 +185,38 @@
                                 <div ng-if="ticketsInfo1.viewInfo != null">
 
                                     <ion-item>
+
+                                        <div class="row">
+                                                
+                                            <div class="col" style="white-space: normal;">
+                                                    <span style="margin-left: 10px;">
+                                                            <div class="btnfont btnfontblue">门票</div>
+                                                    </span>
+                                                    
+                                                    <span style="font-size: 17px;">有效时间：{{currentSelectedDate}}</span>
+                                                    
+                                            </div>
+
+                                        </div>
                                             
-                                        <div>
-                                                <div class="row startposition">
-                                                        <div class="col">
-                                                            <span class="station-address">{{ticketsInfo1_viewName}}</span>
-                                                        </div>
+                                        <div class="row startposition">
+                                                <div class="col">
+                                                    <span class="station-address">{{ticketsInfo1.viewInfo.viewName}}</span>
                                                 </div>
-            
-                                                <div class="row info " style="padding-left: 8px;">
-            
-                                                    <div class="col" style="margin-left: 10px;">
-            
-                                                        <span>
-                                                                <div class="btnfont">门票</div>
-                                                        </span>
-                                                        
-        
-                                                    </div>
-            
-                                                </div>
-            
-                                                <div class="row purchase">
+                                        </div>
+    
+                                        <div class="row purchase">
 
-                                                    <div class="col col-75">
-                                                        <div style="margin: 0 0 8px 11px;white-space: normal;" >景点地址: {{ticketsInfo1_viewAddr}}</div>
-                                                    </div>
+                                            <div class="col col-75">
+                                                <div style="margin: 0 0 8px 10px;white-space: normal;" >景点地址：{{ticketsInfo1.viewInfo.viewaddr}}</div>
+                                            </div>
 
-                                                    <div class="col col-center">
-                                                            <div ng-click="purchase(item, i)">
-                                                                <span style="color: #FC6E2B;font-size: 13px;">￥</span><span style="color: #FC6E2B;font-size: 23px;">{{ticketsInfo1.viewInfo.viewPrices[0].couponPrice}}</span>
-                                                            </div>
+                                            <div class="col col-center" style="    text-align: right;">
+                                                    <div ng-click="purchase(ticketsInfo1, i)">
+                                                        <span style="color: #FC6E2B;font-size: 13px;">￥</span><span style="color: #FC6E2B;font-size: 23px;">{{ticketsInfo1.viewInfo.viewPrices[0].couponPrice}}</span>
                                                     </div>
+                                            </div>
 
-                                                </div>
                                         </div>
                                         
                                     </ion-item>
@@ -225,12 +224,12 @@
                                 </div>
 
                                 <!-- 无门票时 -->
-                                <div ng-if="ticketsInfo1.viewInfo == null">
+                                <!-- <div ng-if="ticketsInfo1.viewInfo == null">
                                     <div style="text-align: center;margin: 8px;">
                                         <i class="icon ion-ios-information-outline" style="color:crimson;font-size: 14px;"></i>                                
                                         加载中( ¯ □ ¯ )......
                                     </div>
-                                </div>
+                                </div> -->
                                 
                             </div>
 
@@ -282,7 +281,7 @@
                                                 </div>
 
                                                 <div class="col col-bottom">
-                                                        <div ng-click="purchase(item, i)">
+                                                        <div ng-click="purchase(item, i)" style="    text-align: right;">
                                                             <span style="color: #FC6E2B;font-size: 13px;">￥</span><span style="color: #FC6E2B;font-size: 23px;">{{item.productPrice}}</span>
                                                         </div>
                                                 </div>
@@ -295,31 +294,32 @@
                                         <!-- 有门票时 -->
                                         <div ng-if="item.viewInfo != null">
 
+                                            <div class="row">
+                                                    
+                                                <div class="col" style="white-space: normal;">
+                                                        <span style="margin-left: 10px;">
+                                                                <div class="btnfont btnfontblue">门票</div>
+                                                        </span>
+                                                        
+                                                        <span style="font-size: 17px;">有效时间：{{currentSelectedDate}}</span>
+                                                        
+                                                </div>
+    
+                                            </div>
+                                                
                                             <div class="row startposition">
                                                     <div class="col">
                                                         <span class="station-address">{{item.viewInfo.viewName}}</span>
                                                     </div>
                                             </div>
         
-                                            <div class="row info " style="padding-left: 8px;">
-        
-                                                <div class="col" style="margin-left: 10px;">
-        
-                                                    <span>
-                                                            <div class="btnfont">门票</div>
-                                                    </span> 
-        
-                                                </div>
-        
-                                            </div>
-        
                                             <div class="row purchase">
 
                                                 <div class="col col-75">
-                                                    <div style="margin: 0 0 8px 11px;white-space: normal;" >景点地址：{{item.viewInfo.viewaddr}}</div>
+                                                    <div style="margin: 0 0 8px 10px;white-space: normal;" >景点地址：{{item.viewInfo.viewaddr}}</div>
                                                 </div>
 
-                                                <div class="col col-center">
+                                                <div class="col col-center" style="    text-align: right;">
                                                         <div ng-click="purchase(item, i)">
                                                             <span style="color: #FC6E2B;font-size: 13px;">￥</span><span style="color: #FC6E2B;font-size: 23px;">{{item.viewInfo.viewPrices[0].couponPrice}}</span>
                                                         </div>
@@ -330,14 +330,14 @@
                                         </div>
 
                                         <!-- 无门票时 -->
-                                        <div ng-if="item.viewInfo == null">
+                                        <!-- <div ng-if="item.viewInfo == null">
 
                                             <div style="text-align: center;margin: 8px;">
                                                 <i class="icon ion-ios-information-outline" style="color:crimson;font-size: 14px;"></i>                                
                                                 加载中( ¯ □ ¯ )......
                                             </div>
 
-                                        </div>
+                                        </div> -->
                                             
                                     </div>
         

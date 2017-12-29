@@ -714,6 +714,8 @@ app
 
         } else { // @进入产品页 没有参数时
 
+            $scope.commentsInfo = []; // @点评 数据
+
             console.log("产品页：无参数的流程。");            
 
             if(sessionStorage.getItem('jqztc_cpy_requestUrlType') == '0') {  // @一、图片推荐类型的产品列表
@@ -1177,6 +1179,7 @@ app
                     console.log("计数： " + $scope.pageCount);
                     run = false;
                     console.log("评论加载");
+                    // console.log($scope.commentsInfo);                    
                     $scope.commentsInfo = $scope.commentsInfo.concat(data.buslineHierarchys);
                     console.log($scope.commentsInfo);
                     $scope.$broadcast('scroll.infiniteScrollComplete');
