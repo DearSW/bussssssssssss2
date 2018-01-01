@@ -1,4 +1,6 @@
 app
+
+// @地理定位服务
 .service('$myLocationService', function($ionicLoading) {
 
     var el = document.createElement('div');
@@ -102,8 +104,11 @@ app
     }
     
 })
+
+// @封装HTTP请求服务
 .service('$myHttpService', function($http, $ionicLoading) {
 
+    // @带遮罩层的POST请求
     this.post = function(url, data, success, error) {
 
         // $ionicLoading，用一个覆盖层表示当前处于活动状态，来阻止用户的交互动作。
@@ -112,7 +117,6 @@ app
             noBackdrop: true
         });
 
-        // $http服务用于请求远程数据
         $http.post(url, data).success(function(data) {
             window.setTimeout(function() {
                 $ionicLoading.hide();
@@ -147,8 +151,12 @@ app
                 error(e);
             }
         });
+
     };
+
+    // @不带遮罩层的POST请求
     this.postNoLoad = function(url, data, success, error) {
+
         $http.post(url, data).success(function(data) {
             if(data.code == 0) {
                 success(data.data);
@@ -179,12 +187,17 @@ app
                 error(e);
             }
         });
+
     };
+
+    // @带遮罩层的GET请求
     this.get = function(url, data, success, error) {
+
         $ionicLoading.show({
             template: '<ion-spinner icon="ripple" class="spinner-assertive"></ion-spinner>',
             noBackdrop: true
         });
+
         $http.get(url, data).success(function(data) {
             $ionicLoading.hide();
             if(data.code == 0) {
@@ -217,9 +230,14 @@ app
                 error(e);
             }
         });
+
     }
+
 })
+
+// @城市服务
 .service('$selectCity', function() {
+
     this.getCity = function(callback) {
         var citysearch = new AMap.CitySearch();
         citysearch.getLocalCity(function(status, result) {
@@ -232,6 +250,7 @@ app
             }
         })
     }
+    
 });
 
 

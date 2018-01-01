@@ -300,7 +300,7 @@
                     <div class="row" style="padding-top: 10px;padding-bottom: 0;">
                         <div class="col" style="padding-bottom: 0;">
                             <div>
-                                <span style="color:#848383;margin-left: 5px;font-size: 16px;">全票 ￥{{ price }}222</span>
+                                <span style="color:#848383;margin-left: 5px;font-size: 16px;">全票 ￥{{ singlePrice }}</span>
                             </div>
                         </div>
                     </div>
@@ -309,44 +309,24 @@
 
                         <div class="col col-66">
                             <button class="button  btnfoot6" ng-click="decr()">-</button>
-                            <button class="button  btnfont7" my-ng-model="true" ng-model="dataContainer.count">{{dataContainer.count}}</button>
+                            <button class="button  btnfont7">{{dataContainer.count}}</button>
                             <button class="button  btnfont8" ng-click="incr()">+</button>
                         </div>
 
                         <div class="col col-33 col-bottom">
+
                             <!-- 有门票时 -->
-                            <div ng-if="ticketInfo.viewInfo != null">
-                                    <div ng-if="useCoupon" style="text-align: center;">
-                                        <div ng-if="sumPrice2 - newTicketPrice >= 0">
-                                            <span class="btnfont9">{{ sumPrice2 - newTicketPrice + sumPrice3 | currency: '￥' }}222</span>                                    
-                                        </div>
-                                        <div ng-if="sumPrice2 - newTicketPrice < 0">
-                                            <span class="btnfont9">{{ 0 + sumPrice3 | currency: '￥' }}222</span>                              
-                                        </div>
+                            <div>
+
+                                    <div style="text-align: center;">
+                                        <span class="btnfont9">{{ sumPrice | currency: '￥' }}</span>
                                     </div>
-                                    <div ng-if="!useCoupon" style="text-align: center;">
-                                        <span class="btnfont9">{{ sumPrice | currency: '￥' }}222</span>
-                                    </div>
-                            </div>
-                            <!-- 没有门票时 -->
-                            <div ng-if="ticketInfo.viewInfo == null">
-                                    <div ng-if="useCoupon" style="text-align: center;">
-                                        <div ng-if="sumPrice - newTicketPrice >= 0">
-                                            <span class="btnfont9">{{ sumPrice - newTicketPrice | currency: '￥' }}222</span>                                    
-                                        </div>
-                                        <div ng-if="sumPrice - newTicketPrice < 0">
-                                            <span class="btnfont9">{{ 0 | currency: '￥' }}222</span>                              
-                                        </div>
-                                    </div>
-                                    <div ng-if="!useCoupon" style="text-align: center;">
-                                        <span class="btnfont9">{{ sumPrice | currency: '￥' }}222</span>
-                                    </div>
+
                             </div>
 
                         </div>
 
                     </div>
-
 
                     <!-- 占位元素 -->
                     <div class="row" style="padding-top: 50px;padding-bottom: 0;">
@@ -371,12 +351,46 @@
                     font-weight: 400;
                     ">
                     <span style="font-size: 17px;">实付款：</span>
-                    <span ng-if="ticketSumPrice_forwardTicket  + ticketSumPrice_backwardTicket - coupon >= 0">
-                        {{ ticketSumPrice_forwardTicket  + ticketSumPrice_backwardTicket - coupon + ticketViewSumPrice  | currency: '￥' }}
+
+                    <span ng-if="ticketInfo.viewInfo != null">
+
+                        <span ng-if="useCoupon">
+
+                            <span ng-if="ticketSumPrice - coupon >= 0">
+                                {{ ticketSumPrice_forwardTicket  + ticketSumPrice_backwardTicket - coupon + ticketViewSumPrice  | currency: '￥' }}
+                            </span>
+                            <span ng-if="ticketSumPrice - coupon < 0">
+                                {{ 0 + ticketViewSumPrice  | currency: '￥' }}
+                            </span>
+
+                        </span>
+
+                        <span ng-if="!useCoupon">
+                            {{ sumPrice | currency: '￥' }}
+                        </span>
+
                     </span>
-                    <span ng-if="ticketSumPrice_forwardTicket  + ticketSumPrice_backwardTicket - coupon < 0">
-                        {{ 0 + ticketViewSumPrice  | currency: '￥' }}
+
+                    <span ng-if="ticketInfo.viewInfo == null">
+
+                        <span ng-if="useCoupon">
+
+                            <span ng-if="ticketSumPrice - coupon >= 0">
+                                {{ ticketSumPrice - coupon  | currency: '￥' }}
+                            </span>
+                            <span ng-if="ticketSumPrice - coupon < 0">
+                                {{ 0 + ticketViewSumPrice  | currency: '￥' }}
+                            </span>
+
+                        </span>
+
+                        <span ng-if="!useCoupon">
+                            {{ sumPrice | currency: '￥' }}
+                        </span>
+
                     </span>
+
+                    
 
                 </div>
 
