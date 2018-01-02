@@ -509,7 +509,7 @@ app
             $scope.paramsProductId = ''; // @产品ID，查询评论用
             $scope.sourceComeType = ''; // @类型来源判断，true：图片推荐接口来的；false：手动搜索接口来的
     
-            $rootScope.currentSelectedDate = null; // @当前的时间选择
+            // $rootScope.currentSelectedDate = null; // @当前的时间选择
 
             console.log("产品页：有参数的流程。");
 
@@ -788,7 +788,7 @@ app
 
                 $scope.sourceComeType = false; // @来源类型 判断
 
-                $rootScope.currentSelectedDate = sessionStorage.getItem('tabsParamsDataDate');
+                // $rootScope.currentSelectedDate = sessionStorage.getItem('tabsParamsDataDate');
                 $rootScope.currentSelectedRoadLine = sessionStorage.getItem('tabsParamsDataInput');
 
                 $scope.ticketsInfo2 = getStorageData('jqztc_cpy_ticketsInfo2'); // @获取数据

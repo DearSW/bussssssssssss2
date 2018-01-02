@@ -123,7 +123,7 @@
 
                                 <ion-item style="padding: 5px 0;">
                                         
-                                    <div>
+                                    <div  ng-click="purchase(ticketsInfo1, i)">
 
                                             <div class="row">
                                                 
@@ -166,7 +166,7 @@
                                                 </div>
 
                                                 <div class="col col-bottom" style="    text-align: right;margin-right: 5px;">
-                                                        <div ng-click="purchase(ticketsInfo1, i)" style="    text-align: right;">
+                                                        <div style="    text-align: right;">
                                                             <span style="color: #FC6E2B;font-size: 13px;">￥</span><span style="color: #FC6E2B;font-size: 23px;">{{ticketsInfo1.productPrice}}</span>
                                                         </div>
                                                 </div>
@@ -184,37 +184,41 @@
                                 <!-- 有门票时 -->
                                 <div ng-if="ticketsInfo1.viewInfo != null">
 
-                                    <ion-item>
+                                    <ion-item >
 
-                                        <div class="row">
-                                                
-                                            <div class="col" style="white-space: normal;">
-                                                    <span style="margin-left: 10px;">
-                                                            <div class="btnfont btnfontblue">门票</div>
-                                                    </span>
-                                                    
-                                                    <span>有效时间：</span><span style="font-size: 17px;">{{currentSelectedDate}}</span>
-                                                    
-                                            </div>
+                                        <div ng-click="purchase(ticketsInfo1, i)">
 
-                                        </div>
-                                            
-                                        <div class="row startposition">
-                                                <div class="col">
-                                                    <span class="station-address">{{ticketsInfo1.viewInfo.viewName}}</span>
+                                            <div class="row">
+                                                    
+                                                <div class="col" style="white-space: normal;">
+                                                        <span style="margin-left: 10px;">
+                                                                <div class="btnfont btnfontblue">门票</div>
+                                                        </span>
+                                                        
+                                                        <span>有效时间：</span><span style="font-size: 17px;">{{currentSelectedDate}}</span>
+                                                        
                                                 </div>
-                                        </div>
-    
-                                        <div class="row purchase">
 
-                                            <div class="col col-75">
-                                                <div style="margin: 0 0 8px 10px;white-space: normal;" >景点地址：{{ticketsInfo1.viewInfo.viewaddr}}</div>
                                             </div>
-
-                                            <div class="col col-center" style="    text-align: right;margin-right: 5px;">
-                                                    <div ng-click="purchase(ticketsInfo1, i)">
-                                                        <span style="color: #FC6E2B;font-size: 13px;">￥</span><span style="color: #FC6E2B;font-size: 23px;">{{ticketsInfo1.viewInfo.viewPrices[0].couponPrice}}</span>
+                                                
+                                            <div class="row startposition">
+                                                    <div class="col">
+                                                        <span class="station-address">{{ticketsInfo1.viewInfo.viewName}}</span>
                                                     </div>
+                                            </div>
+        
+                                            <div class="row purchase">
+
+                                                <div class="col col-75">
+                                                    <div style="margin: 0 0 8px 10px;white-space: normal;" >景点地址：{{ticketsInfo1.viewInfo.viewaddr}}</div>
+                                                </div>
+
+                                                <div class="col col-center" style="    text-align: right;margin-right: 5px;">
+                                                        <div>
+                                                            <span style="color: #FC6E2B;font-size: 13px;">￥</span><span style="color: #FC6E2B;font-size: 23px;">{{ticketsInfo1.viewInfo.viewPrices[0].couponPrice}}</span>
+                                                        </div>
+                                                </div>
+
                                             </div>
 
                                         </div>
@@ -241,7 +245,7 @@
                                 <ion-item ng-repeat="item in ticketsInfo2 track by $index" style="padding: 5px 0;">
                                     
                                     <!-- 有车票时 -->
-                                    <div ng-if="item.plans != null">
+                                    <div ng-if="item.plans != null" ng-click="purchase(item, i)">
 
                                             <div class="row">
                                                     
@@ -281,7 +285,7 @@
                                                 </div>
 
                                                 <div class="col col-bottom" style="    text-align: right;margin-right: 5px;">
-                                                        <div ng-click="purchase(item, i)" style="    text-align: right;">
+                                                        <div style="    text-align: right;">
                                                             <span style="color: #FC6E2B;font-size: 13px;">￥</span><span style="color: #FC6E2B;font-size: 23px;">{{item.productPrice}}</span>
                                                         </div>
                                                 </div>
@@ -292,7 +296,7 @@
                                     <div ng-if="item.plans == null">
 
                                         <!-- 有门票时 -->
-                                        <div ng-if="item.viewInfo != null">
+                                        <div ng-if="item.viewInfo != null" ng-click="purchase(item, i)">
 
                                             <div class="row">
                                                     
@@ -320,7 +324,7 @@
                                                 </div>
 
                                                 <div class="col col-center" style="    text-align: right;margin-right: 5px;">
-                                                        <div ng-click="purchase(item, i)">
+                                                        <div>
                                                             <span style="color: #FC6E2B;font-size: 13px;">￥</span><span style="color: #FC6E2B;font-size: 23px;">{{item.viewInfo.viewPrices[0].couponPrice}}</span>
                                                         </div>
                                                 </div>
