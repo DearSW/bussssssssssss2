@@ -472,7 +472,7 @@ app
             // 封装参数
             var data = {
                 input: $rootScope.isSelectedRoadLine, // 路线
-                date: $filter('date')($scope.goDate.time, 'yyyy-MM-dd') // 时间
+                date: $filter('date')(new Date(), 'yyyy-MM-dd') // 时间
             };
 
             console.log("首页：打印搜索按钮传递到产品页的参数");
