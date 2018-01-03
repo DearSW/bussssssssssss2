@@ -965,7 +965,7 @@ app
                 } else {
 
                     $ionicLoading.show({
-                        template: '<ion-spinner icon="ios-small"></ion-spinner><div style="font-weight: bold;font-size: 14px;">生成订单</div>',
+                        template: '<ion-spinner icon="ios-small"></ion-spinner><div style="font-weight: bold;font-size: 14px;">加载中</div>',
                         hideOnStateChange: true
                     });
 
@@ -981,7 +981,7 @@ app
             } else { // @单独的门票
 
                 $ionicLoading.show({
-                    template: '<ion-spinner icon="ios-small"></ion-spinner><div style="font-weight: bold;font-size: 14px;">生成订单</div>',
+                    template: '<ion-spinner icon="ios-small"></ion-spinner><div style="font-weight: bold;font-size: 14px;">加载中</div>',
                     hideOnStateChange: true
                 });
 
@@ -1780,6 +1780,10 @@ app
             ionicDatePicker.openDatePicker(ipObj1);
 
         }
+
+        $scope.$on('$destroy', function() {
+            $ionicLoading.hide();
+        });
 
     })
 
