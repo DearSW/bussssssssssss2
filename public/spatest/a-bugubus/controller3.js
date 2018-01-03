@@ -972,6 +972,7 @@ app
                     console.log("产品页：点击购买按钮传递的参数");
                     console.log(item);
                     $timeout(function() {
+                        $ionicLoading.hide();
                         $state.go('order_confirm_pay', {data: JSON.stringify(item)});
                     }, 250);
     
@@ -989,6 +990,7 @@ app
                 console.log(item);
 
                 $timeout(function() {
+                    $ionicLoading.hide();
                     $state.go('order_confirm_pay', {data: JSON.stringify(item)});
                 }, 250);
 
