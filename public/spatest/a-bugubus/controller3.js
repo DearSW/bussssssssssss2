@@ -821,146 +821,186 @@ app
                     var compareTimeTemp1 = new Date();
                     var compareTimeTemp2 = $filter('date')(compareTimeTemp1, 'yyyy-MM-dd');
                     var compareTime = new Date(compareTimeTemp2).getTime() + (60 * 86400000); // @60天时间
+
+                    var requestData = {
+                        productid: item.productid,
+                        departDate: $filter('date')(new Date(), 'yyyy-MM-dd')
+                    };
+    
+                    // @图片推荐类型产品列表 /web/product/queryProduct
+                    $myHttpService.post('api/product/queryProduct', requestData, function(data) {
+    
+                        console.log("产品页：图片推荐产品列表API返回的数据");
+                        console.log(data);   
+                                
+                        var ticketsInfo1_temp = data.product; // @产品对象
+    
+                        // @jqztc_tab1_dateArr @不可用日期数组的构造
+                        if(ticketsInfo1_temp.counts != null && ticketsInfo1_temp.counts.length != 0) {
+                
+                            var dateArrTemp = [];
+                
+                            getTodayToAfterTwoMonthRegionArray(dateArrTemp);
+                
+                            // @格式化
+                            for(var i = 0; i < ticketsInfo1_temp.counts.length; i++) {
+                                ticketsInfo1_temp.counts[i] = $filter('date')(ticketsInfo1_temp.counts[i], 'yyyy/MM/dd');
+                            }
+            
+                            console.log("测试");
+                            console.log(ticketsInfo1_temp.counts);
+                            console.log(dateArrTemp);
+                
+                            var jqztc_tab1_dateArr = arrayMinus(dateArrTemp, ticketsInfo1_temp.counts);
+                            console.log(jqztc_tab1_dateArr);
+                            
+                        }
+                
+                        // @格式化不可用日期数组
+                        for(var i = 0; i < jqztc_tab1_dateArr.length; i++) {
+                            jqztc_tab1_dateArr[i] = new Date(jqztc_tab1_dateArr[i]);
+                        }
+
+                        var ipObj1 = {
+                            callback: function (val) {  // @必选
+            
+                                var val2 = new Date(val);
+                                $rootScope.currentSelectedDate = $filter('date')(val2, 'yyyy-MM-dd');
+                                $rootScope.currentSelectedDate2 = "周" + "日一二三四五六".charAt(new Date($rootScope.currentSelectedDate).getDay());
+    
+                                // @重新拉取数据
+                                if($scope.sourceComeType == true) { // @图片推荐类型
+    
+                                    var requestData = {
+                                        productid: sessionStorage.getItem('jqztc_cpy_paramsProductId'),
+                                        departDate: $rootScope.currentSelectedDate
+                                    };
                     
-                    var ipObj1 = {
-                        callback: function (val) {  // @必选
-        
-                            var val2 = new Date(val);
-                            $rootScope.currentSelectedDate = $filter('date')(val2, 'yyyy-MM-dd');
-                            $rootScope.currentSelectedDate2 = "周" + "日一二三四五六".charAt(new Date($rootScope.currentSelectedDate).getDay());
-
-                            // @重新拉取数据
-                            if($scope.sourceComeType == true) { // @图片推荐类型
-
-                                var requestData = {
-                                    productid: sessionStorage.getItem('jqztc_cpy_paramsProductId'),
-                                    departDate: $rootScope.currentSelectedDate
-                                };
-                
-                                // @图片推荐类型产品列表 /web/product/queryProduct
-                                $myHttpService.post('api/product/queryProduct', requestData, function(data) {
-                
-                                    console.log("产品页：图片推荐产品列表API返回的数据");
-                                    console.log(data);   
-                                            
-                                    $scope.ticketsInfo1 = data.product; // @产品对象
-                                    
-                                    storageData('jqztc_cpy_ticketsInfo1', $scope.ticketsInfo1); // @存储数据，以便后用 
-                
-                                    if($scope.ticketsInfo1 != null) {
+                                    // @图片推荐类型产品列表 /web/product/queryProduct
+                                    $myHttpService.post('api/product/queryProduct', requestData, function(data) {
+                    
+                                        console.log("产品页：图片推荐产品列表API返回的数据");
+                                        console.log(data);   
+                                                
+                                        $scope.ticketsInfo1 = data.product; // @产品对象
                                         
-                                        if($scope.ticketsInfo1.plans != null) { // @产品 有车票时
+                                        storageData('jqztc_cpy_ticketsInfo1', $scope.ticketsInfo1); // @存储数据，以便后用 
+                    
+                                        if($scope.ticketsInfo1 != null) {
                                             
-                                            $scope.ticketsInfo1_havePlans = true; // @有无车票
-                    
-                                            $scope.ticketsInfo1_prodcutType = $scope.ticketsInfo1.productType.split("&"); // @产品类型
-                                            $scope.ticketsInfo1_prodcutType2 = $scope.ticketsInfo1.productType.replace("&", "+"); // @产品类型
-                    
-                                            $scope.ticketsInfo1_station = $scope.ticketsInfo1.plans[0].linename.split("-"); // @出发/返回 站点名
-                    
-                                            if($scope.ticketsInfo1.plans[0].bdidType == 0) { // @单程票
-                    
-                                                $scope.ticketsInfo1_plansType = true; // @车票类型
-                    
-                                                $scope.ticketsInfo1_departAddr = $scope.ticketsInfo1.plans[0].departaddr; // @出发发车地址
-                                                $scope.ticketsInfo1_driveTime = $scope.ticketsInfo1.plans[0].drivetime; // @行程时间
+                                            if($scope.ticketsInfo1.plans != null) { // @产品 有车票时
                                                 
-                                            } else { // @往返票
-                                                
-                                                $scope.ticketsInfo1_plansType = false; // @车票类型
-                                                $scope.ticketsInfo1_departAddr = $scope.ticketsInfo1.plans[0].departaddr; // @出发发车地址
-                                                $scope.ticketsInfo1_arriveAddr = $scope.ticketsInfo1.plans[1].departaddr; // @返回发车地址
-                                                $scope.ticketsInfo1_driveTime = $scope.ticketsInfo1.plans[0].drivetime; // @行程时间
-                    
+                                                $scope.ticketsInfo1_havePlans = true; // @有无车票
+                        
+                                                $scope.ticketsInfo1_prodcutType = $scope.ticketsInfo1.productType.split("&"); // @产品类型
+                                                $scope.ticketsInfo1_prodcutType2 = $scope.ticketsInfo1.productType.replace("&", "+"); // @产品类型
+                        
+                                                $scope.ticketsInfo1_station = $scope.ticketsInfo1.plans[0].linename.split("-"); // @出发/返回 站点名
+                        
+                                                if($scope.ticketsInfo1.plans[0].bdidType == 0) { // @单程票
+                        
+                                                    $scope.ticketsInfo1_plansType = true; // @车票类型
+                        
+                                                    $scope.ticketsInfo1_departAddr = $scope.ticketsInfo1.plans[0].departaddr; // @出发发车地址
+                                                    $scope.ticketsInfo1_driveTime = $scope.ticketsInfo1.plans[0].drivetime; // @行程时间
+                                                    
+                                                } else { // @往返票
+                                                    
+                                                    $scope.ticketsInfo1_plansType = false; // @车票类型
+                                                    $scope.ticketsInfo1_departAddr = $scope.ticketsInfo1.plans[0].departaddr; // @出发发车地址
+                                                    $scope.ticketsInfo1_arriveAddr = $scope.ticketsInfo1.plans[1].departaddr; // @返回发车地址
+                                                    $scope.ticketsInfo1_driveTime = $scope.ticketsInfo1.plans[0].drivetime; // @行程时间
+                        
+                                                }
+                        
+                                            } else { // @产品 无车票时
+                        
+                                                $scope.ticketsInfo1_havePlans = false;
+                        
+                                                if($scope.ticketsInfo1.viewInfo != null) { // @单独的门票
+                        
+                                                    $scope.ticketsInfo1_viewName = $scope.ticketsInfo1.viewInfo.viewName; // @景点名字
+                                                    $scope.ticketsInfo1_viewAddr = $scope.ticketsInfo1.viewInfo.viewaddr; // @景点地址
+                        
+                                                } 
+                        
                                             }
                     
-                                        } else { // @产品 无车票时
+                                        } else {
                     
-                                            $scope.ticketsInfo1_havePlans = false;
-                    
-                                            if($scope.ticketsInfo1.viewInfo != null) { // @单独的门票
-                    
-                                                $scope.ticketsInfo1_viewName = $scope.ticketsInfo1.viewInfo.viewName; // @景点名字
-                                                $scope.ticketsInfo1_viewAddr = $scope.ticketsInfo1.viewInfo.viewaddr; // @景点地址
-                    
-                                            } 
+                                            layer.open({
+                                                content: '客官，您当前选择的推荐主题路线已售完，请返回进行主题线路搜索 (╯-╰)',
+                                                btn: '确定',
+                                                shadeClose: false,
+                                                yes: function(index) {
+                                                    layer.closeAll();
+                                                    $timeout(function() {
+                                                        window.history.back();
+                                                        return false;
+                                                    }, 250)
+                                                }
+                                            });
                     
                                         }
-                
-                                    } else {
-                
-                                        layer.open({
-                                            content: '客官，您当前选择的推荐主题路线已售完，请返回进行主题线路搜索 (╯-╰)',
-                                            btn: '确定',
-                                            shadeClose: false,
-                                            yes: function(index) {
-                                                layer.closeAll();
-                                                $timeout(function() {
-                                                    window.history.back();
-                                                    return false;
-                                                }, 250)
-                                            }
-                                        });
-                
-                                    }
-                
-                                }, errorFn);
-
-                            } else { // @手动搜索类型
-
-                                var requestData = { // @请求参数封装
-                                    keyword: sessionStorage.getItem('tabsParamsDataInput'),
-                                    departDate: $rootScope.currentSelectedDate
-                                };
-                
-                                // @手动搜索类型的产品列表 wechat/product/queryProductList
-                                $myHttpService.post('api/product/queryProductList', requestData, function(data) {
-                
-                                    console.log("产品页：手动搜索类型的产品列表API返回的数据");
-                                    console.log(data);
-                
-                                    $scope.ticketsInfo2 = data.products;
-                
-                                    storageData('jqztc_cpy_ticketsInfo2', $scope.ticketsInfo2); // @存储数据，以便后用
-                
-                                    if($scope.ticketsInfo2.length != 0) {
-                
-                                        $scope.paramsProductId = $scope.ticketsInfo2[0].productid;  // @产品ID，查询评论用
-                                        
-                                    } else {
-                
-                                        layer.open({
-                                            content: '没有找到相关产品信息，请重新搜索 (╯-╰)',
-                                            btn: '确定',
-                                            yes: function(index){
-                                                $timeout(function() {
-                                                    window.history.back();
-                                                    return false;
-                                                }, 250)
-                                                layer.closeAll();
-                                            }
-                                        });
-                
-                                    }
-                
-                                }, errorFn);
-
-                            }
-        
-                        },
-                        titleLabel: '选择日期',
-                        closeLabel: '返回',
-                        from: new Date(),
-                        to: new Date(compareTime), // @11对应十二月，差1
-                        disabledDates: $rootScope.jqztc_tab1_dateArr,
-                        dateFormat: 'yyyy-MM-dd', // @可选
-                        closeOnSelect: true, // @可选,设置选择日期后是否要关掉界面。呵呵，原本是false。
-                        inputDate: new Date(),
-                        templateType: 'modal',
-                        // disableWeekdays: $scope.disabledWeeks
-                    };
-                    ionicDatePicker.openDatePicker(ipObj1);             
                     
+                                    }, errorFn);
+    
+                                } else { // @手动搜索类型
+    
+                                    var requestData = { // @请求参数封装
+                                        keyword: sessionStorage.getItem('tabsParamsDataInput'),
+                                        departDate: $rootScope.currentSelectedDate
+                                    };
+                    
+                                    // @手动搜索类型的产品列表 wechat/product/queryProductList
+                                    $myHttpService.post('api/product/queryProductList', requestData, function(data) {
+                    
+                                        console.log("产品页：手动搜索类型的产品列表API返回的数据");
+                                        console.log(data);
+                    
+                                        $scope.ticketsInfo2 = data.products;
+                    
+                                        storageData('jqztc_cpy_ticketsInfo2', $scope.ticketsInfo2); // @存储数据，以便后用
+                    
+                                        if($scope.ticketsInfo2.length != 0) {
+                    
+                                            $scope.paramsProductId = $scope.ticketsInfo2[0].productid;  // @产品ID，查询评论用
+                                            
+                                        } else {
+                    
+                                            layer.open({
+                                                content: '没有找到相关产品信息，请重新搜索 (╯-╰)',
+                                                btn: '确定',
+                                                yes: function(index){
+                                                    $timeout(function() {
+                                                        window.history.back();
+                                                        return false;
+                                                    }, 250)
+                                                    layer.closeAll();
+                                                }
+                                            });
+                    
+                                        }
+                    
+                                    }, errorFn);
+    
+                                }
+            
+                            },
+                            titleLabel: '选择日期',
+                            closeLabel: '返回',
+                            from: new Date(),
+                            to: new Date(compareTime), // @11对应十二月，差1
+                            disabledDates: jqztc_tab1_dateArr,
+                            dateFormat: 'yyyy-MM-dd', // @可选
+                            closeOnSelect: true, // @可选,设置选择日期后是否要关掉界面。呵呵，原本是false。
+                            inputDate: new Date(),
+                            templateType: 'modal',
+                            // disableWeekdays: $scope.disabledWeeks
+                        };
+                        ionicDatePicker.openDatePicker(ipObj1);      
+                        
+                    }, errorFn);
                     
                 } else {
 
