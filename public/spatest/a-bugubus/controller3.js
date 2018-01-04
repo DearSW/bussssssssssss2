@@ -2248,7 +2248,7 @@ app
 
                 if($scope.ticketInfo.plans[0] != null && $scope.ticketInfo.plans[1] == null) { // @有去程，无返程的情况
 
-                    var bsids = $scope.ticketInfo.plans[0].linename + '&' + departDate + '&' + $scope.ticketInfo_forwardTicket_time
+                    var bsids = $scope.ticketInfo.plans[0].linename + '&' + departDate + '&' + $scope.ticketInfo.plans[0].departtime;                      
                     
                     var requestData = {
                         phone: $scope.dataContainer.phone,
@@ -2259,7 +2259,7 @@ app
 
                 } else if($scope.ticketInfo.plans[0] != null && $scope.ticketInfo.plans[1] != null) { // @有去程，有返程的情况
  
-                    var bsids = $scope.ticketInfo.plans[0].linename + '&' + departDate + '&' + $scope.ticketInfo_forwardTicket_time
+                    var bsids = $scope.ticketInfo.plans[0].linename + '&' + departDate + '&' + $scope.ticketInfo.plans[0].departtime;
                     
                     var requestData = {
                         phone: $scope.dataContainer.phone,
