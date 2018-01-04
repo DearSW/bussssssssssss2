@@ -68,7 +68,7 @@ app.use(express.static(path.join(__dirname, 'public/'), {
 	redirect: true,
 	setHeaders: function (res, path, stat) {
 		//res.set('x-timestamp', Date.now());
-		// res.setHeader("Cache-Control", "public, max-age=3600000");
+		res.setHeader("Cache-Control", "public, max-age=0");
 	}
 }
 
