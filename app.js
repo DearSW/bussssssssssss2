@@ -64,11 +64,11 @@ app.use(express.static(path.join(__dirname, 'public/'), {
 	etag: false,
 	extensions: ['css', 'png', 'gif', 'jpg', 'js', 'html'],
 	// index: true,
-	maxAge: '3600000',
+	// maxAge: '3600000',
 	redirect: true,
 	setHeaders: function (res, path, stat) {
 		//res.set('x-timestamp', Date.now());
-		res.setHeader("Cache-Control", "public, max-age=3600000");
+		// res.setHeader("Cache-Control", "public, max-age=3600000");
 	}
 }
 
