@@ -48,9 +48,9 @@ app.use(cookieParser());
 
 // session
 app.use(session({
-  	secret: 'bugu_bus_secret',
+	secret: 'bugu_bus_secret',
 	name: 'testapp',   //这里的name值得是cookie的name，默认cookie的name是：connect.sid
-	cookie: {maxAge: 3600*1000 },  //设置maxAge是80000ms，即80s后session和相应的cookie失效过期
+	cookie: { maxAge: 3600 * 1000 },  //设置maxAge是80000ms，即80s后session和相应的cookie失效过期
 	resave: true,
 	saveUninitialized: true,
 	rolling: true
@@ -59,35 +59,35 @@ app.use(session({
 
 // 处理静态资源，语法 express.static(静态目录, [options])，内置中间件
 //设置浏览器缓存
-app.use(express.static(path.join(__dirname, 'public/'), [{ 
-				dotfiles: 'ignore',
-				etag: false,
-				extensions: ['css','png','gif','jpg','js'],
-				index: true,
-				maxAge: '3600000',
-				redirect: true,
-				setHeaders: function (res, path, stat) {
-					//res.set('x-timestamp', Date.now());
-					res.setHeader("Cache-Control","Expires");
-				}
-			}
-		]
-	)
+app.use(express.static(path.join(__dirname, 'public/'), {
+	dotfiles: 'ignore',
+	etag: false,
+	extensions: ['css', 'png', 'gif', 'jpg', 'js', 'html'],
+	index: true,
+	maxAge: '3600000',
+	redirect: true,
+	setHeaders: function (res, path, stat) {
+		//res.set('x-timestamp', Date.now());
+		res.setHeader("Cache-Control", "Expires");
+	}
+}
+
+)
 );
 
 //过滤掉前缀是api的服务接口
 app.use('/spatest/api', api); // 挂载至'/spatest/api'的中间件，任何指向'/spatest/api'的请求都会执行它，api是一个函数
 
 // 使用模块化的路由
-app.use('/spatest/auth', auth); 
-app.use('/', routes); 
+app.use('/spatest/auth', auth);
+app.use('/', routes);
 
 //app.use('/users', users);
 
 // 下面是错误处理中间件，使用四个参数，(err, req, res, next)
 // 虽然下面这个没有使用err参数，但是使用了Error对象来处理了
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
 	var err = new Error('Not Found');
 	err.status = 404;
 	next(err);
@@ -98,7 +98,7 @@ app.use(function(req, res, next) {
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-	app.use(function(err, req, res, next) {
+	app.use(function (err, req, res, next) {
 		res.status(err.status || 500);
 		res.render('error', {
 			message: err.message,
@@ -109,7 +109,7 @@ if (app.get('env') === 'development') {
 
 // production error handler
 // no stacktraces leaked to user
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
 	res.status(err.status || 500);
 	res.render('error', {
 		message: err.message,
@@ -122,6 +122,6 @@ module.exports = app;
 // 设置端口号 3000
 app.set('port', process.env.PORT || '3333');
 // 监听端口 app.get() 获取设置值
-app.listen(app.get('port'), function() {
-  console.log('HaHa.... Start at the port: ' + app.get('port'));
+app.listen(app.get('port'), function () {
+	console.log('HaHa.... Start at the port: ' + app.get('port'));
 });
