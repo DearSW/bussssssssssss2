@@ -63,7 +63,7 @@ app.use(express.static(path.join(__dirname, 'public/'), {
 	dotfiles: 'ignore',
 	etag: false,
 	extensions: ['css', 'png', 'gif', 'jpg', 'js', 'html'],
-	index: true,
+	// index: true,
 	maxAge: '3600000',
 	redirect: true,
 	setHeaders: function (res, path, stat) {
