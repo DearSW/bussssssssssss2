@@ -63,15 +63,16 @@ const expressStaticOptions = {
 	etag: false,
 	extensions: ['css', 'png', 'gif', 'jpg', 'js'],
 	// index: true,
-	maxAge: '1800000', // @1小时
+	maxAge: '1800000', // @半小时
 	redirect: true,
 	setHeaders: function (res, path, stat) {
 		// res.set('x-timestamp', Date.now());
 		// res.setHeader("Cache-Control","Expires");				
+		// res.setHeader("Cache-Control","no-cache");				
 		res.setHeader("Cache-Control", "public, max-age=1800000");
 	}
 };
-app.use(express.static(path.join(__dirname, 'public'), expressStaticOptions));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // @过滤掉前缀是api的服务接口
 app.use('/spatest/api', api); // @挂载至'/spatest/api'的中间件，任何指向'/spatest/api'的请求都会执行它，api是一个函数
