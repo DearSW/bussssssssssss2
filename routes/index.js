@@ -35,7 +35,7 @@ router.get('/spatest/index', function(req, res, next) {
     console.log("ZW: Get the Code, finished redirection (/spatest/index)");
     res.render('index', {
         "user": req.session.user,
-        "version": "201611062153"
+        "version": new Date().getTime()
     });
 });
 

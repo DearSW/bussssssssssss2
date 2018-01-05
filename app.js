@@ -57,25 +57,22 @@ app.use(session({
 }));
 
 
-// 处理静态资源，语法 express.static(静态目录, [options])，内置中间件
-//设置浏览器缓存
-app.use(express.static(path.join(__dirname, 'public/'), [{
-			dotfiles: 'ignore',
-			etag: false,
-			extensions: ['css', 'png', 'gif', 'jpg', 'js', 'html'],
-			// index: true,
-			maxAge: '0',
-			maxAge: '3600000',
-			redirect: true,
-			setHeaders: function (res, path, stat) {
-				//res.set('x-timestamp', Date.now());
-				// res.setHeader("Cache-Control", "public, max-age=0");
-				res.setHeader("Cache-Control","Expires");
-				
-			}
-		}]
-	)
-);
+// @处理静态资源，语法 express.static(静态目录, [options])，唯一内置中间件
+// @设置浏览器缓存，缓存参数
+const expressStaticOptions = {
+	dotfiles: 'ignore',
+	etag: false,
+	extensions: ['css', 'png', 'gif', 'jpg', 'js', 'html'],
+	// index: true,
+	maxAge: '3600000',
+	redirect: true,
+	setHeaders: function (res, path, stat) {
+		//res.set('x-timestamp', Date.now());
+		// res.setHeader("Cache-Control","Expires");				
+		res.setHeader("Cache-Control", "public, max-age=3600000");
+	}
+};
+app.use(express.static(path.join(__dirname, 'public'), expressStaticOptions));
 
 //过滤掉前缀是api的服务接口
 app.use('/spatest/api', api); // 挂载至'/spatest/api'的中间件，任何指向'/spatest/api'的请求都会执行它，api是一个函数
