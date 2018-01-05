@@ -1909,7 +1909,7 @@ app
             if($scope.ticketInfo.plans[0] != null) { 
                 
                 $scope.ticketInfo_Ticket_tempRequestParamArr[0] = [
-                    $scope.ticketInfo.plans[0].bpid, // @去程票 线路ID
+                    $scope.ticketInfo.plans[0].bdid, // @去程票 线路ID
                     $scope.dataContainer.count // @去程票 数量
                 ]; 
 
@@ -1920,7 +1920,7 @@ app
             if($scope.ticketInfo.plans[1] != null) { 
                 
                 $scope.ticketInfo_Ticket_tempRequestParamArr[1] = [
-                    $scope.ticketInfo.plans[1].bpid, // @返程票 线路ID
+                    $scope.ticketInfo.plans[1].bdid, // @返程票 线路ID
                     $scope.dataContainer.count // @返程票 数量
                 ]; 
 
