@@ -59,23 +59,22 @@ app.use(session({
 
 // 处理静态资源，语法 express.static(静态目录, [options])，内置中间件
 //设置浏览器缓存
-app.use(express.static(path.join(__dirname, 'public/'), {
-	dotfiles: 'ignore',
-	etag: false,
-	extensions: ['css', 'png', 'gif', 'jpg', 'js', 'html'],
-	// index: true,
-	maxAge: '0',
-	// maxAge: '3600000',
-	redirect: true,
-	setHeaders: function (res, path, stat) {
-		//res.set('x-timestamp', Date.now());
-		// res.setHeader("Cache-Control", "public, max-age=0");
-		res.setHeader("Cache-Control","Expires");
-		
-	}
-}
-
-)
+app.use(express.static(path.join(__dirname, 'public/'), [{
+			dotfiles: 'ignore',
+			etag: false,
+			extensions: ['css', 'png', 'gif', 'jpg', 'js', 'html'],
+			// index: true,
+			maxAge: '0',
+			// maxAge: '3600000',
+			redirect: true,
+			setHeaders: function (res, path, stat) {
+				//res.set('x-timestamp', Date.now());
+				// res.setHeader("Cache-Control", "public, max-age=0");
+				res.setHeader("Cache-Control","Expires");
+				
+			}
+		}]
+	)
 );
 
 //过滤掉前缀是api的服务接口
