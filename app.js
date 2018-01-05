@@ -63,7 +63,7 @@ const expressStaticOptions = {
 	etag: false,
 	extensions: ['css', 'png', 'gif', 'jpg', 'js'],
 	// index: true,
-	maxAge: '3600000',
+	maxAge: '3600000', // @1小时
 	redirect: true,
 	setHeaders: function (res, path, stat) {
 		// res.set('x-timestamp', Date.now());
