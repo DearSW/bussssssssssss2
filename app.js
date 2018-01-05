@@ -65,7 +65,7 @@ app.use(express.static(path.join(__dirname, 'public/'), [{
 			extensions: ['css', 'png', 'gif', 'jpg', 'js', 'html'],
 			// index: true,
 			maxAge: '0',
-			// maxAge: '3600000',
+			maxAge: '3600000',
 			redirect: true,
 			setHeaders: function (res, path, stat) {
 				//res.set('x-timestamp', Date.now());
