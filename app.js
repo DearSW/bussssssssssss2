@@ -63,12 +63,12 @@ const expressStaticOptions = {
 	etag: false,
 	extensions: ['css', 'png', 'gif', 'jpg', 'js'],
 	// index: true,
-	maxAge: '3600000', // @1小时
+	maxAge: '1800000', // @1小时
 	redirect: true,
 	setHeaders: function (res, path, stat) {
 		// res.set('x-timestamp', Date.now());
 		// res.setHeader("Cache-Control","Expires");				
-		res.setHeader("Cache-Control", "public, max-age=3600000");
+		res.setHeader("Cache-Control", "public, max-age=1800000");
 	}
 };
 app.use(express.static(path.join(__dirname, 'public'), expressStaticOptions));
