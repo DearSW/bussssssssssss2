@@ -90,6 +90,16 @@ app
         }
 
         $scope.next = function() {
+
+            var requestData = {
+                phone: $scope.user.mobile,
+                authcode: $scope.user.authcode,
+                openid: $rootScope.session.user.openId
+            };
+
+            console.log("注册页：请求参数");
+            console.log(requestData);
+
             $myHttpService.post("auth/login", {
                 phone: $scope.user.mobile,
                 authcode: $scope.user.authcode,
