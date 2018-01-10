@@ -58,6 +58,7 @@ app.use(session({
 
 // @处理静态资源，语法 express.static(静态目录, [options])，唯一内置中间件
 // @设置浏览器缓存，缓存参数
+// @这个缓存不好处理，最好等到服务器上线再开启
 const expressStaticOptions = {
 	dotfiles: 'ignore',
 	etag: false,
