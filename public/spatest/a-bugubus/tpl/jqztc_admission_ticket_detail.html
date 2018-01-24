@@ -72,8 +72,42 @@
                                     <span class="btnfont11" ng-if="isCheckedTicket"><span style="color: #F90002">已验票</span></span>
                                 </div>
                             </div>
+
+                            <!-- 条形码 -->
+                            <div ng-if="item.isPay == 0">
+
+                                <div class="row" ng-if="!isCheckedTicket">
+                                        <div class="col">
+                                            <span class="btnfont11">入场请出示条形码!</span>
+                                        </div>
+                                    </div>
+        
+                                    <div class="row" ng-if="!isCheckedTicket">
+                                        <div class="col">
+                                            <canvas ng-model="item.ticketCode" barcode></canvas>
+                                        </div>
+                                    </div>
+
+                            </div>
+
+                            <!-- 二维码 -->
+                            <div ng-if="item.isPay != 0">
+                                
+                                    <div class="row" ng-if="!isCheckedTicket">
+                                            <div class="col">
+                                                <span class="btnfont11">入场请出示二维码!</span>
+                                            </div>
+                                        </div>
+            
+                                        <div class="row" ng-if="!isCheckedTicket">
+                                            <div class="col">
+                                                <qrcode infostr="item.qrcodeid"></qrcode>
+                                            </div>
+                                        </div>
+
+                            </div>
     
-                            <div class="row" ng-if="!isCheckedTicket">
+                            <!-- <div class="row" ng-if="!isCheckedTicket">
                                 <div class="col">
                                     <span class="btnfont11">入场请出示条形码!</span>
                                 </div>
@@ -83,7 +117,7 @@
                                 <div class="col">
                                     <canvas ng-model="ticketViewInfo.ticketCode" barcode></canvas>
                                 </div>
-                            </div>
+                            </div> -->
                             
                         </div>
 

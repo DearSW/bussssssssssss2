@@ -70,7 +70,7 @@ const expressStaticOptions = {
 		// res.set('x-timestamp', Date.now());
 		// res.setHeader("Cache-Control","Expires");				
 		// res.setHeader("Cache-Control","no-cache");				
-		res.setHeader("Cache-Control", "public, max-age=1800000");
+		// res.setHeader("Cache-Control", "public, max-age=1800000");
 	}
 };
 app.use(express.static(path.join(__dirname, 'public')));

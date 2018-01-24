@@ -165,17 +165,41 @@
                                 </div>
                             </div>
 
-                            <div class="row">
-                                <div class="col">
-                                    <span class="btnfont11">入场请出示条形码!</span>
-                                </div>
+                            <!-- 条形码 -->
+                            <div ng-if="item.isPay == 0">
+
+                                <div class="row">
+                                        <div class="col">
+                                            <span class="btnfont11">入场请出示条形码!</span>
+                                        </div>
+                                    </div>
+        
+                                    <div class="row">
+                                        <div class="col">
+                                            <canvas ng-model="item.ticketCode" barcode></canvas>
+                                        </div>
+                                    </div>
+
                             </div>
 
-                            <div class="row">
-                                <div class="col">
-                                    <canvas ng-model="item.ticketCode" barcode></canvas>
-                                </div>
+                            <!-- 二维码 -->
+                            <div ng-if="item.isPay != 0">
+                                
+                                    <div class="row">
+                                            <div class="col">
+                                                <span class="btnfont11">入场请出示二维码!</span>
+                                            </div>
+                                        </div>
+            
+                                        <div class="row">
+                                            <div class="col">
+                                                <qrcode infostr="item.qrcodeid"></qrcode>
+                                            </div>
+                                        </div>
+
                             </div>
+
+                            
 
                         </div>
 
