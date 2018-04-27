@@ -11,6 +11,7 @@ var bodyParser = require('body-parser');
 var api = require('./routes/api-filter'); // @自定义的中间件
 var routes = require('./routes/index'); // @路由模块
 var auth = require('./routes/auth-filter'); // @路由模块
+var localMockData = require('./routes/local-mock-data'); // @本地假数据
 
 var app = express();
 
@@ -76,11 +77,14 @@ const expressStaticOptions = {
 app.use(express.static(path.join(__dirname, 'public')));
 
 // @过滤掉前缀是api的服务接口
-app.use('/spatest/api', api); // @挂载至'/spatest/api'的中间件，任何指向'/spatest/api'的请求都会执行它，api是一个函数
+// @挂载至 '/spatest/api' 路劲上的中间件，任何指向 '/spatest/api' 的请求都会执行它，api本质是一个函数
+app.use('/spatest/api', api); // @中间件，截取发起HTTP通信后的请求URL，并进行了代理任务。
 
-// @使用模块化的路由
-app.use('/spatest/auth', auth);
-app.use('/', routes);
+app.use('/spatest/auth', auth); // @用户登录路由
+
+app.use('/', routes); // @基本路由
+
+app.use('/guizhoubus/wechat', localMockData); // @Mock数据的路由
 
 // @下面是错误处理中间件，使用四个参数，(err, req, res, next)
 // @虽然下面这个没有使用err参数，但是使用了Error对象来处理了
@@ -117,9 +121,10 @@ app.use(function (err, req, res, next) {
 
 module.exports = app;
 
-// @设置端口号 3333
+// @使用 app.set() 设置端口号变量，默认为3333端口
 app.set('port', process.env.PORT || '3333');
-// @监听端口 app.get() 获取设置值
+
+// @监听端口，使用 app.get() 获取设置值端口号变量值
 app.listen(app.get('port'), function () {
-	console.log('HaHa.... Start at the port: ' + app.get('port'));
+	console.log('滕召维(TengZhaoWei).... Start at the port: ' + app.get('port'));
 });
