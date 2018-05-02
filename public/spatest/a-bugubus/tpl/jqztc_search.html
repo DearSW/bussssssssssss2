@@ -15,7 +15,7 @@
         }
     </style>
 
-    <ion-content style="background: #E3E4E5;">
+    <ion-content style="background: #ffffff;">
 
         <!-- 动画加载 -->
         <div class="showDefaultImg" ng-if="showDefaultImg" style="z-index: 999;">
@@ -43,16 +43,16 @@
                         <img ng-if="item.photoPath != null" ng-src="{{item.photoPath}}" alt="景区直通车为您服务" err-src="images/month-bus.png" />
                         <div class="imgTitle">
                             <span style="
-                            background: red;
+                            background: #E91E63;
                             display: inline-block;
                             height: 27px;
                             width: 70px;
                             color: white;
                             margin: 7px 10px 3px 10px;
                             text-align: center;
-                            border-radius: 3px;
+                            border-radius: 50px;
                             font-size: 14px;
-                        " >热门推荐</span><span style="color: whitesmoke;">{{item.titleName}}</span>
+                        " >倾心推荐</span><span style="color: whitesmoke;">{{item.titleName}}</span>
                         </div>
                 </div>
             </ion-slide>
@@ -60,12 +60,18 @@
         </ion-slide-box>
 
         <!-- 输入块 -->
-        <form style="padding: 5px;background: #E3E4E5;" >
+        <form style=" padding: 6px;
+                            background: #ffffff;
+                            box-shadow: #9E9E9E 0px 0px 11px 0px;
+                            border-radius: 10px;
+                            width: 95%;
+                            margin: auto;
+                            margin-top: 15px;" >
 
             <div class="row">
 
-                <div class="col">
-                    <div class="list list-inset">
+                <div class="col col-60">
+                    <div class="list list-inset" style="margin: 15px;">
                         <label ng-click="openRoadLine()" class="item item-input" style="border-radius: 5px;border: none;margin: 8px 0;">
                             <div>
                                 <span ng-if="isSelectedRoadLineBoolean" style="color: #a2a2a2;">目的地/主题/路线</span>
@@ -73,6 +79,19 @@
                             </div>
                         </label>
                     </div>
+                </div>
+
+                <div class="col col-40">
+
+                        <div>
+                            <button style="
+                                                    transition: all linear 1s;
+                                                    margin: 15px auto;
+                                                    width: 50px;
+                                                    background: #FF9800;
+                                                    border-radius: 50%;" ng-disabled="isSearchBtnDisabled" class="button button-block button-positive" ng-click="goTabs()">搜索</button>
+                        </div>
+
                 </div>
 
             </div>
@@ -95,9 +114,9 @@
         </form>
 
         <!-- 搜索按钮 -->
-        <div style="padding: 10px 15px;">
+        <!-- <div style="padding: 10px 15px;">
             <button style="transition: all linear 1s;margin: 10px auto;width: 30%;background: #0F50FB;border-radius: 3px;" ng-disabled="isSearchBtnDisabled" class="button button-block button-positive" ng-click="goTabs()">搜索</button>
-        </div>
+        </div> -->
 
     </ion-content>
 
