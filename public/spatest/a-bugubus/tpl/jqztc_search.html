@@ -13,111 +13,210 @@
        .item.activated {
            background: #ffffff;
         }
+
+        /* 解决tabs的定位问题 */
+        .tabs-positive > .tabs,  
+        .tabs.tabs-positive {
+            position: fixed;
+            background-color: #ffffff;
+            color: #101010;
+            box-shadow: #aba6a68f 0px 0px 9px 2px;
+        }
+
+        .tab-item {
+            border-bottom: none;
+        }
+
+        .tab-item.tab-item-active, .tab-item.active, .tab-item.activated {
+            color: #F44336;
+        }
+
+        .ion-ios-paw:before {
+            content: "\f400";
+        }
+        
+        .ion-record:before {
+            content: "\f42f";
+        }
+
     </style>
 
-    <ion-content style="background: #ffffff;">
+    <div>
 
-        <!-- 动画加载 -->
-        <div class="showDefaultImg" ng-if="showDefaultImg" style="z-index: 999;">
-                <!-- <div class='base'>
-                    <div class='cube'></div>
-                    <div class='cube'></div>
-                    <div class='cube'></div>
-                    <div class='cube'></div>
-                    <div class='cube'></div>
-                    <div class='cube'></div>
-                    <div class='cube'></div>
-                    <div class='cube'></div>
-                    <div class='cube'></div>
-                </div> -->
-                <div id="counter2">
-                     <span style="color: whitesmoke;">努力加载中...</span>
-                </div>
-        </div>
+        <ion-tabs class="tabs-positive tabs-icon-top tabs-bottom">  
+  
+            <ion-tab title="首页" icon-on="ion-ios-filing" icon-off="ion-ios-filing-outline">  
+                 
+                <ion-view>
 
-        <!-- 轮播块  -->
-        <ion-slide-box  class="jqztc" show-pager="true" auto-play="true" does-continue="true" delegate-handle="adBanner">
+                <ion-header-bar style="background: white;
+                                        box-shadow: #aba6a68f 0px 0px 9px 2px;">
+                    
+                    <div>
+                        <i class="icon ion-ios-chatbubble" style="
+                            color: #060606;
+                            font-size: 26px;
+                            margin: 10px;
+                            padding: 5px;
+                            position: absolute;
+                            top: -7px;"></i>
+                        <i class="icon ion-ios-paw" style="
+                            color: #F44336;
+                            font-size: 11px;
+                            position: fixed;
+                            left: 39px;"></i>
+                    </div>
 
-            <ion-slide  class="showDefaultImg2" ng-repeat="item in recommendProducts2 track by $index" ng-click="recommendProductsDetail(item, $index)">
-                <div class="showDefaultImg2">
-                        <img ng-if="item.photoPath != null" ng-src="{{item.photoPath}}" alt="景区直通车为您服务" err-src="images/month-bus.png" />
-                        <div class="imgTitle">
-                            <span style="
-                            background: #E91E63;
-                            display: inline-block;
-                            height: 27px;
-                            width: 70px;
-                            color: white;
-                            margin: 7px 10px 3px 10px;
-                            text-align: center;
-                            border-radius: 50px;
-                            font-size: 14px;
-                        " >倾心推荐</span><span style="color: whitesmoke;">{{item.titleName}}</span>
-                        </div>
-                </div>
-            </ion-slide>
+                        
+                    <h1 class="title" style="color: #9E9E9E;
+                                                font-size: 13px;
+                                                font-weight: bold;">
+                        <i class="icon ion-ios-navigate" style="margin-right: 5px;color: #929191;"></i>
+                        贵阳市
+                        <i class="icon ion-ios-arrow-down" style="margin-left: 5px;"></i>
+                    </h1>
+                </ion-header-bar>
 
-        </ion-slide-box>
+                    <ion-content style="background: #ffffff;" has-tabs="true">
 
-        <!-- 输入块 -->
-        <form style=" padding: 6px;
-                            background: #ffffff;
-                            box-shadow: #9E9E9E 0px 0px 11px 0px;
-                            border-radius: 10px;
-                            width: 95%;
-                            margin: auto;
-                            margin-top: 15px;" >
-
-            <div class="row">
-
-                <div class="col col-60">
-                    <div class="list list-inset" style="margin: 15px;">
-                        <label ng-click="openRoadLine()" class="item item-input" style="border-radius: 5px;border: none;margin: 8px 0;">
-                            <div>
-                                <span ng-if="isSelectedRoadLineBoolean" style="color: #a2a2a2;">目的地/主题/路线</span>
-                                <span ng-if="!isSelectedRoadLineBoolean" style="color: #111;">{{isSelectedRoadLine}}</span>
+                            <!-- 动画加载 -->
+                            <div class="showDefaultImg" ng-if="showDefaultImg" style="z-index: 999;">
+                                    <!-- <div class='base'>
+                                        <div class='cube'></div>
+                                        <div class='cube'></div>
+                                        <div class='cube'></div>
+                                        <div class='cube'></div>
+                                        <div class='cube'></div>
+                                        <div class='cube'></div>
+                                        <div class='cube'></div>
+                                        <div class='cube'></div>
+                                        <div class='cube'></div>
+                                    </div> -->
+                                    <div id="counter2">
+                                            <span style="color: whitesmoke;">努力加载中...</span>
+                                    </div>
                             </div>
-                        </label>
-                    </div>
-                </div>
+                    
+                            <!-- 这里搞一个地点区域选择，类似于网易云的首页 -->
+                            <!-- 建一个总页面，用tab页来做吧 -->
+                    
+                            <!-- 轮播块  -->
+                            <ion-slide-box  class="jqztc" show-pager="true" auto-play="true" does-continue="true" delegate-handle="adBanner">
+                    
+                                <ion-slide  class="showDefaultImg2" ng-repeat="item in recommendProducts2 track by $index" ng-click="recommendProductsDetail(item, $index)">
+                                    <div class="showDefaultImg2">
+                                            <img ng-if="item.photoPath != null" ng-src="{{item.photoPath}}" alt="景区直通车为您服务" err-src="images/month-bus.png" />
+                                            <div class="imgTitle">
+                                                <span style="
+                                                background: #4CAF50;
+                                                display: inline-block;
+                                                height: 27px;
+                                                width: 70px;
+                                                color: white;
+                                                margin: 7px 10px 3px 10px;
+                                                text-align: center;
+                                                border-radius: 50px;
+                                                font-size: 14px;
+                                            " >倾心推荐</span><span style="color: whitesmoke;">{{item.titleName}}</span>
+                                            </div>
+                                    </div>
+                                </ion-slide>
+                    
+                            </ion-slide-box>
+                    
+                            <!-- 输入块 -->
+                            <form style=" padding: 6px;
+                                                background: #ffffff;
+                                                box-shadow: #9E9E9E 0px 0px 11px 0px;
+                                                border-radius: 10px;
+                                                width: 95%;
+                                                margin: auto;
+                                                margin-top: 15px;" >
+                    
+                                <div class="row">
+                    
+                                    <div class="col col-60">
+                                        <div class="list list-inset" style="margin: 15px;">
+                                            <label ng-click="openRoadLine()" class="item item-input" style="border-radius: 5px;border: none;margin: 8px 0;">
+                                                <div>
+                                                    <span ng-if="isSelectedRoadLineBoolean" style="color: #a2a2a2;">目的地/主题/路线</span>
+                                                    <span ng-if="!isSelectedRoadLineBoolean" style="color: #111;">{{isSelectedRoadLine}}</span>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+                    
+                                    <div class="col col-40">
+                    
+                                            <div>
+                                                <button style="
+                                                                        transition: all linear 1s;
+                                                                        margin: 15px auto;
+                                                                        width: 50px;    
+                                                                        background: #000000;
+                                                                        border-radius: 5px;" ng-disabled="isSearchBtnDisabled" class="button button-block button-positive" ng-click="goTabs()">搜索</button>
+                                            </div>
+                    
+                                    </div>
+                    
+                                </div>
+                    
+                                <!-- 新的日期选择 -->
+                                <!-- <div class="row">
+                                    <div class="col">
+                                        <div class="list padding-top gray f14">
+                                            <div style="border-radius: 3px; border: none;color: #ADADAD;" class="item" ng-click="openDatePicker()" ng-model="goDate.time">
+                                                出发时间
+                                                <span class="item-note">
+                                                    {{ goDate.time | date: "yyyy-MM-dd"}} 
+                                                    <i class="icon ion-chevron-right padding-left" style="color: #c7c5c5;padding-left: 3px;"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> -->
+                    
+                            </form>
+                    
+                            <!-- 搜索按钮 -->
+                            <!-- <div style="padding: 10px 15px;">
+                                <button style="transition: all linear 1s;margin: 10px auto;width: 30%;background: #0F50FB;border-radius: 3px;" ng-disabled="isSearchBtnDisabled" class="button button-block button-positive" ng-click="goTabs()">搜索</button>
+                            </div> -->
+                    
+                    
+                    
+                    </ion-content>
 
-                <div class="col col-40">
+                </ion-view>
+                    
+            </ion-tab>  
+      
+            <ion-tab title="包车" icon-on="ion-ios-clock" icon-off="ion-ios-clock-outline" badge="12" badge-style="badge-assertive">  
+                <ion-view>  
+                    <ion-header-bar  class="bar-positive">  
+                        <h1 class="title">about tab</h1>  
+                    </ion-header-bar>  
+                    <ion-content>  
+                        <p>about content</p>  
+                    </ion-content>  
+                </ion-view>  
+            </ion-tab>  
+      
+            <ion-tab title="我的" icon-on="ion-ios-gear" icon-off="ion-ios-gear-outline">  
+                <ion-view>  
+                    <ion-header-bar  class="bar-positive">  
+                        <h1 class="title">settings tab</h1>  
+                    </ion-header-bar>  
+                    <ion-content>  
+                        <p>settings content</p>  
+                    </ion-content>  
+                </ion-view>  
+            </ion-tab>  
+      
+        </ion-tabs>  
 
-                        <div>
-                            <button style="
-                                                    transition: all linear 1s;
-                                                    margin: 15px auto;
-                                                    width: 50px;
-                                                    background: #FF9800;
-                                                    border-radius: 50%;" ng-disabled="isSearchBtnDisabled" class="button button-block button-positive" ng-click="goTabs()">搜索</button>
-                        </div>
+    </div>
 
-                </div>
-
-            </div>
-
-            <!-- 新的日期选择 -->
-            <!-- <div class="row">
-                <div class="col">
-                    <div class="list padding-top gray f14">
-                        <div style="border-radius: 3px; border: none;color: #ADADAD;" class="item" ng-click="openDatePicker()" ng-model="goDate.time">
-                            出发时间
-                            <span class="item-note">
-                                {{ goDate.time | date: "yyyy-MM-dd"}} 
-                                <i class="icon ion-chevron-right padding-left" style="color: #c7c5c5;padding-left: 3px;"></i>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-
-        </form>
-
-        <!-- 搜索按钮 -->
-        <!-- <div style="padding: 10px 15px;">
-            <button style="transition: all linear 1s;margin: 10px auto;width: 30%;background: #0F50FB;border-radius: 3px;" ng-disabled="isSearchBtnDisabled" class="button button-block button-positive" ng-click="goTabs()">搜索</button>
-        </div> -->
-
-    </ion-content>
+    
 
 </ui-view>
