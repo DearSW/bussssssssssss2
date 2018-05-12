@@ -175,7 +175,7 @@ app
     /**
      * @首页、搜索、控制器
      */
-    .controller('City_select', function($rootScope, $scope, $state, $timeout, $interval, $myLocationService, $myHttpService, $ionicSlideBoxDelegate, $ionicActionSheet, $selectCity, $filter, ionicDatePicker, $ionicModal) {
+    .controller('City_select', function($rootScope, $scope, $state, $timeout, $interval, $myLocationService, $myHttpService, $ionicSlideBoxDelegate, $ionicActionSheet, $selectCity, $filter, ionicDatePicker, $ionicScrollDelegate, $ionicModal, $jsonCity) {
         
         var slideImageTimer = null; // @图片定时器
         
@@ -184,6 +184,8 @@ app
 
             var recommendImgCount = 1; // @流程控制变量
             $rootScope.recommendProducts2 = []; // @推荐图片数组
+
+            $scope.current = '贵阳市'; // @当前城市
 
         } else {
 
@@ -384,7 +386,10 @@ app
 
         }
 
-        // 选择路线的自定义弹窗
+        /************************************************************ */
+        
+
+        // @选择路线的自定义弹窗
         $scope.modal = $ionicModal.fromTemplate('<ion-modal-view>'+
             '	  '+
             '        <ion-header-bar class="bar bar-header modal-one" style="margin-top: 35%;box-shadow: none;" >'+
@@ -428,6 +433,356 @@ app
 
         }
 
+        /************************************************************ */
+
+        // @自定义城市选择弹窗
+        $scope.modal1 = $ionicModal.fromTemplate(
+
+            ['<ion-view view-title="城市选择" hide-tabs="true"> ',
+                '            <ion-header-bar style="padding: 0; box-shadow:{{searchCityBoxShadow ? \'0 0 5px 5px #ADADAD\' : \'none\'}};" class="animate" id="searchHeader">',
+                '                <div style="width: 100%;height:100%;">',
+                '                    <div class="list list-inset" style="border-radius: 0;padding:0;margin:0;border:none;">',
+                '                            ',
+                '                        <label class="item item-input" style="padding-left: 21px;border-radius:0;margin:0;">',
+                '                            <i class="icon ion-search placeholder-icon" style="font-size: 18px;"></i>',
+                '                            <input type="text" placeholder="请选择城市" ng-focus="searchCityFocus()" ng-model="data.search" ng-change="searchCity()">',
+                '                           ',
+                '                        </label>',
+                '                        <span>',
+                '                                <i class="icon ion-close-circled animate" ng-click="searchCityEmpty()" style="margin-right: 10px;font-size: 20px;color: #a2a2a2;line-height: 1;position: fixed;right: 0;top: 15px;z-index: 999;padding: 0 2px; display:{{clearInputSearch ? \'block\' : \'none\'}};"></i>                                ',
+                '                        </span>',
+                '    ',
+                '                    </div>',
+                '                </div>',
+                '            </ion-header-bar>',
+                '            <ion-content delegate-handle="cityScroll" id="citySelectContent" on-scroll="scrollpin()" style="background: #f8f8f8; padding-top: 5px;">',
+                '                <ion-refresher pulling-text="下拉刷新" pulling-icon="ion-ios-refresh-empty" spinner="ripple" on-refresh="doRefresh()" refreshing-text="正在刷新..."></ion-refresher>',
+                '                <div style="margin: 5px 10px; background: #ffffff; padding: 2px 5px; box-shadow: #ddd 0px 0px 5px 2px; border-radius: 3px;">',
+                '                    <div style="color: #989393;" id="current">当前定位城市</div>',
+                '                    <button ng-if="current != \'\'" class="button button-balanced city-button">{{current}}</button>',
+                '                </div>',
+                // '                <div style="margin: 10px 0 0 20px">',
+                // '                    <div style="color: #989393;" id="history">历史记录</div>',
+                // '                    <button class="button button-balanced city-button" ng-click="chooseCity("武汉市")" >武汉</button>',
+                // '                    <button class="button button-balanced city-button" ng-click="chooseCity("贵阳市")">贵阳</button>',
+                // '                    <button class="button button-balanced city-button" ng-click="chooseCity("铜仁市")" >铜仁</button>                    ',
+                // '                </div>',
+                '                <div style="margin: 5px 10px;    background: #ffffff;    padding: 2px 5px;border-radius: 3px;box-shadow: #ddd 0px 0px 5px 2px;">',
+                '                    <div style="color: #989393;" id="hot">热门城市</div>',
+                '                    <button class="button button-balanced city-button" ng-click="chooseCity(\'北京市\')" >北京</button>',
+                '                    <button class="button button-balanced city-button" ng-click="chooseCity(\'广州市\')" >广州</button>',
+                '                    <button class="button button-balanced city-button" ng-click="chooseCity(\'杭州市\')" >杭州</button>',
+                '                    <button class="button button-balanced city-button" ng-click="chooseCity(\'上海市\')" >上海</button>',
+                '                    <button class="button button-balanced city-button" ng-click="chooseCity(\'深圳市\')" >深圳</button>                    ',
+                '                </div>',
+                '                <div class="list card" ng-if="citys.length>0">',
+                '                    <div  ng-repeat="city in citys | orderBy:\'letter\'">',
+                '                        <div class="item item-divider" id="city-{{city.letter}}">',
+                '                            {{city.letter}}',
+                '                        </div>',
+                '                        <div class="item item-text-wrap" ng-repeat="item in city.list" ng-click="chooseCity(item.city)">',
+                '                            {{item.city}}',
+                '                        </div>',
+                '                    </div>',
+                '                </div>',
+                '                <div class="list card" ng-if="citys.length==0">',
+                '                    当前没有数据',
+                '                </div>',
+                '            </ion-content>',
+                '            <div ng-show="showLetter" class="city-showLetter">',
+                '                <strong>{{letter}}</strong>',
+                '            </div> ',
+                '            <div class="city-letterList">',
+                '                <a style="display: block"  ng-click="jumper(\'current\')">当前</a>',
+                // '                <a style="display: block"  ng-click="jumper(\'history\')">历史</a>',
+                '                <a style="display: block"  ng-click="jumper(\'hot\')">热门</a>',
+                '                <a ng-repeat=" city in citys | orderBy:\'letter\' "  style="display: block" ng-touchmove="mTouch($event)" ng-touchend="mRelease()" ng-click="jumper(city.letter)">{{city.letter}}</a>',
+                '                <a style="display: block"  ng-click="jumper(\'#\')"><i class="icon ion-arrow-up-a"></i></a>',
+                '            </div>',
+                '        </ion-view>',
+                '    </div>'].join(""), {
+                scope: $scope,
+                animation: 'slide-in-up'
+        });
+
+        // @打开城市选择弹窗
+        $scope.openCitySelect = function() {
+
+            $scope.modal1.show();
+
+        }
+
+        // @城市搜索变量，由于是input元素中的双向绑定，所以需要使用对象来传递！
+        $scope.data = {
+            search: ''
+        }
+
+        // @接收一个拼音，返回首字母大写
+        $scope.getFirstLetter = function (word, fn) {
+            fn(word.charAt(0).toUpperCase());
+        }
+
+        $scope.cityList = $jsonCity.all(); // @从服务中获取城市数据
+
+        var map = {};
+
+        // @读取城市信息后，进行格式化
+        angular.forEach($scope.cityList, function (value, key) {
+            title = value.pinyin;
+            $scope.getFirstLetter(title, function (ret) {
+                if (map[ret]) {
+                    map[ret].push(value);
+                } else {
+                    map[ret] = [value]
+                }
+            });
+        });
+
+        // @由于html中循环不能按首字母排序所以重新定义一个城市数组
+        $scope.citys = [];
+        angular.forEach(map, function (value, key) {
+            $scope.citys.push({
+                'letter': key,
+                'list': value
+            });
+        });
+
+        $scope.showLetter = false; // @字母modal的显示或者隐藏布尔值
+
+        // @跳转到点击字母位置并显示点击的字母，如果点击#号则跳到顶部
+        $scope.jumper = function (key) {
+
+            if (key == '#') {
+
+                $ionicScrollDelegate.$getByHandle('cityScroll').scrollTop(true); // @返回顶部
+                return;
+
+            } else  if(key == 'current') {
+
+                var el = document.getElementById('current'); // @这个代码最骚，获取元素
+                
+                if (el) {
+                    var scrollPosition = el.offsetTop; // @返回当前元素的y坐标
+                    // @滚动到点击热门的位置。由于上面多了一个搜索框，所以y坐标高度要稍微加一点
+                    $ionicScrollDelegate.$getByHandle('cityScroll').scrollTo(0, scrollPosition - 8, true); // @scrollTo(left, top, [shouldAnimate])
+                }
+                return;
+
+            } else if(key == 'history') {
+
+                var el = document.getElementById('history'); // @这个代码最骚，获取元素
+                
+                if (el) {
+                    var scrollPosition = el.offsetTop; // @返回当前元素的y坐标
+                    // @滚动到点击热门的位置。由于上面多了一个搜索框，所以y坐标高度要稍微加一点
+                    $ionicScrollDelegate.$getByHandle('cityScroll').scrollTo(0, scrollPosition - 8, true); // @scrollTo(left, top, [shouldAnimate])
+                }
+                return;
+
+            } else if(key == 'hot') {
+
+                var el = document.getElementById('hot'); // @这个代码最骚，获取元素
+                
+                if (el) {
+                    var scrollPosition = el.offsetTop; // @返回当前元素的y坐标
+                    // @滚动到点击热门的位置。由于上面多了一个搜索框，所以y坐标高度要稍微加一点
+                    $ionicScrollDelegate.$getByHandle('cityScroll').scrollTo(0, scrollPosition - 8, true); // @scrollTo(left, top, [shouldAnimate])
+                }
+                return;
+
+            } else {
+
+                $scope.letter = key;
+                // @点击侧边字母后屏幕中间的字母也显示,500毫秒隐藏
+                if ($scope.showLetter == false) {
+                    $scope.showLetter = true;
+                    setTimeout(function () {
+                        $scope.showLetter = false;
+                        $scope.$apply();
+                    }, 500)
+                } else {
+                    $scope.showLetter = false;
+                }
+
+                var el = document.getElementById('city-' + key); // @这个代码最骚，获取元素
+
+                if (el) {
+                    var scrollPosition = el.offsetTop; // @返回当前元素的y坐标
+                    // @滚动到点击字母的位置。由于上面多了一个搜索框，所以y坐标高度要稍微加一点
+                    $ionicScrollDelegate.$getByHandle('cityScroll').scrollTo(0, scrollPosition + 80, true); // @scrollTo(left, top, [shouldAnimate])
+                }
+
+            }
+        }
+        
+        $scope.searchCityBoxShadow = false; // @搜索框样式动态渲染布尔值
+        $scope.scrollpin = throttle(function() { // @在滚动事件中移除dom操作
+            // @on-scroll="scrollpin()"
+            var scrollTop = $ionicScrollDelegate.$getByHandle('cityScroll').getScrollPosition().top;
+            
+            console.log(scrollTop);
+
+            if(scrollTop > 10) {
+                
+                $scope.searchCityBoxShadow = true;
+                // aim.style.boxShadow = '0 0 5px 5px #ADADAD';
+        
+            } else {
+                
+                $scope.searchCityBoxShadow = false;
+                // aim.style,boxShadow = 'none';
+                
+            }
+            console.log($scope.searchCityBoxShadow);
+            $scope.$apply();
+
+        }, 500, 1000);
+        
+        // @简单的节流函数
+        function throttle(func, wait, mustRun) {
+            var timeout,
+                startTime = new Date();
+        
+            return function() {
+                var context = this,
+                    args = arguments,
+                    curTime = new Date();
+        
+                clearTimeout(timeout);
+                // 如果达到了规定的触发时间间隔，触发 handler
+                if(curTime - startTime >= mustRun){
+                    func.apply(context,args);
+                    startTime = curTime;
+                // 没达到触发间隔，重新设定定时器
+                }else{
+                    timeout = setTimeout(func, wait);
+                }
+            };
+        };
+
+        // @滑动选择城市函数，滑动字母进行城市选择
+        $scope.mTouch = function (event) {
+
+            console.log(event);
+
+            var positionX = event.changedTouches[0].pageX;
+            var positioinY = event.changedTouches[0].pageY;
+
+            var ele = document.elementFromPoint(positionX, positioinY);
+            if (!ele) {
+                return;
+            }
+            var key = ele.innerText;
+
+            if (!key || key == " " || key.length != 1 || key == "#") {
+                return;
+            }
+
+            //提示
+            // layer.open({
+            //     content: key,
+            //     skin: 'msg',
+            //     time: 2 //2秒后自动关闭
+            // });
+
+            $scope.letter = key;
+
+            $scope.showLetter=true;    
+          
+            var scroll = document.getElementById("city-" + $scope.letter).offsetTop - $ionicScrollDelegate.$getByHandle('cityScroll').getScrollPosition().top; 
+            $ionicScrollDelegate.$getByHandle('cityScroll').scrollBy(0, scroll, true);
+
+            var ele2 = angular.element(document.getElementsByTagName("ion-content"));
+            ele2[1].style.cssText = "overflow: auto !important";
+            
+        };
+
+        // @滑动结束函数，做一些清理工作，隐藏字母modal
+        $scope.mRelease = function () {
+            console.log("mRelease执行了");
+            $timeout(function () {
+                $scope.showLetter = false;
+            }, 300);
+        };
+
+        $scope.clearInputSearch = false; // @清空搜索框的布尔值
+
+        // @城市搜索函数
+        $scope.searchCity = function () {
+            // @搜索框搜索之后又清空列表数据为初始数据
+
+            $ionicScrollDelegate.$getByHandle('cityScroll').scrollTop(true); // @返回顶部            
+
+            if ($scope.data.search == null || $scope.data.search == '') {
+
+                $scope.clearInputSearch = false;
+                
+                $scope.citys = [];
+
+                angular.forEach(map, function (value, key) {
+                    $scope.citys.push({
+                        'letter': key,
+                        'list': value
+                    });
+                });
+
+            } else {
+
+                $scope.clearInputSearch = true;
+
+                $scope.citys = [];
+                var newList = [];
+                var count = 0;
+                angular.forEach($scope.cityList, function (value, key) {
+                    if (value.city.indexOf($scope.data.search) > -1 || value.pinyin.charAt(0).indexOf($scope.data.search) > -1) {
+                        count++;
+                        newList.push(value);
+                        if (count == 1) {
+                            $scope.citys.push({
+                                'letter': value.pinyin.charAt(0).toUpperCase(),
+                                'list': newList
+                            });
+                        }
+                    }
+                });
+
+                console.log($scope.citys);
+
+            }
+        }
+
+        // @城市聚焦函数，搜索框聚焦后返回首页
+        $scope.searchCityFocus = function() {
+            $ionicScrollDelegate.$getByHandle('cityScroll').scrollTop(true); // @返回顶部
+            return;
+        }
+
+        // @城市搜索框清空函数
+        $scope.searchCityEmpty = function() {
+            console.log("searchCityEmpty");   
+            $scope.data.search = '';
+            $scope.clearInputSearch = false;
+            
+            $scope.citys = [];
+
+            angular.forEach(map, function (value, key) {
+                $scope.citys.push({
+                    'letter': key,
+                    'list': value
+                });
+            });
+        }
+
+        // @选择城市
+        $scope.chooseCity = function(city) {
+            console.log("首页：用户当前点击选择的城市");
+            console.log(city);
+            $scope.current = city;
+            $scope.modal1.hide();
+        }
+
+        /************************************************************ */
+
         // @时间选择的默认操作
         if(sessionStorage.getItem('jqztc_search_time') != null) {
 
@@ -448,23 +803,26 @@ app
         $scope.openDatePicker = function (val) {
 
             var ipObj1 = {
-              callback: function (val) {  // @必选
-                var val2 = new Date(val);
-                var val3 = $filter('date')(val2, 'yyyy-MM-dd');
-                $scope.goDate.time = new Date(val);
-              },
-              titleLabel: '选择日期',
-              closeLabel: '返回',
-              from: new Date(),
-              to: new Date(compareTime), // @11对应十二月，差1
-              dateFormat: 'yyyy-MM-dd', // @可选
-              closeOnSelect: true, // @可选,设置选择日期后是否要关掉界面。呵呵，原本是false。
-              inputDate: new Date(),
-              templateType: 'modal'
+                callback: function (val) {  // @必选
+                    var val2 = new Date(val);
+                    var val3 = $filter('date')(val2, 'yyyy-MM-dd');
+                    $scope.goDate.time = new Date(val);
+                },
+                titleLabel: '选择日期',
+                closeLabel: '返回',
+                from: new Date(),
+                to: new Date(compareTime), // @11对应十二月，差1
+                dateFormat: 'yyyy-MM-dd', // @可选
+                closeOnSelect: true, // @可选,设置选择日期后是否要关掉界面。呵呵，原本是false。
+                inputDate: new Date(),
+                templateType: 'modal'
             };
             ionicDatePicker.openDatePicker(ipObj1);
 
         }
+
+        /************************************************************ */
+        
 
         // @点击搜索的同时，需要把数据传递到下一个tabs页面
         $scope.goTabs = function() {
