@@ -185,7 +185,7 @@ app
             var recommendImgCount = 1; // @流程控制变量
             $rootScope.recommendProducts2 = []; // @推荐图片数组
 
-            $scope.current = '贵阳市'; // @当前城市
+            $rootScope.currentCity = '贵阳市'; // @当前城市
 
         } else {
 
@@ -205,7 +205,7 @@ app
         
             // @请求获取推荐路线数据  /web/product/queryRecommendProductList
             $myHttpService.postNoLoad('api/product/queryRecommendProductList', {}, function(data) {
-                console.log("首页：图片推荐API返回的数据");
+                console.log("川梦大法师报告：首页，图片推荐API返回的数据");
                 console.log(data);
                 $rootScope.recommendProducts2 = data.products;
                 if($rootScope.recommendProducts2.length == 0) {
@@ -243,18 +243,13 @@ app
             slideImage();
         }, 4000);
 
-        // @当DOM元素从页面中被移除时，Ng将会在scope中触发$destory事件。
-        $scope.$on("$destroy", function() { // @清除定时器，防止定时的叠加效应
-            $interval.cancel(slideImageTimer); // @专业的清除函数
-        });
-
         // @推荐路线 数据详情，点击图片进行跳转到 产品 页面
         $scope.recommendProductsDetail = function(item, i) {
 
             var data = {
                 productid: item.productid
             };
-            console.log("首页：点击图片进入产品页打印参数");
+            console.log("川梦大法师报告：首页，点击图片进入产品页打印参数");
             console.log(data);
             $state.go('tabs', {data: JSON.stringify(data)}, {reload: true});
 
@@ -369,12 +364,12 @@ app
             // @搜索关键字 wechat/product/queryProductKeywords
             $myHttpService.postNoLoad('api/product/queryProductKeywords', {}, function(data) {
                 
-                console.log("首页：搜索关键字API返回的数据");
+                console.log("川梦大法师报告：首页，搜索关键字API返回的数据");
                 console.log(data);
 
                 if(data.products != null && data.products.length != 0) {
                     $rootScope.roadLineData = data.products;
-                    console.log("首页：路线数据数组");
+                    console.log("川梦大法师报告：首页，路线数据数组");
                     console.log($rootScope.roadLineData);
                 }
 
@@ -394,14 +389,14 @@ app
             '	  '+
             '        <ion-header-bar class="bar bar-header modal-one" style="margin-top: 35%;box-shadow: none;" >'+
             '		'+
-        //    '		   <button class="button  button-balanced" ng-click="chooseScenicSpotTicket()" style="background: rgba(240, 248, 255, 0.09);color: #676464;">取消</button>'+
+            //    '		   <button class="button  button-balanced" ng-click="chooseScenicSpotTicket()" style="background: rgba(240, 248, 255, 0.09);color: #676464;">取消</button>'+
             '          <h1 class="title" style="font-weight: normal;color: #525151;"> 线路选择 </h1>'+
             '          <button class="button button-balanced" ng-click="modal.hide()" style="background: rgba(240, 248, 255, 0.09);color: rgba(103, 100, 100, 0.67);">取消</button>'+
             '		  '+
             '        </ion-header-bar>'+
             '		'+
             '        <ion-content class="padding" style="background: #ffffff;margin-top: 35%;" >'+
-        //    '		    <p style="text-align:center;font-size: 20px;"><span>{{ticketInfo.viewName}}</span></p>	'+
+            //    '		    <p style="text-align:center;font-size: 20px;"><span>{{ticketInfo.viewName}}</span></p>	'+
             '			<button class="button button-outline button-dark" style="min-width: 0;min-height: 0;height: 42px;margin: 2px 4px 15px 8px;font-size: 14px;padding: 0px 7px;" ng-repeat="item in roadLineData track by $index" ng-click="selectedRoadLine(item.viewaddress)">{{item.viewaddress}}</button> '+
             '			'+
             '        </ion-content>'+
@@ -425,7 +420,7 @@ app
 
             $rootScope.isSearchBtnDisabled = false; // @开启搜索按钮的启用状态
 
-            console.log("首页：用户当前点击选择的路线");
+            console.log("川梦大法师报告：首页，用户当前点击选择的路线");
             console.log(item);
 
             $rootScope.isSelectedRoadLine = item;
@@ -439,17 +434,17 @@ app
         $scope.modal1 = $ionicModal.fromTemplate(
 
             ['<ion-view view-title="城市选择" hide-tabs="true"> ',
-                '            <ion-header-bar style="padding: 0; box-shadow:{{searchCityBoxShadow ? \'0 0 5px 5px #ADADAD\' : \'none\'}};" class="animate" id="searchHeader">',
+                '            <ion-header-bar style="transition: all 0.3s; padding: 0; box-shadow:{{searchCityBoxShadow ? \'0 0 5px 5px #ADADAD\' : \'none\'}};" class="animate" id="searchHeader">',
                 '                <div style="width: 100%;height:100%;">',
                 '                    <div class="list list-inset" style="border-radius: 0;padding:0;margin:0;border:none;">',
                 '                            ',
-                '                        <label class="item item-input" style="padding-left: 21px;border-radius:0;margin:0;">',
-                '                            <i class="icon ion-search placeholder-icon" style="font-size: 18px;"></i>',
-                '                            <input type="text" placeholder="请选择城市" ng-focus="searchCityFocus()" ng-model="data.search" ng-change="searchCity()">',
+                '                        <label class="item item-input" style="padding-left: 10px;border-radius:0;margin:0;">',
+                '                            <i class="icon ion-ios-search placeholder-icon" style="font-size: 18px;"></i>',
+                '                            <input type="text" placeholder="请选择城市" style=" padding-right: 80px; " ng-focus="searchCityFocus()" ng-model="data.search" ng-change="searchCity()">',
                 '                           ',
                 '                        </label>',
                 '                        <span>',
-                '                                <i class="icon ion-close-circled animate" ng-click="searchCityEmpty()" style="margin-right: 10px;font-size: 20px;color: #a2a2a2;line-height: 1;position: fixed;right: 0;top: 15px;z-index: 999;padding: 0 2px; display:{{clearInputSearch ? \'block\' : \'none\'}};"></i>                                ',
+                '                                <i class="icon ion-close-circled animate" ng-click="searchCityEmpty()" style="margin-right: 10px;font-size: 20px;color: #a2a2a2;line-height: 1;position: fixed;right: 50px;top: 15px;z-index: 999;padding: 0 2px; display:{{clearInputSearch ? \'block\' : \'none\'}};"></i><span style="position: fixed;right: 5px;top: 15px;z-index: 999;color: #a2a2a2;" ng-click="modal1.hide()">取消</span>',
                 '                        </span>',
                 '    ',
                 '                    </div>',
@@ -458,8 +453,8 @@ app
                 '            <ion-content delegate-handle="cityScroll" id="citySelectContent" on-scroll="scrollpin()" style="background: #f8f8f8; padding-top: 5px;">',
                 '                <ion-refresher pulling-text="下拉刷新" pulling-icon="ion-ios-refresh-empty" spinner="ripple" on-refresh="doRefresh()" refreshing-text="正在刷新..."></ion-refresher>',
                 '                <div style="margin: 5px 10px; background: #ffffff; padding: 2px 5px; box-shadow: #ddd 0px 0px 5px 2px; border-radius: 3px;">',
-                '                    <div style="color: #989393;" id="current">当前定位城市</div>',
-                '                    <button ng-if="current != \'\'" class="button button-balanced city-button">{{current}}</button>',
+                '                    <div style="color: #989393;" id="current">当前选择城市</div>',
+                '                    <button ng-if="current != \'\'" class="button button-balanced city-button">{{currentCity}}</button>',
                 '                </div>',
                 // '                <div style="margin: 10px 0 0 20px">',
                 // '                    <div style="color: #989393;" id="history">历史记录</div>',
@@ -507,9 +502,7 @@ app
 
         // @打开城市选择弹窗
         $scope.openCitySelect = function() {
-
             $scope.modal1.show();
-
         }
 
         // @城市搜索变量，由于是input元素中的双向绑定，所以需要使用对象来传递！
@@ -522,32 +515,37 @@ app
             fn(word.charAt(0).toUpperCase());
         }
 
-        $scope.cityList = $jsonCity.all(); // @从服务中获取城市数据
+        if(recommendImgCount == 1) { // @只在首次加载时执行，其他时间不执行，所以用全局变量保存下来。
 
-        var map = {};
+            $scope.cityList = $jsonCity.all(); // @从服务中获取城市数据
 
-        // @读取城市信息后，进行格式化
-        angular.forEach($scope.cityList, function (value, key) {
-            title = value.pinyin;
-            $scope.getFirstLetter(title, function (ret) {
-                if (map[ret]) {
-                    map[ret].push(value);
-                } else {
-                    map[ret] = [value]
-                }
+            var map = {};
+
+            // @读取城市信息后，进行格式化
+            angular.forEach($scope.cityList, function (value, key) {
+                title = value.pinyin;
+                $scope.getFirstLetter(title, function (ret) {
+                    if (map[ret]) {
+                        map[ret].push(value);
+                    } else {
+                        map[ret] = [value]
+                    }
+                });
             });
-        });
 
-        // @由于html中循环不能按首字母排序所以重新定义一个城市数组
-        $scope.citys = [];
-        angular.forEach(map, function (value, key) {
-            $scope.citys.push({
-                'letter': key,
-                'list': value
+            // @由于html中循环不能按首字母排序所以重新定义一个城市数组
+            $rootScope.citys = [];
+            angular.forEach(map, function (value, key) {
+                $rootScope.citys.push({
+                    'letter': key,
+                    'list': value
+                });
             });
-        });
 
-        $scope.showLetter = false; // @字母modal的显示或者隐藏布尔值
+        }
+        
+        // @字母modal的显示或者隐藏布尔值
+        $scope.showLetter = false; 
 
         // @跳转到点击字母位置并显示点击的字母，如果点击#号则跳到顶部
         $scope.jumper = function (key) {
@@ -615,9 +613,12 @@ app
             }
         }
         
-        $scope.searchCityBoxShadow = false; // @搜索框样式动态渲染布尔值
-        $scope.scrollpin = throttle(function() { // @在滚动事件中移除dom操作
-            // @on-scroll="scrollpin()"
+        // @搜索框样式动态渲染布尔值
+        $scope.searchCityBoxShadow = false; 
+
+        // @使用节流函数的滚动函数。用法：on-scroll="scrollpin()"
+        $scope.scrollpin = throttle(function() { // @注意：在滚动事件中移除dom操作
+            
             var scrollTop = $ionicScrollDelegate.$getByHandle('cityScroll').getScrollPosition().top;
             
             console.log(scrollTop);
@@ -699,13 +700,14 @@ app
 
         // @滑动结束函数，做一些清理工作，隐藏字母modal
         $scope.mRelease = function () {
-            console.log("mRelease执行了");
+            console.log("川梦大法师报告：首页，mRelease滑动结束函数执行了");
             $timeout(function () {
                 $scope.showLetter = false;
             }, 300);
         };
 
-        $scope.clearInputSearch = false; // @清空搜索框的布尔值
+        // @清空搜索框的布尔值
+        $scope.clearInputSearch = false; 
 
         // @城市搜索函数
         $scope.searchCity = function () {
@@ -717,10 +719,10 @@ app
 
                 $scope.clearInputSearch = false;
                 
-                $scope.citys = [];
+                $rootScope.citys = [];
 
                 angular.forEach(map, function (value, key) {
-                    $scope.citys.push({
+                    $rootScope.citys.push({
                         'letter': key,
                         'list': value
                     });
@@ -730,7 +732,7 @@ app
 
                 $scope.clearInputSearch = true;
 
-                $scope.citys = [];
+                $rootScope.citys = [];
                 var newList = [];
                 var count = 0;
                 angular.forEach($scope.cityList, function (value, key) {
@@ -738,7 +740,7 @@ app
                         count++;
                         newList.push(value);
                         if (count == 1) {
-                            $scope.citys.push({
+                            $rootScope.citys.push({
                                 'letter': value.pinyin.charAt(0).toUpperCase(),
                                 'list': newList
                             });
@@ -746,7 +748,8 @@ app
                     }
                 });
 
-                console.log($scope.citys);
+                console.log("川梦大法师报告：首页，当前的城市数组");
+                console.log($rootScope.citys);
 
             }
         }
@@ -763,10 +766,10 @@ app
             $scope.data.search = '';
             $scope.clearInputSearch = false;
             
-            $scope.citys = [];
+            $rootScope.citys = [];
 
             angular.forEach(map, function (value, key) {
-                $scope.citys.push({
+                $rootScope.citys.push({
                     'letter': key,
                     'list': value
                 });
@@ -775,9 +778,9 @@ app
 
         // @选择城市
         $scope.chooseCity = function(city) {
-            console.log("首页：用户当前点击选择的城市");
+            console.log("川梦大法师报告：首页，用户当前点击选择的城市");
             console.log(city);
-            $scope.current = city;
+            $rootScope.currentCity = city;
             $scope.modal1.hide();
         }
 
@@ -833,7 +836,7 @@ app
                 date: $filter('date')(new Date(), 'yyyy-MM-dd') // 时间
             };
 
-            console.log("首页：打印搜索按钮传递到产品页的参数");
+            console.log("川梦大法师报告：首页，打印搜索按钮传递到产品页的参数");
             console.log(data);
 
             sessionStorage.setItem('jqztc_search_time', data.date);
@@ -841,6 +844,14 @@ app
             $state.go('tabs', {data: JSON.stringify(data)}, {reload: true});
 
         }
+
+        // @当DOM元素从页面中被移除时，ng将会在$scope中触发$destory事件。
+        $scope.$on("$destroy", function() { // @清除定时器，防止定时的叠加效应
+            console.log("川梦大法师报告：首页，$destroy触发了");
+            $interval.cancel(slideImageTimer); // @专业的清除函数
+            $scope.modal.remove();
+            $scope.modal1.remove();
+        });
 
     })
 

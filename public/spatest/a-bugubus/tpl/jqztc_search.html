@@ -123,14 +123,14 @@
                                                 font-weight: bold;">
                         <div ng-click="openCitySelect()">
                             <i class="icon ion-ios-navigate" style="margin-right: 5px;color: #929191;"></i>
-                            {{current}}
+                            {{currentCity}}
                             <i class="icon ion-ios-arrow-down" style="margin-left: 5px;"></i>
                         </div>
                         
                     </h1>
                 </ion-header-bar>
 
-                    <ion-content style="background: #ffffff;" has-tabs="true">
+                    <ion-content style="background: #ffffff;top: 45px;" has-tabs="true">
 
                             <!-- 动画加载 -->
                             <div class="showDefaultImg" ng-if="showDefaultImg" style="z-index: 999;">
@@ -184,7 +184,7 @@
                                                 border-radius: 10px;
                                                 width: 95%;
                                                 margin: auto;
-                                                margin-top: 5px;" >
+                                                margin-top: 10px;" >
                     
                                 <div class="row">
                     
@@ -207,7 +207,7 @@
                                                                         margin: 15px auto;
                                                                         width: 50px;    
                                                                         background: #000000;
-                                                                        border-radius: 5px;" ng-disabled="isSearchBtnDisabled" class="button button-block button-positive" ng-click="goTabs()">搜索</button>
+                                                                        border-radius: 50%;" ng-disabled="isSearchBtnDisabled" class="button button-block button-positive" ng-click="goTabs()">搜索</button>
                                             </div>
                     
                                     </div>
