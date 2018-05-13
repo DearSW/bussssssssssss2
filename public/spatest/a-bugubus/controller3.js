@@ -175,7 +175,9 @@ app
     /**
      * @首页、搜索、控制器
      */
-    .controller('City_select', function($rootScope, $scope, $state, $timeout, $interval, $myLocationService, $myHttpService, $ionicSlideBoxDelegate, $ionicActionSheet, $selectCity, $filter, ionicDatePicker, $ionicScrollDelegate, $ionicModal, $jsonCity) {
+    .controller('City_select', function($rootScope, $scope, $state, $timeout, $interval, $myLocationService, $myHttpService, $ionicSlideBoxDelegate, $ionicActionSheet, $selectCity, $filter, ionicDatePicker, $ionicScrollDelegate, $ionicModal, $ionicSideMenuDelegate, $jsonCity) {
+        
+        /************************************************************ */
         
         var slideImageTimer = null; // @图片定时器
         
@@ -226,6 +228,9 @@ app
 
         }
         
+        /************************************************************ */
+        // @轮播
+
         function slideImage() { // @轮播控制函数
             if($rootScope.recommendProducts2 && $rootScope.recommendProducts2.length > 0) {
                 $rootScope.recommendProducts2Index = $rootScope.recommendProducts2Index === $rootScope.recommendProducts2.length - 1 ? 0 : $rootScope.recommendProducts2Index + 1;
@@ -243,6 +248,8 @@ app
             slideImage();
         }, 4000);
 
+        /************************************************************ */        
+
         // @推荐路线 数据详情，点击图片进行跳转到 产品 页面
         $scope.recommendProductsDetail = function(item, i) {
 
@@ -254,6 +261,8 @@ app
             $state.go('tabs', {data: JSON.stringify(data)}, {reload: true});
 
         };
+
+        /************************************************************ */        
 
         // @所在城市
         /*
@@ -356,6 +365,9 @@ app
             }
         */
 
+        
+        /************************************************************ */
+
         if(recommendImgCount == 1) {
 
             // @路线数据 数组，展现在路线选择的弹窗中 
@@ -380,10 +392,7 @@ app
             $rootScope.isSearchBtnDisabled = true; // @是否开启搜索按钮的可点击状态，true 不开启（默认、初始），false开启
 
         }
-
-        /************************************************************ */
         
-
         // @选择路线的自定义弹窗
         $scope.modal = $ionicModal.fromTemplate('<ion-modal-view>'+
             '	  '+
@@ -845,6 +854,15 @@ app
 
         }
 
+        /************************************************************ */
+        // @侧边栏菜单操作
+
+        $scope.toggleLeftSideMenu = function() {
+            $ionicSideMenuDelegate.toggleLeft();
+        };
+
+        /************************************************************ */
+        // @离开页面时，做一些清除工作
         // @当DOM元素从页面中被移除时，ng将会在$scope中触发$destory事件。
         $scope.$on("$destroy", function() { // @清除定时器，防止定时的叠加效应
             console.log("川梦大法师报告：首页，$destroy触发了");
@@ -852,6 +870,8 @@ app
             $scope.modal.remove();
             $scope.modal1.remove();
         });
+
+        /************************************************************ */
 
     })
 
