@@ -526,25 +526,25 @@ app
 
         if(recommendImgCount == 1) { // @只在首次加载时执行，其他时间不执行，所以用全局变量保存下来。
 
-            $scope.cityList = $jsonCity.all(); // @从服务中获取城市数据
+            $rootScope.cityList = $jsonCity.all(); // @从服务中获取城市数据
 
-            var map = {};
+            $rootScope.cityMap = {};
 
             // @读取城市信息后，进行格式化
-            angular.forEach($scope.cityList, function (value, key) {
+            angular.forEach($rootScope.cityList, function (value, key) {
                 title = value.pinyin;
                 $scope.getFirstLetter(title, function (ret) {
-                    if (map[ret]) {
-                        map[ret].push(value);
+                    if ($rootScope.cityMap[ret]) {
+                        $rootScope.cityMap[ret].push(value);
                     } else {
-                        map[ret] = [value]
+                        $rootScope.cityMap[ret] = [value]
                     }
                 });
             });
 
             // @由于html中循环不能按首字母排序所以重新定义一个城市数组
             $rootScope.citys = [];
-            angular.forEach(map, function (value, key) {
+            angular.forEach($rootScope.cityMap, function (value, key) {
                 $rootScope.citys.push({
                     'letter': key,
                     'list': value
@@ -553,6 +553,9 @@ app
 
         }
         
+        console.log("川梦大法师报告：全局城市数组数据");
+        console.log($rootScope.citys);
+
         // @字母modal的显示或者隐藏布尔值
         $scope.showLetter = false; 
 
@@ -730,7 +733,7 @@ app
                 
                 $rootScope.citys = [];
 
-                angular.forEach(map, function (value, key) {
+                angular.forEach($rootScope.cityMap, function (value, key) {
                     $rootScope.citys.push({
                         'letter': key,
                         'list': value
@@ -744,7 +747,7 @@ app
                 $rootScope.citys = [];
                 var newList = [];
                 var count = 0;
-                angular.forEach($scope.cityList, function (value, key) {
+                angular.forEach($rootScope.cityList, function (value, key) {
                     if (value.city.indexOf($scope.data.search) > -1 || value.pinyin.charAt(0).indexOf($scope.data.search) > -1) {
                         count++;
                         newList.push(value);
@@ -777,7 +780,7 @@ app
             
             $rootScope.citys = [];
 
-            angular.forEach(map, function (value, key) {
+            angular.forEach($rootScope.cityMap, function (value, key) {
                 $rootScope.citys.push({
                     'letter': key,
                     'list': value
@@ -856,6 +859,10 @@ app
 
         /************************************************************ */
         // @侧边栏菜单操作
+
+        $scope.listData = {
+            showDelete: false // @列表删除按钮显示布尔值
+        };
 
         $scope.toggleLeftSideMenu = function() {
             $ionicSideMenuDelegate.toggleLeft();

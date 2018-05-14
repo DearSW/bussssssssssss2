@@ -89,6 +89,18 @@
             background: #444 !important;
         }
 
+        .lunbotuijian_title {
+            background: #4CAF50;
+            display: inline-block;
+            height: 27px;
+            width: 70px;
+            color: white;
+            margin: 7px 0px 3px 0px;
+            text-align: center;
+            border-radius: 50px;
+            font-size: 14px;
+        }
+
     </style>
 
     <div>
@@ -99,9 +111,9 @@
                  
                 <ion-view>
 
-                    <ion-side-menus>
+                    <ion-side-menus enable-menu-with-back-views="true" delegate-handle="">
 
-                        <ion-side-menu-content>
+                        <ion-side-menu-content drag-content="false" edge-drag-threshold="false" >
 
                             <ion-header-bar style="background: white; box-shadow: #aba6a68f 0px 0px 9px 2px;">
                         
@@ -121,7 +133,7 @@
 
                             </ion-header-bar>
 
-                            <ion-content style="background: #ffffff;top: 45px;" has-tabs="true">
+                            <ion-content style="background: #ffffff;top: 45px;" has-tabs="true" delegate-handle="" scroll-event-interval="10" on-scroll="" on-scroll-complete="" has-bouncing="true" scroll="true" padding="true" scrollbar-x="true" scrollbar-y="true" locking="true">
 
                                     <!-- 动画加载 -->
                                     <div class="showDefaultImg" ng-if="showDefaultImg" style="z-index: 999;">
@@ -148,17 +160,8 @@
                                             <div class="showDefaultImg2">
                                                     <img ng-if="item.photoPath != null" ng-src="{{item.photoPath}}" alt="景区直通车为您服务" err-src="images/month-bus.png" />
                                                     <div class="imgTitle">
-                                                        <span style="
-                                                        background: #4CAF50;
-                                                        display: inline-block;
-                                                        height: 27px;
-                                                        width: 70px;
-                                                        color: white;
-                                                        margin: 7px 10px 3px 10px;
-                                                        text-align: center;
-                                                        border-radius: 50px;
-                                                        font-size: 14px;
-                                                    " >倾心推荐</span><span style="color: whitesmoke;">{{item.titleName}}</span>
+                                                        <span class="lunbotuijian_title" >倾心推荐</span>
+                                                        <span style="color: whitesmoke; overflow: hidden; text-overflow: ellipsis;">{{item.titleName}}</span>
                                                     </div>
                                             </div>
                                         </ion-slide>
@@ -173,9 +176,9 @@
                                             <div class="col col-60">
                                                 <div class="list list-inset" style="margin: 15px;">
                                                     <label ng-click="openRoadLine()" class="item item-input" style="border-radius: 5px;border: none;margin: 8px 0;">
-                                                        <div>
-                                                            <span ng-if="isSelectedRoadLineBoolean" style="color: #a2a2a2;">目的地/主题/路线</span>
-                                                            <span ng-if="!isSelectedRoadLineBoolean" style="color: #111;">{{isSelectedRoadLine}}</span>
+                                                        <div style="overflow: hidden;">
+                                                            <span ng-if="isSelectedRoadLineBoolean" style="display: block; color: #a2a2a2; overflow: hidden; text-overflow: ellipsis;">目的地/主题/路线</span>
+                                                            <span ng-if="!isSelectedRoadLineBoolean" style="display: block; color: #111; overflow: hidden; text-overflow: ellipsis;">{{isSelectedRoadLine}}</span>
                                                         </div>
                                                     </label>
                                                 </div>
@@ -215,59 +218,81 @@
                         
                             </ion-content>
 
-
                         </ion-side-menu-content>
 
-                        <ion-side-menu side="left">
-                            <!--侧滑页面顶部bar-->  
+                        <ion-side-menu side="left" width="300" is-enabled="true" expose-aside-when="(min-width:768px)" >
+
+                            <!-- 侧滑页面顶部bar -->  
                             <ion-header-bar align-title="center" class="bar-dark" style="background: #ffffff; box-shadow: #ccc 0 0 8px 0px;">  
                                 <h1 class="title" style="color: #111; font-weight: 400;">消息</h1>  
                                 <div class="buttons pull-right" nav-clear menu-close>
                                     <button class="button button-icon icon ion-ios-arrow-forward" style="color: #444;"></button>  
                                 </div>  
                             </ion-header-bar>  
-                            <!--侧滑页面主要内容-->  
-                            <ion-content class="has-header" style="top: 45px;">  
-                                <ion-list>
+
+                            <!-- 侧滑页面主要内容 -->  
+                            <ion-content style="background: #ffffff;top: 45px;" has-tabs="true" delegate-handle="" scroll-event-interval="10" on-scroll="" on-scroll-complete="" has-bouncing="true" scroll="true" padding="false" scrollbar-x="true" scrollbar-y="true" locking="true" >  
+
+                                <ion-list can-swipe="true" show-delete="listData.showDelete" show-reorder="false" delegate-handle="" >
                                     <!-- <ion-item nav-clear menu-close ng-repeat="menu in menus" href="#/app/todolist/{{menu.groupId}}">  
                                     
                                         <i class="icon ion-android-clock"></i>  {{menu.title}} <span class="badge" ng-if="menu.badge>0">{{menu.badge}}</span>  
                                     </ion-item>   -->
                                     <ion-item>
                                         <div class="row">
-                                            <div class="col col-20" style="border-radius: 50%; background: #ffffff; border: #ccc 1px solid; padding: 8px 10px;">
+                                            <div class="col col-20" style="border-radius: 50%; background: #ffffff; box-shadow: #ccc 0px 0px 3px 0px; height: 50px; padding: 0; margin: 0; position: relative;">
                                                 <div>
-                                                    <i class="icon ion-card" style="font-size: 30px; color: orange; "></i>
+                                                    <i class="icon ion-card" style="font-size: 30px; color: #0c60ee; width: 25px; height: 30px; position: absolute; top: 0; right: 0; bottom: 0; left: 0; margin: auto;"></i>
+                                                    <i class="icon ion-android-radio-button-on" style="color: #f11909;" ng-if="true"></i>
                                                 </div>
                                             </div>
                                             <div class="col col-80">
                                                     <div class="row" style="font-size: 16px;padding: 0;margin: 0;">
-                                                        <div class="col col-60" style=" padding: 0; margin: 0; ">门店优惠</div>
+                                                        <div class="col col-60" style=" padding: 0; margin: 0; ">景区优惠</div>
                                                         <div class="col col-40" style=" padding: 0; margin: 0; text-align: right; font-size: 14px; color: #737070; ">01:16</div>
                                                     </div>
                                                     <div style="overflow: hidden; text-overflow: ellipsis; color: #676666;">端午节，黄果树优惠多多等你来，谢谢！</div>
                                             </div>
                                         </div>
+
+                                        <ion-option-button class="button-positive" ng-click="listData.showDelete = true;" style="background: #f71c0b;">
+                                            删除
+                                        </ion-option-button>
+
+                                        <ion-delete-button class="ion-minus-circled" ng-click="alert('已删除');listData.showDelete = false;"></ion-delete-button>
+                                        <ion-reorder-button class="ion-navicon" on-reorder=""></ion-reorder-button>
+
                                     </ion-item>  
+
                                     <ion-item>
                                         <div class="row">
-                                                <div class="col col-20" style="border-radius: 50%; background: #ffffff; border: #ccc 1px solid; padding: 8px 10px;">
+                                                <div class="col col-20" style="border-radius: 50%; background: #ffffff; box-shadow: #ccc 0px 0px 3px 0px; height: 50px; padding: 0; margin: 0; position: relative;">                                            
                                                     <div>
-                                                        <i class="icon ion-android-car" style="font-size: 30px; color: #31b0d4;"></i>                                                        
+                                                        <i class="icon ion-android-car" style="font-size: 30px; color: #444; width: 25px; height: 30px; position: absolute; top: 0; right: 0; bottom: 0; left: 0; margin: auto;"></i>                                                                                                           
+                                                        <i class="icon ion-android-radio-button-on" style="color: #f11909;" ng-if="true"></i>
                                                     </div>
                                                 </div>
                                                 <div class="col col-80">
                                                         <div class="row" style="font-size: 16px;padding: 0;margin: 0;">
-                                                            <div class="col col-60" style=" padding: 0; margin: 0; ">分时租车</div>
+                                                            <div class="col col-60" style=" padding: 0; margin: 0; ">分时租赁</div>
                                                             <div class="col col-40" style=" padding: 0; margin: 0; text-align: right; font-size: 14px; color: #737070; ">22:16</div>
                                                         </div>
                                                         <div style="overflow: hidden; text-overflow: ellipsis; color: #676666; ">现在下单，送专车百元礼包！</div>
                                                 </div>
                                         </div>
+
+                                        <ion-option-button class="button-positive" ng-click="listData.showDelete = true;" style="background: #f71c0b;">
+                                            删除
+                                        </ion-option-button>
+
+                                        <ion-delete-button class="ion-minus-circled" ng-click="alert('已删除');listData.showDelete = false;"></ion-delete-button>
+                                        <ion-reorder-button class="ion-navicon" on-reorder=""></ion-reorder-button>
+
                                     </ion-item>  
                                 </ion-list>  
                             </ion-content> 
-                        <ion-side-menu>
+
+                        </ion-side-menu>
 
                     </ion-side-menus>
 
