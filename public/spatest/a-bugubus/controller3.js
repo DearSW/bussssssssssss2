@@ -394,13 +394,13 @@ app
         }
         
         // @选择路线的自定义弹窗
-        $scope.modal = $ionicModal.fromTemplate('<ion-modal-view>'+
+        $scope.roadSelectModal = $ionicModal.fromTemplate('<ion-modal-view>'+
             '	  '+
             '        <ion-header-bar class="bar bar-header modal-one" style="margin-top: 35%;box-shadow: none;" >'+
             '		'+
             //    '		   <button class="button  button-balanced" ng-click="chooseScenicSpotTicket()" style="background: rgba(240, 248, 255, 0.09);color: #676464;">取消</button>'+
             '          <h1 class="title" style="font-weight: normal;color: #525151;"> 线路选择 </h1>'+
-            '          <button class="button button-balanced" ng-click="modal.hide()" style="background: rgba(240, 248, 255, 0.09);color: rgba(103, 100, 100, 0.67);">取消</button>'+
+            '          <button class="button button-balanced" ng-click="roadSelectModal.hide()" style="background: rgba(240, 248, 255, 0.09);color: rgba(103, 100, 100, 0.67);">取消</button>'+
             '		  '+
             '        </ion-header-bar>'+
             '		'+
@@ -418,7 +418,7 @@ app
         // @打开路线选择弹窗
         $scope.openRoadLine = function() {
 
-            $scope.modal.show();
+            $scope.roadSelectModal.show();
 
         }
 
@@ -433,17 +433,17 @@ app
             console.log(item);
 
             $rootScope.isSelectedRoadLine = item;
-            $scope.modal.hide();
+            $scope.roadSelectModal.hide();
 
         }
 
         /************************************************************ */
 
         // @自定义城市选择弹窗
-        $scope.modal1 = $ionicModal.fromTemplate(
+        $scope.citySelectModal = $ionicModal.fromTemplate(
 
-            ['<ion-view view-title="城市选择" hide-tabs="true"> ',
-                '            <ion-header-bar style="transition: all 0.3s; padding: 0; box-shadow:{{searchCityBoxShadow ? \'0 0 5px 5px #ADADAD\' : \'none\'}};" class="animate" id="searchHeader">',
+            [
+                '            <ion-header-bar style="transition: all 0.5s; padding: 0; box-shadow:{{searchCityBoxShadow ? \'0 0 5px 5px #ADADAD\' : \'none\'}};" class="animate" id="searchHeader">',
                 '                <div style="width: 100%;height:100%;">',
                 '                    <div class="list list-inset" style="border-radius: 0;padding:0;margin:0;border:none;">',
                 '                            ',
@@ -453,7 +453,7 @@ app
                 '                           ',
                 '                        </label>',
                 '                        <span>',
-                '                                <i class="icon ion-close-circled animate" ng-click="searchCityEmpty()" style="margin-right: 10px;font-size: 20px;color: #a2a2a2;line-height: 1;position: fixed;right: 50px;top: 15px;z-index: 999;padding: 0 2px; display:{{clearInputSearch ? \'block\' : \'none\'}};"></i><span style="position: fixed;right: 5px;top: 15px;z-index: 999;color: #a2a2a2;" ng-click="modal1.hide()">取消</span>',
+                '                                <i class="icon ion-close-circled animate" ng-click="searchCityEmpty()" style="margin-right: 10px;font-size: 20px;color: #a2a2a2;line-height: 1;position: fixed;right: 50px;top: 15px;z-index: 999;padding: 0 2px; display:{{clearInputSearch ? \'block\' : \'none\'}};"></i><span style="position: fixed;right: 5px;top: 15px;z-index: 999;color: #a2a2a2;" ng-click="citySelectModal.hide()">取消</span>',
                 '                        </span>',
                 '    ',
                 '                    </div>',
@@ -502,16 +502,16 @@ app
                 '                <a style="display: block"  ng-click="jumper(\'hot\')">热门</a>',
                 '                <a ng-repeat=" city in citys | orderBy:\'letter\' "  style="display: block" ng-touchmove="mTouch($event)" ng-touchend="mRelease()" ng-click="jumper(city.letter)">{{city.letter}}</a>',
                 '                <a style="display: block"  ng-click="jumper(\'#\')"><i class="icon ion-arrow-up-a"></i></a>',
-                '            </div>',
-                '        </ion-view>',
-                '    </div>'].join(""), {
+                '            </div>'
+            ].join(""), {
                 scope: $scope,
                 animation: 'slide-in-up'
-        });
+            }
+        );
 
         // @打开城市选择弹窗
         $scope.openCitySelect = function() {
-            $scope.modal1.show();
+            $scope.citySelectModal.show();
         }
 
         // @城市搜索变量，由于是input元素中的双向绑定，所以需要使用对象来传递！
@@ -553,8 +553,8 @@ app
 
         }
         
-        console.log("川梦大法师报告：全局城市数组数据");
-        console.log($rootScope.citys);
+        // console.log("川梦大法师报告：全局城市数组数据");
+        // console.log($rootScope.citys);
 
         // @字母modal的显示或者隐藏布尔值
         $scope.showLetter = false; 
@@ -793,7 +793,7 @@ app
             console.log("川梦大法师报告：首页，用户当前点击选择的城市");
             console.log(city);
             $rootScope.currentCity = city;
-            $scope.modal1.hide();
+            $scope.citySelectModal.hide();
         }
 
         /************************************************************ */
@@ -869,13 +869,68 @@ app
         };
 
         /************************************************************ */
+
+        // @消息模态窗
+        $scope.messageModal = $ionicModal.fromTemplate('<ion-modal-view>'+
+            '	  '+
+            '        <ion-header-bar class="bar bar-header" style="box-shadow: none;" >'+
+            '		'+
+            //    '		   <button class="button  button-balanced" ng-click="chooseScenicSpotTicket()" style="background: rgba(240, 248, 255, 0.09);color: #676464;">取消</button>'+
+            '          <h1 class="title" style="font-weight: normal;color: #525151;"> {{messageModalTitle}} </h1>'+
+            '          <button class="button button-balanced" ng-click="messageModal.hide()" style="background: rgba(240, 248, 255, 0.09);color: rgba(103, 100, 100, 0.67);">返回</button>'+
+            '		  '+
+            '        </ion-header-bar>'+
+            '		'+
+            '        <ion-content class="padding" style="background: #ffffff;" >'+
+            '        <div class="list card">'+
+            '           <div class="item">'+
+            '               <h2>官方发布</h2>'+
+            '               <p>{{ messageDate | date:"yyyy:MM:dd HH:mm"}}</p>'+
+            '           </div>'+
+            '           <div class="item item-body">'+
+            '               <img class="full-image" style="height:20%; width:100%" src="http://www.runoob.com/try/demo_source/delorean.jpg">'+
+            '                <p>'+
+            '                   菜鸟教程 -- 学的不仅是技术，更是梦想！'+
+            '                   <br> 菜鸟教程 -- 学的不仅是技术，更是梦想！'+
+            '                   <br> 菜鸟教程 -- 学的不仅是技术，更是梦想！'+
+            '                   <br> 菜鸟教程 -- 学的不仅是技术，更是梦想！'+
+            '               </p>'+
+            '               <p>'+
+            '                   <a style="color: #797777;">'+
+            '                          查看详情 >'+
+            '                   </a>'+
+            '               </p>'+
+            '           </div>'+
+            '        </div>'+
+            '        </ion-content>'+
+            '		'+
+            '      </ion-modal-view>', {
+            scope: $scope,
+            animation: 'slide-in-up'
+        });
+
+        $scope.openMessage = function(num) {
+            if(num == "1") {
+                $scope.messageModalTitle ="景区优惠";
+            } else if(num = "2") {
+                $scope.messageModalTitle = "分时租赁";
+            } else {
+                $scope.messageModalTitle = "最新消息";
+            }
+            $scope.messageModal.show();
+        }
+
+        $scope.messageDate = new Date();
+
+        /************************************************************ */
         // @离开页面时，做一些清除工作
         // @当DOM元素从页面中被移除时，ng将会在$scope中触发$destory事件。
         $scope.$on("$destroy", function() { // @清除定时器，防止定时的叠加效应
             console.log("川梦大法师报告：首页，$destroy触发了");
             $interval.cancel(slideImageTimer); // @专业的清除函数
-            $scope.modal.remove();
-            $scope.modal1.remove();
+            $scope.roadSelectModal.remove();
+            $scope.citySelectModal.remove();
+            $scope.messageModal.remove();
         });
 
         /************************************************************ */

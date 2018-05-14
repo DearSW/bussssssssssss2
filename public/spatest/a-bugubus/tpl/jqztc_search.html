@@ -48,11 +48,13 @@
         }
 
         .city-showLetter{
-            position: relative;
+            position: absolute;
             width: 80px;
             height: 80px;
-            left: 45%;
-            top: 40%;
+            left: 50%;
+            top: 50%;
+            margin-top: -40px;
+            margin-left: -40px;
             background-color: #e5e5e5;
             text-align: center;
             color: #28a54c;
@@ -99,6 +101,14 @@
             text-align: center;
             border-radius: 50px;
             font-size: 14px;
+        }
+
+        .fix_sidemenu_content_top {
+            top: 45px;
+        }
+        .fix_row {
+            padding: 5px;
+            margin: 5px;
         }
 
     </style>
@@ -231,22 +241,22 @@
                             </ion-header-bar>  
 
                             <!-- 侧滑页面主要内容 -->  
-                            <ion-content style="background: #ffffff;top: 45px;" has-tabs="true" delegate-handle="" scroll-event-interval="10" on-scroll="" on-scroll-complete="" has-bouncing="true" scroll="true" padding="false" scrollbar-x="true" scrollbar-y="true" locking="true" >  
+                            <ion-content class="fix_sidemenu_content_top" style="background: #ffffff;top: 45px;" has-tabs="true" delegate-handle="" scroll-event-interval="10" on-scroll="" on-scroll-complete="" has-bouncing="true" scroll="true" padding="false" scrollbar-x="true" scrollbar-y="true" locking="true" >  
 
                                 <ion-list can-swipe="true" show-delete="listData.showDelete" show-reorder="false" delegate-handle="" >
                                     <!-- <ion-item nav-clear menu-close ng-repeat="menu in menus" href="#/app/todolist/{{menu.groupId}}">  
                                     
                                         <i class="icon ion-android-clock"></i>  {{menu.title}} <span class="badge" ng-if="menu.badge>0">{{menu.badge}}</span>  
                                     </ion-item>   -->
-                                    <ion-item>
-                                        <div class="row">
-                                            <div class="col col-20" style="border-radius: 50%; background: #ffffff; box-shadow: #ccc 0px 0px 3px 0px; height: 50px; padding: 0; margin: 0; position: relative;">
+                                    <ion-item style="border-top: none;">
+                                        <div class="row fix_row">
+                                            <div class="col col-20" style="border-radius: 50%; background: #ffffff; box-shadow: #ccc 0px 0px 3px 0px; padding: 0; margin: 0; position: relative; max-width: 50px; max-height: 50px;">
                                                 <div>
                                                     <i class="icon ion-card" style="font-size: 30px; color: #0c60ee; width: 25px; height: 30px; position: absolute; top: 0; right: 0; bottom: 0; left: 0; margin: auto;"></i>
-                                                    <i class="icon ion-android-radio-button-on" style="color: #f11909;" ng-if="true"></i>
+                                                    <i class="icon ion-android-radio-button-on" style="color: #f11909; font-size: 12px;" ng-if="true"></i>
                                                 </div>
                                             </div>
-                                            <div class="col col-80">
+                                            <div class="col col-80" ng-click="openMessage('1')">
                                                     <div class="row" style="font-size: 16px;padding: 0;margin: 0;">
                                                         <div class="col col-60" style=" padding: 0; margin: 0; ">景区优惠</div>
                                                         <div class="col col-40" style=" padding: 0; margin: 0; text-align: right; font-size: 14px; color: #737070; ">01:16</div>
@@ -265,14 +275,15 @@
                                     </ion-item>  
 
                                     <ion-item>
-                                        <div class="row">
-                                                <div class="col col-20" style="border-radius: 50%; background: #ffffff; box-shadow: #ccc 0px 0px 3px 0px; height: 50px; padding: 0; margin: 0; position: relative;">                                            
+                                        
+                                        <div class="row fix_row">
+                                                <div class="col col-20" style="border-radius: 50%; background: #ffffff; box-shadow: #ccc 0px 0px 3px 0px;  padding: 0; margin: 0; position: relative; max-width: 50px; max-height: 50px;">                                            
                                                     <div>
-                                                        <i class="icon ion-android-car" style="font-size: 30px; color: #444; width: 25px; height: 30px; position: absolute; top: 0; right: 0; bottom: 0; left: 0; margin: auto;"></i>                                                                                                           
-                                                        <i class="icon ion-android-radio-button-on" style="color: #f11909;" ng-if="true"></i>
+                                                        <i class="icon ion-android-car" style="font-size: 30px; color: #444; width: 22px; height: 30px; position: absolute; top: 0; right: 0; bottom: 0; left: 0; margin: auto;"></i>                                                                                                           
+                                                        <i class="icon ion-android-radio-button-on" style="color: #f11909; font-size: 12px;" ng-if="true"></i>
                                                     </div>
                                                 </div>
-                                                <div class="col col-80">
+                                                <div class="col col-80" ng-click="openMessage('2')">
                                                         <div class="row" style="font-size: 16px;padding: 0;margin: 0;">
                                                             <div class="col col-60" style=" padding: 0; margin: 0; ">分时租赁</div>
                                                             <div class="col col-40" style=" padding: 0; margin: 0; text-align: right; font-size: 14px; color: #737070; ">22:16</div>
@@ -280,6 +291,16 @@
                                                         <div style="overflow: hidden; text-overflow: ellipsis; color: #676666; ">现在下单，送专车百元礼包！</div>
                                                 </div>
                                         </div>
+
+                                        <!-- <div class="list card">
+
+                                            <div class="item item-avatar">
+                                                <img src="http://www.runoob.com/try/demo_source/mcfly.jpg">
+                                                <h2>专车租赁</h2>
+                                                <p>现在下单，送专车百元礼包！</p>
+                                            </div>
+
+                                        </div> -->
 
                                         <ion-option-button class="button-positive" ng-click="listData.showDelete = true;" style="background: #f71c0b;">
                                             删除
