@@ -192,8 +192,8 @@ app.directive('qrcode', function() {
                 var draw = function() {
 
                     var option = {
-                        height: 100,
-                        width: 100,
+                        height: 150,
+                        width: 150,
                         text: $scope.infostr
                     };
 

@@ -3,7 +3,7 @@
  * Copyright 2015 Drifty Co.
  * http://drifty.com/
  *
- * Ionic, v1.3.1
+ * Ionic, v1.3.3
  * A powerful HTML5 mobile app framework.
  * http://ionicframework.com/
  *
@@ -3839,22 +3839,22 @@ a.subdued {
 .platform-android .action-sheet-has-icons .button {
   padding-left: 56px; }
 
-/*.backdrop {*/
-  /*position: fixed;*/
-  /*top: 0;*/
-  /*left: 0;*/
-  /*z-index: 11;*/
-  /*width: 100%;*/
-  /*height: 100%;*/
-  /*background-color: rgba(0, 0, 0, 0.4);*/
-  /*visibility: hidden;*/
-  /*opacity: 0;*/
-  /*-webkit-transition: 0.1s opacity linear;*/
-  /*transition: 0.1s opacity linear; }*/
-  /*.backdrop.visible {*/
-    /*visibility: visible; }*/
-  /*.backdrop.active {*/
-    /*opacity: 1; }*/
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 11;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: 0.1s opacity linear;
+  transition: 0.1s opacity linear; }
+  .backdrop.visible {
+    visibility: visible; }
+  .backdrop.active {
+    opacity: 1; }
 
 /**
  * Bar (Headers and Footers)
@@ -4008,8 +4008,8 @@ a.subdued {
     text-align: center;
     text-overflow: ellipsis;
     white-space: nowrap;
-    font-size: 16px;
-    font-weight: 300;
+    font-size: 17px;
+    font-weight: 500;
     line-height: 44px; }
     .bar .title.title-left {
       text-align: left; }
@@ -4357,7 +4357,7 @@ a.subdued {
   background-color: #f8f8f8;
   background-image: linear-gradient(0deg, #b2b2b2, #b2b2b2 50%, transparent 50%);
   color: #444;
-  position: relative;
+  position: absolute;
   bottom: 0;
   z-index: 5;
   width: 100%;
@@ -4375,7 +4375,7 @@ a.subdued {
       border-top: none !important;
       border-bottom: none;
       background-position: top;
-
+      background-size: 100% 1px;
       background-repeat: no-repeat; } }
 
 /* Allow parent element of tabs to define color, or just the tab itself */
@@ -5109,7 +5109,7 @@ ion-tabs.tabs-striped.tabs-color-active-dark .tab-item.tab-item-active, ion-tabs
   display: block;
   overflow: hidden;
   max-width: 150px;
-  /*height: 100%;*/
+  height: 100%;
   color: inherit;
   text-align: center;
   text-decoration: none;
@@ -5562,7 +5562,6 @@ ion-tabs.tabs-striped.tabs-color-active-dark .tab-item.tab-item-active, ion-tabs
     -webkit-animation-fill-mode: both;
     animation-fill-mode: both; }
   .popup-container .popup {
-    -webkit-box-shadow:0px 0px 10px #999!important;
     width: 250px;
     max-width: 100%;
     max-height: 90%;
@@ -9077,8 +9076,8 @@ a.button {
     padding: 0; }
 
 .row + .row {
-  /*margin-top: -5px;
-  padding-top: 0;*/ }
+  margin-top: -5px;
+  padding-top: 0; }
 
 .col {
   -webkit-box-flex: 1;

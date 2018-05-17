@@ -126,5 +126,5 @@ app.set('port', process.env.PORT || '3333');
 
 // @监听端口，使用 app.get() 获取设置值端口号变量值
 app.listen(app.get('port'), function () {
-	console.log('川梦大法师报告： Start at the port: ' + app.get('port'));
+	console.log('师法大梦川报告： 已启动端口 ' + app.get('port'));
 });

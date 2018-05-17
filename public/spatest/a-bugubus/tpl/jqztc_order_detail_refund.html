@@ -1,4 +1,4 @@
-<ui-view ng-controller="order_detail_refund">
+<ion-view ng-controller="order_detail_refund" view-title="购买成功" can-swipe-back="" cache-view="" hide-back-button="true" hide-nav-bar="">
 
     <style>
         
@@ -7,6 +7,10 @@
             color: #0c60ee;
             border: 1px solid;
             border-radius: 3px;
+        }
+
+        #qrcode img {
+            margin: 0 auto;
         }
         
     </style>
@@ -17,7 +21,7 @@
 
             <div class="notice2" >
                 <p>1、可左右滑动查看购买的车票或者门票</p>
-                <p>2、查看更多票据信息、退票等请在公众号的<span style="color:#47bd4c">我的行程</span>菜单栏中操作。</p>
+                <p>2、查看更多票据信息、退票等请在<span style="color:#47bd4c">我的行程</span>菜单栏中操作。</p>
             </div>
 
             <ion-slide-box show-pager="false">
@@ -186,16 +190,16 @@
                             <div ng-if="item.isPay != 0">
                                 
                                     <div class="row">
-                                            <div class="col">
-                                                <span class="btnfont11">入场请出示二维码!</span>
-                                            </div>
+                                        <div class="col">
+                                            <span class="btnfont11">入场请出示二维码!</span>
                                         </div>
-            
-                                        <div class="row">
-                                            <div class="col">
-                                                <qrcode infostr="item.qrcodeid"></qrcode>
-                                            </div>
+                                    </div>
+        
+                                    <div class="row">
+                                        <div class="col">
+                                            <qrcode infostr="item.qrcodeid"></qrcode>
                                         </div>
+                                    </div>
 
                             </div>
 
@@ -211,4 +215,4 @@
 
     </div>
     
-</ui-view>
+</ion-view>

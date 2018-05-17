@@ -1,4 +1,4 @@
-<ui-view ng-controller="order_confirm_pay">
+<ion-view ng-controller="order_confirm_pay" view-title="订单确认" can-swipe-back="" cache-view="" hide-back-button="" hide-nav-bar="">
 
     <style>
             .modal {
@@ -133,7 +133,7 @@
                         <div class="col col-50" style="padding: 0;">
                         
                             <div style="text-align: right;margin: 10px 10px 0px 10px;">
-                                <i class="icon ion-ios-information-outline" style="color: #f76601;font-size: 17px;margin-right: 3px;"></i><span style="color: #656572;" ng-click="yonghuxuzhi_Fn()">用户须知</span>
+                                <i class="icon ion-ios-information-outline" style="color: #f76601;font-size: 17px;margin-right: 3px;"></i><span style="color: #656572;" ng-click="yonghuxuzhi_Fn.show()">用户须知</span>
                             </div>
 
                         </div>
@@ -334,7 +334,15 @@
                     </div>
 
                     <!-- 占位元素 -->
-                    <div class="row" style="padding-top: 50px;padding-bottom: 0;">
+                    <div class="row" style="padding-top: 50px; padding-bottom: 0;">
+                        <div class="col" style="padding-bottom: 0;">
+                        </div>
+                    </div>
+                    <div class="row" style="padding-top: 50px; padding-bottom: 0;">
+                        <div class="col" style="padding-bottom: 0;">
+                        </div>
+                    </div>
+                    <div class="row" style="padding-top: 50px; padding-bottom: 0;">
                         <div class="col" style="padding-bottom: 0;">
                         </div>
                     </div>
@@ -344,7 +352,7 @@
         </ion-content>
 
         <!-- 固定在底部的支付按钮 -->
-        <div class="bar bar-footer" style="background: #E6E7E8;padding: 0;margin: 0;">
+        <div class="bar bar-footer" style="background: #f7f7f7; padding: 0; margin: 0; margin-bottom: 49px;">
             
                 <div class="title" style="
                     width: 70%;
@@ -427,4 +435,4 @@
     </div>
 
 
-</ui-view>
+</ion-view>

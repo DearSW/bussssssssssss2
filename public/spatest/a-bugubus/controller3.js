@@ -172,6 +172,29 @@ var floatObj = function() {
  *  @描述：页面控制器
  */
 app
+
+    /**
+     * @app-center 控制器
+     */
+    .controller('app_center', function($rootScope, $scope, $state, $timeout, $interval, $ionicHistory) {
+
+        $scope.clearWorks = function() {
+            console.log('师法大梦川报告：on-deselect执行');
+            $interval.cancel($rootScope.searchSlideImageTimer);
+        }
+        
+        $rootScope.myGoBack = function() {
+            console.log('师法大梦川报告：myGoBack执行');            
+            $ionicHistory.goBack();
+        };
+
+        $rootScope.myGoHome = function() {
+            console.log('师法大梦川报告：myGoHome执行');            
+            $ionicHistory.goBack(-9);
+        };
+
+    })
+
     /**
      * @首页、搜索、控制器
      */
@@ -179,7 +202,7 @@ app
         
         /************************************************************ */
         
-        var slideImageTimer = null; // @图片定时器
+        $rootScope.searchSlideImageTimer = null; // @图片定时器
         
         // @流程控制，确保推荐在未关闭Ng页面之前仅仅请求一次，优化
         if(sessionStorage.getItem("recommendImgCount") == null) { // @首次加载
@@ -207,7 +230,7 @@ app
         
             // @请求获取推荐路线数据  /web/product/queryRecommendProductList
             $myHttpService.postNoLoad('api/product/queryRecommendProductList', {}, function(data) {
-                console.log("川梦大法师报告：首页，图片推荐API返回的数据");
+                console.log("师法大梦川报告：首页，图片推荐API返回的数据");
                 console.log(data);
                 $rootScope.recommendProducts2 = data.products;
                 if($rootScope.recommendProducts2.length == 0) {
@@ -229,6 +252,7 @@ app
         }
         
         /************************************************************ */
+
         // @轮播
 
         function slideImage() { // @轮播控制函数
@@ -244,7 +268,7 @@ app
             }
         }
 
-        slideImageTimer = $interval(function() { // @定时器，开始轮播
+        $rootScope.searchSlideImageTimer = $interval(function() { // @定时器，开始轮播
             slideImage();
         }, 4000);
 
@@ -256,9 +280,9 @@ app
             var data = {
                 productid: item.productid
             };
-            console.log("川梦大法师报告：首页，点击图片进入产品页打印参数");
+            console.log("师法大梦川报告：首页，点击图片进入产品页打印参数");
             console.log(data);
-            $state.go('tabs', {data: JSON.stringify(data)}, {reload: true});
+            $state.go('app.tabs', {data: JSON.stringify(data)});
 
         };
 
@@ -365,7 +389,6 @@ app
             }
         */
 
-        
         /************************************************************ */
 
         if(recommendImgCount == 1) {
@@ -376,12 +399,12 @@ app
             // @搜索关键字 wechat/product/queryProductKeywords
             $myHttpService.postNoLoad('api/product/queryProductKeywords', {}, function(data) {
                 
-                console.log("川梦大法师报告：首页，搜索关键字API返回的数据");
+                console.log("师法大梦川报告：首页，搜索关键字API返回的数据");
                 console.log(data);
 
                 if(data.products != null && data.products.length != 0) {
                     $rootScope.roadLineData = data.products;
-                    console.log("川梦大法师报告：首页，路线数据数组");
+                    console.log("师法大梦川报告：首页，路线数据数组");
                     console.log($rootScope.roadLineData);
                 }
 
@@ -429,7 +452,7 @@ app
 
             $rootScope.isSearchBtnDisabled = false; // @开启搜索按钮的启用状态
 
-            console.log("川梦大法师报告：首页，用户当前点击选择的路线");
+            console.log("师法大梦川报告：首页，用户当前点击选择的路线");
             console.log(item);
 
             $rootScope.isSelectedRoadLine = item;
@@ -553,7 +576,7 @@ app
 
         }
         
-        // console.log("川梦大法师报告：全局城市数组数据");
+        // console.log("师法大梦川报告：全局城市数组数据");
         // console.log($rootScope.citys);
 
         // @字母modal的显示或者隐藏布尔值
@@ -712,7 +735,7 @@ app
 
         // @滑动结束函数，做一些清理工作，隐藏字母modal
         $scope.mRelease = function () {
-            console.log("川梦大法师报告：首页，mRelease滑动结束函数执行了");
+            console.log("师法大梦川报告：首页，mRelease滑动结束函数执行了");
             $timeout(function () {
                 $scope.showLetter = false;
             }, 300);
@@ -760,7 +783,7 @@ app
                     }
                 });
 
-                console.log("川梦大法师报告：首页，当前的城市数组");
+                console.log("师法大梦川报告：首页，当前的城市数组");
                 console.log($rootScope.citys);
 
             }
@@ -790,7 +813,7 @@ app
 
         // @选择城市
         $scope.chooseCity = function(city) {
-            console.log("川梦大法师报告：首页，用户当前点击选择的城市");
+            console.log("师法大梦川报告：首页，用户当前点击选择的城市");
             console.log(city);
             $rootScope.currentCity = city;
             $scope.citySelectModal.hide();
@@ -848,16 +871,17 @@ app
                 date: $filter('date')(new Date(), 'yyyy-MM-dd') // 时间
             };
 
-            console.log("川梦大法师报告：首页，打印搜索按钮传递到产品页的参数");
+            console.log("师法大梦川报告：首页，打印搜索按钮传递到产品页的参数");
             console.log(data);
 
             sessionStorage.setItem('jqztc_search_time', data.date);
 
-            $state.go('tabs', {data: JSON.stringify(data)}, {reload: true});
+            $state.go('app.tabs', {data: JSON.stringify(data)});
 
         }
 
         /************************************************************ */
+
         // @侧边栏菜单操作
 
         $scope.listData = {
@@ -923,11 +947,12 @@ app
         $scope.messageDate = new Date();
 
         /************************************************************ */
+
         // @离开页面时，做一些清除工作
         // @当DOM元素从页面中被移除时，ng将会在$scope中触发$destory事件。
         $scope.$on("$destroy", function() { // @清除定时器，防止定时的叠加效应
-            console.log("川梦大法师报告：首页，$destroy触发了");
-            $interval.cancel(slideImageTimer); // @专业的清除函数
+            console.log("师法大梦川报告：首页，$destroy触发了");
+            $interval.cancel($rootScope.searchSlideImageTimer); // @专业的清除函数
             $scope.roadSelectModal.remove();
             $scope.citySelectModal.remove();
             $scope.messageModal.remove();
@@ -942,6 +967,18 @@ app
      */
     .controller('Tabs', function($rootScope, $scope, $state, $timeout, $myHttpService, $myLocationService, $filter, ionicDatePicker, $ionicModal, $ionicLoading) {
 
+
+        /************************************************************ */
+
+        // @定义要聚焦的索引
+        $scope.focusIndex = 0;
+        // @更改要聚焦的tab
+        $scope.focus = function(index) {
+            $scope.focusIndex = index;
+        }
+
+        /************************************************************ */
+        
         // @接收 首页 传递过来的参数，并解析，打印
         var paramsData = JSON.parse($state.params.data);
         console.log("产品页：从首页传递过来的参数打印。");
@@ -1129,14 +1166,12 @@ app
             
                         $rootScope.jqztc_tab1_dateArr = arrayMinus($scope.dateArrTemp, $scope.ticketsInfo1.counts);
                         console.log($rootScope.jqztc_tab1_dateArr);
-                        
+                        // @格式化不可用日期数组
+                        for(var i = 0; i < $rootScope.jqztc_tab1_dateArr.length; i++) {
+                            $rootScope.jqztc_tab1_dateArr[i] = new Date($rootScope.jqztc_tab1_dateArr[i]);
+                        }
                     }
             
-                    // @格式化不可用日期数组
-                    for(var i = 0; i < $rootScope.jqztc_tab1_dateArr.length; i++) {
-                        $rootScope.jqztc_tab1_dateArr[i] = new Date($rootScope.jqztc_tab1_dateArr[i]);
-                    }
-
                     storageData('jqztc_cpy_ticketsInfo2', $scope.ticketsInfo2); // @存储数据，以便后用
 
                     if($scope.ticketsInfo2.length != 0) {
@@ -1256,7 +1291,7 @@ app
                 }
 
             } else {
-                $state.go('search');
+                $state.go('app.search');
             }
         }
 
@@ -1304,13 +1339,15 @@ app
                 
                             var jqztc_tab1_dateArr = arrayMinus(dateArrTemp, ticketsInfo1_temp.counts);
                             console.log(jqztc_tab1_dateArr);
+
+                            // @格式化不可用日期数组
+                            for(var i = 0; i < jqztc_tab1_dateArr.length; i++) {
+                                jqztc_tab1_dateArr[i] = new Date(jqztc_tab1_dateArr[i]);
+                            }
                             
                         }
                 
-                        // @格式化不可用日期数组
-                        for(var i = 0; i < jqztc_tab1_dateArr.length; i++) {
-                            jqztc_tab1_dateArr[i] = new Date(jqztc_tab1_dateArr[i]);
-                        }
+                        
 
                         var ipObj1 = {
                             callback: function (val) {  // @必选
@@ -1442,7 +1479,7 @@ app
                             closeLabel: '返回',
                             from: new Date(),
                             to: new Date(compareTime), // @11对应十二月，差1
-                            disabledDates: jqztc_tab1_dateArr,
+                            // disabledDates: jqztc_tab1_dateArr,
                             dateFormat: 'yyyy-MM-dd', // @可选
                             closeOnSelect: true, // @可选,设置选择日期后是否要关掉界面。呵呵，原本是false。
                             inputDate: new Date(),
@@ -1464,7 +1501,7 @@ app
                     console.log(item);
                     $timeout(function() {
                         $ionicLoading.hide();
-                        $state.go('order_confirm_pay', {data: JSON.stringify(item)});
+                        $state.go('app.order_confirm_pay', {data: JSON.stringify(item)});
                     }, 250);
     
                 }
@@ -1482,7 +1519,7 @@ app
 
                 $timeout(function() {
                     $ionicLoading.hide();
-                    $state.go('order_confirm_pay', {data: JSON.stringify(item)});
+                    $state.go('app.order_confirm_pay', {data: JSON.stringify(item)});
                 }, 250);
 
             }
@@ -1517,6 +1554,8 @@ app
 
         }
 
+        /************************************************************ */
+        
         // @产品信息 下拉刷新
         /*
             $scope.doRefreshRoad = function() {
@@ -1695,6 +1734,8 @@ app
         $scope.onHover = function(val){};
         $scope.onLeave = function(){};
 
+        /************************************************************ */
+        
         // @日期选择
 
         // @后一天 
@@ -2869,11 +2910,6 @@ app
             
         }
 
-        $scope.$on('$destroy', function() {
-            $scope.couponChooseModal.remove();
-        });
-
-
         // ************************************************************************************************
 
 
@@ -3035,7 +3071,7 @@ app
                     if(data.updateCoupon) {
                         console.log("订单页：优惠券支付成功，传递到支付成功页的参数");                        
                         console.log(data3);
-                        $state.go('order_detail_refund', {data: JSON.stringify(data3)}, {reload: true});                        
+                        $state.go('app.order_detail_refund', {data: JSON.stringify(data3)});                        
                     } else {
                         layer.open({
                             content: '支付失败',
@@ -3069,7 +3105,7 @@ app
                                         alert("您已成功支付");
                                         console.log("订单页：微信支付成功，传递到支付成功页的参数");
                                         console.log(data3);
-                                        $state.go('order_detail_refund', {data: JSON.stringify(data3)}, {reload: true});
+                                        $state.go('app.order_detail_refund', {data: JSON.stringify(data3)});
                                     }, function(data) {
                                         layer.open({
                                             content: '支付失败，请联系客服处理。',
@@ -3110,16 +3146,35 @@ app
         // ************************************************************************************************
         
 
-        $scope.yonghuxuzhi_Fn = function() { // @用户须知弹窗函数
-            
-            layer.open({
-                type: 1,
-                content: '<p style="text-align: right;margin-top: 10px;"><i class="icon ion-ios-close-empty" style="color:#ccc;font-size: 45px;margin-right: 10px;" onclick="layer.closeAll();"></i></p><div style="margin: 5px 15px;">' + $scope.ticketInfo.productinfo + '</div>',
-                anim: 'up',
-                style: 'position: absolute; left:0; top:0; width:100%; height:100%; border: none; -webkit-animation-duration: .3s; animation-duration: .3s;background: white;'
-            });
+        // @弹窗须知函数
+        $scope.yonghuxuzhi_Fn = $ionicModal.fromTemplate('<ion-modal-view>'+
+            '	  '+
+            '        <ion-header-bar class="bar bar-header" >'+
+            '		'+
+            // '		   <button class="button  button-balanced" ng-click="coupon_NOFn()" style="background: rgba(240, 248, 255, 0.09);color: #676464;">取消</button>'+
+            '          <h1 class="title" style="color: black;font-size: 17px;font-weight: 400;">用户须知</h1>'+
+            '          <button class="button button-balanced" ng-click="yonghuxuzhi_Fn.hide()" style="background: rgba(240, 248, 255, 0.09);color: #676464;">确定</button>'+
+            '		'+
+            '        </ion-header-bar>'+
+            '		'+
+            '        <ion-content class="padding" style="background: #ffffff;" >'+
+            '		    <p style=""><span>{{ticketInfo.productinfo}}</span></p>'+
+            '        </ion-content>'+
+            '		'+
+            '      </ion-modal-view>', {
+            scope: $scope,
+            animation: 'slide-in-up'
+        });
 
-        }
+        // ************************************************************************************************
+        
+        // @清除工作
+        $scope.$on('$destroy', function() {
+            console.log("师法大梦川报告：订单页，$destroy执行");
+            $scope.couponChooseModal.remove();
+            $scope.yonghuxuzhi_Fn.remove();
+        });
+
         
     })
 
@@ -3201,8 +3256,8 @@ app
                 carid: item.carid,
                 lineid: item.lineid
             };
-            $state.go('ticket_detail.bus_position', {data: JSON.stringify(data)}, {reload: false});
-        } 
+            $state.go('app.bus_position', {data: JSON.stringify(data)});
+        }
                
     })
 
@@ -4305,7 +4360,7 @@ app
         $scope.submitBtnIsDiasbled = true; // 控制提交按钮的状态
 
         if(JSON.parse($state.params.data) == null) {
-            $state.go('myplan');
+            $state.go('app.myplan');
         } else {
 
             // @接受参数
@@ -4521,16 +4576,20 @@ app
     })
 
     /**
-     * @我的个人页 信息保存 编辑 控制器
+     * @我的个人信息 保存 编辑 控制器
      */
     .controller('IUserController', function($rootScope, $scope, $location, $state, $myHttpService) {
         
         $scope.tempUser = {};
         var tempUser2 = {};
 
-        $myHttpService.post("api/user/queryUserinfo", {
+        $myHttpService.postNoLoad("api/product/queryUserinfo", {
             userid: $rootScope.session.user.userInfo.userid
         }, function(data) {
+
+            console.log("个人信息页：查询用户个人信息返回的数据");
+            console.log(data);
+
             if(data.flag) {
                 $scope.user = data.user;
                 if($scope.user.userid.length > 4) {
@@ -4578,7 +4637,7 @@ app
                     $scope.editButtonText = "设置";
                     $scope.editCance = false;                
                     //保存用户信息
-                    $myHttpService.post("api/user/modifyUserInfo", $scope.tempUser, function(data) {
+                    $myHttpService.post("api/product/modifyUserInfo", $scope.tempUser, function(data) {
                         $scope.user = angular.copy($scope.tempUser);
                     });
                 }
@@ -4591,6 +4650,36 @@ app
             $scope.editCance = false;
             $scope.user = angular.copy(tempUser2);
         }
+    })
+
+    /**
+     * @用户中心
+     */
+    .controller('userCenter', function($rootScope, $scope, $location, $state, $myHttpService) {
+
+        $myHttpService.postNoLoad("api/product/queryUserinfo", {
+            userid: $rootScope.session.user.userInfo.userid
+        }, function(data) {
+
+            console.log("用户中心页：查询用户个人信息返回的数据");
+            console.log(data);
+            if(data.flag) {
+                $scope.user = data.user;
+            } else {
+                $state.go('auth.login');
+            }
+        });
+
+        // @去往 行程
+        $scope.goMyPlan = function() {
+            $state.go('app.myplan');
+        }
+
+        // @去往 我的个人资料
+        $scope.goMyUser = function() {
+            $state.go('app.user');
+        }
+
     })
 
 /**

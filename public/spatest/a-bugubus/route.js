@@ -75,13 +75,14 @@ angular.module('app', [
             closeOnSelect: true,
             disableWeekdays: []
         };
+
         ionicDatePickerProvider.configDatePicker(datePickerObj);
 
         // @跨平台配置
         $ionicConfigProvider.platform.ios.tabs.style('standard'); 
-        $ionicConfigProvider.platform.ios.tabs.position('top');
+        $ionicConfigProvider.platform.ios.tabs.position('bottom');
         $ionicConfigProvider.platform.android.tabs.style('standard');
-        $ionicConfigProvider.platform.android.tabs.position('top');
+        $ionicConfigProvider.platform.android.tabs.position('bottom');
         $ionicConfigProvider.platform.ios.navBar.alignTitle('center'); 
         $ionicConfigProvider.platform.android.navBar.alignTitle('center');
         $ionicConfigProvider.platform.ios.backButton.previousTitleText('').icon('ion-ios-arrow-thin-left');
@@ -89,13 +90,44 @@ angular.module('app', [
         $ionicConfigProvider.platform.ios.views.transition('ios'); 
         $ionicConfigProvider.platform.android.views.transition('android');
 
+        // @配置页面的缓存数量
+        $ionicConfigProvider.views.maxCache(0);
+
         // @把$stateprovider和$urlrouterprovider路由引擎作为函数参数传入
+
         // @路由 配置
         var basePath = "a-bugubus/";
 
-        $urlRouterProvider.otherwise('/search');
+        $urlRouterProvider.otherwise('/app/search');
 
         $stateProvider
+
+            .state('app', {
+                url: '/app',
+                abstract: true,
+                templateUrl: basePath + 'tpl/app_home.html',
+                controller: 'app_center'
+            })
+
+            .state('app.usercenter', {
+                //我的用户主目录
+                url: '/usercenter',
+                views: {
+                    "user-center": {
+                        templateUrl: basePath + "tpl/user_center.html"
+                    }
+                }
+                
+            })
+
+            // .state('tabs.home', {
+            //     url: "/home",
+            //     views: {
+            //       'home-tab': {
+            //         templateUrl: "templates/home.html",
+            //         controller: 'HomeTabCtrl'
+            //     }
+            // }
 
             /************************ 
              * 
@@ -108,10 +140,11 @@ angular.module('app', [
                 url: '/auth',
                 template: '<div ui-view class="fadeInUp animated"></div>'
             })
-            .state('auth.login', {
+
+            .state('app.login', {
                 //跳转到用户登录页面
                 url: '/login?url',
-                templateUrl: basePath+'tpl/login.html' // 向ui-view中插入HTML模板文件
+                templateUrl: basePath + 'tpl/login.html' // 向ui-view中插入HTML模板文件
             })
 
             /************************ 
@@ -126,18 +159,18 @@ angular.module('app', [
              * 
              ************************/
 
-            .state('select_location',{
+            .state('app.select_location',{
                 url: '/select_location/{params}/{status}',
                 templateUrl:basePath+'tpl/select-location.html'
             })
 
-            .state('select_address',{
+            .state('app.select_address',{
                 url:'/select_address/{params}',
                 templateUrl:basePath+'tpl/select-address.html'
             })
 
             /*城市选择*/
-            .state('select_city',{
+            .state('app.select_city',{
                 url:'/select_city',
                 templateUrl:basePath+'tpl/select_city.html'
             })
@@ -162,10 +195,15 @@ angular.module('app', [
             })
 
             //账户信息
-            .state('i.user', {
+            .state('app.user', {
                 //我的用户主目录
                 url: '/user',
-                templateUrl: basePath + 'tpl/i-user.html'
+                views: {
+                    "user-center": {
+                        templateUrl: basePath + 'tpl/i-user.html'
+                    }
+                }
+                
             })
 
             /************************ 
@@ -179,39 +217,56 @@ angular.module('app', [
              * @包车服务   开始
              * 
              ************************/
-            //包车服务
-            .state('bus_service1',{
-                //申请包车
-                url:'/bus_service1',
-                templateUrl:basePath+'tpl/bus_service_1.html',
+            // @包车服务
+            .state('app.bus_service1', {
+                url: '/bus_service1',
+                views: {
+                    'car-center': {
+                        templateUrl: basePath + 'tpl/bus_service_1.html'
+                    }
+                }
             })
-            //填写信息
-            .state('bus_service_mess', {
-                url:'/bus_service2?usermessobj',
-                templateUrl:basePath+'tpl/bus_service_2.html',
-            })
-            //用户完整信息
-            .state('bus_service_all',{
-                url:'/bus_service_all?charterid&caseStatus',
-                templateUrl:basePath+'tpl/bus_service_3.html',
+            // @填写信息
+            .state('app.bus_service_mess', {
+                url: '/bus_service2?usermessobj',
+                views: {
+                    'car-center': {
+                        templateUrl: basePath + 'tpl/bus_service_2.html'
+                    }
+                }
             })
 
-            /*提交成功界面*/
-            .state('bus_submit_success',{
-                url:'/bus_submit_success?charterid&caseStatus',
-                templateUrl:basePath+'tpl/bus_service_success.html',
+            // @用户完整信息
+            .state('app.bus_service_all', {
+                url: '/bus_service_all?charterid&caseStatus',
+                views: {
+                    'car-center': {
+                        templateUrl: basePath + 'tpl/bus_service_3.html'
+                    }
+                }
+            })
+
+            // @提交成功界面
+            .state('app.bus_submit_success', {
+                url: '/bus_submit_success?charterid&caseStatus',
+                views: {
+                    'car-center': {
+                        templateUrl: basePath + 'tpl/bus_service_success.html'
+                    }
+                }
             })
 
             //包车订单的历史信息
-            .state('bus_service_history',{
-                url:'/bus_service_history',
-                templateUrl:basePath+'tpl/bus_service_history.html'
+            .state('app.bus_service_history', {
+                url: '/bus_service_history',
+
+                templateUrl: basePath + 'tpl/bus_service_history.html'
             })
 
             //跳转支付界面
-            .state('bus_service_pay',{
-                url:'/bus_service_pay?totalfee&charterid',
-                templateUrl:basePath+'tpl/bus_service_pay.html'
+            .state('app.bus_service_pay', {
+                url: '/bus_service_pay?totalfee&charterid',
+                templateUrl: basePath + 'tpl/bus_service_pay.html'
             })
 
             /************************ 
@@ -227,47 +282,65 @@ angular.module('app', [
              ***********************************/
 
             /*景区直通车：搜索、主页*/
-            .state('search', {
+            .state('app.search', {
                 url: '/search',
-                templateUrl: basePath + 'tpl/jqztc_search.html'
+                views: {
+                    'home-center': {
+                        templateUrl: basePath + 'tpl/jqztc_search.html'
+                    }
+                }
             })
 
             /*景区直通车：路线、点评、须知*/
-            .state('tabs', {
+            .state('app.tabs', {
                 url: '/tabs',
-                cache: true,
                 params: {
                     data: null
                 },
-                templateUrl: basePath + 'tpl/jqztc_tab1.html'
+                views: {
+                    'home-center': {
+                        templateUrl: basePath + 'tpl/jqztc_tab1.html'
+                    }
+                }
+                
             })
 
             /*景区直通车测试页面*/
-            .state('test', {
+            .state('app.test', {
                 url: '/test',
                 templateUrl: basePath + 'tpl/jqztc_test.html'
             })
 
             /*景区直通车：订单确认、支付*/
-            .state('order_confirm_pay', {
+            .state('app.order_confirm_pay', {
                 url: '/order_confirm_pay',
                 params: {
                     data: null
                 },
-                templateUrl: basePath + 'tpl/jqztc_order_confirm_pay.html'
+                views: {
+                    'home-center': {
+                        templateUrl: basePath + 'tpl/jqztc_order_confirm_pay.html'
+                    }
+                }
+                
             })
 
             /*景区直通车：订单详情、退款*/
-            .state('order_detail_refund', {
+            .state('app.order_detail_refund', {
                 url: '/order_detail_refund',
                 params: {
                     data: null
                 },
-                templateUrl: basePath + 'tpl/jqztc_order_detail_refund.html'
+                views: {
+                    'home-center': {
+                        templateUrl: basePath + 'tpl/jqztc_order_detail_refund.html'
+                    }
+                }
+                
             })
 
             /*景区直通车：订单验证、评论*/
-            .state('order_check_comment', {
+            .state('app.order_check_comment', {
                 url: '/order_check_comment',
                 params: {
                     data: null,
@@ -279,9 +352,14 @@ angular.module('app', [
             })
 
             /*景区直通车：我的行程*/
-            .state('myplan', {
+            .state('app.myplan', {
                 url: '/myplan',
-                templateUrl: basePath + 'tpl/jqztc_myplan.html'
+                views: {
+                    'user-center': {
+                        templateUrl: basePath + 'tpl/jqztc_myplan.html'
+                    }
+                }
+                
             })
 
             /*景区直通车：车辆位置地图1*/
@@ -291,16 +369,15 @@ angular.module('app', [
             // })
 
             /*景区直通车：车票详情*/
-            .state('ticket_detail', {
+            .state('app.ticket_detail', {
                 abstract: true,
                 url: '/ticket_detail',
                 template: '<div ui-view class="fadeInUp animated"></div>'
             })
 
             /*景区直通车：车票详情*/
-            .state('ticket_detail.ticketdetail', {
+            .state('app.ticketdetail', {
                 url: '/ticketdetail', 
-                cache: true,
                 params: {
                     data: null
                 },
@@ -308,16 +385,34 @@ angular.module('app', [
             })
 
             /*景区直通车：车辆位置地图2*/
-            .state('ticket_detail.bus_position', {
+            .state('app.bus_position', {
                 url: '/bus_position', 
                 params: {
                     data: null
                 },
-                templateUrl: basePath + 'tpl/jqztc_bus_position.html'
+                views: {
+                    'user-center': {
+                        templateUrl: basePath + 'tpl/jqztc_bus_position.html'
+                    }
+                }
+                
+            })
+            
+            .state('app.bus_position2', {
+                url: '/bus_position2', 
+                params: {
+                    data: null
+                },
+                views: {
+                    'home-center': {
+                        templateUrl: basePath + 'tpl/jqztc_bus_position.html'
+                    }
+                }
+                
             })
 
             /*景区直通车：门票详情*/
-            .state('ticket_admission_detail', {
+            .state('app.ticket_admission_detail', {
                 url: '/ticket_admission_detail', 
                 params: {
                     data: null
@@ -358,9 +453,5 @@ angular.module('app', [
  *   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
  *                     佛祖保佑        永无BUG
  *                     佛祖保佑        永无BUG
- * 
- *                     操你妈的狗逼设计和策划
- *                     操你妈的狗逼设计和策划
- *                     操你妈的狗逼设计和策划
- *                     操你妈的狗逼设计和策划
- */
+ *
+*/

@@ -1,0 +1,60 @@
+<style>
+    .tab-item {
+        border-bottom: none;
+    }
+
+    .tab-item.tab-item-active, .tab-item.active, .tab-item.activated {
+        color: #F44336;
+    }
+
+    /* 解决tabs的定位问题 */
+    .tabs-positive > .tabs,  
+    .tabs.tabs-positive {
+        position: fixed;
+        background-color: #ffffff;
+        color: #101010;
+        box-shadow: #aba6a68f 0px 0px 9px 2px;
+        background-image: none;
+        border: none;
+    }
+
+    /* .tabs-top > .tabs, .tabs.tabs-top {
+        top: unset;
+    } */
+
+</style>
+
+<ion-tabs class="tabs-positive tabs-icon-top tabs-bottom">  
+  
+        <ion-tab title="首页" href="#/app/search" on-select="" on-deselect="clearWorks()" icon-on="ion-ios-home" icon-off="ion-ios-home-outline">  
+             
+            <ion-nav-view name="home-center" animation="slide-left-right-ios7"></ion-nav-view>
+                
+        </ion-tab>  
+        
+        <!-- href="#/myplan" -->
+        <ion-tab title="租赁" href="#/app/bus_service1" on-select=""  on-deselect=""  icon-on="ion-android-bicycle" icon-off="ion-model-s" badge="12" badge-style="badge-assertive">  
+
+            <!-- <ion-view>  
+                <ion-header-bar  class="bar-positive">  
+                    <h1 class="title">about tab</h1>  
+                </ion-header-bar>  
+                <ion-content>  
+                    <p>about content</p>  
+                    <a ui-sref="bus_service1">test</a><br>
+                    <a ui-sref="bus_service1">test</a>
+                    <a ui-sref="bus_service1">test1</a><br>
+                    <a ui-sref="myplan">test2</a>
+                </ion-content>  
+            </ion-view> -->
+            <ion-nav-view name="car-center" animation="slide-left-right-ios7"></ion-nav-view>
+
+        </ion-tab>  
+  
+        <ion-tab title="我的" href="#/app/usercenter" on-select="" on-deselect="" icon-on="ion-android-person" icon-off="ion-ios-person-outline">  
+
+            <ion-nav-view name="user-center" animation="slide-left-right-ios7"></ion-nav-view>            
+
+        </ion-tab>  
+  
+    </ion-tabs>  

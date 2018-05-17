@@ -118,11 +118,15 @@ app
         });
 
         $http.post(url, data).success(function(data) {
+
             window.setTimeout(function() {
                 $ionicLoading.hide();
             }, 250);
+
             if(data.code == 0) {
+
                 success(data.data);
+
             } else {
                 var errorMsg = "";
                 if(data.data.msg) {
@@ -139,7 +143,7 @@ app
                     error(data.data);
                 }
             }
-            //$scope.dt = $scope.driver.birthday;
+            
         }).error(function(e) {
             $ionicLoading.hide();
             if(layer) {
@@ -158,8 +162,11 @@ app
     this.postNoLoad = function(url, data, success, error) {
 
         $http.post(url, data).success(function(data) {
+
             if(data.code == 0) {
+
                 success(data.data);
+
             } else {
                 var errorMsg = "";
                 if(data.data.msg) {
@@ -175,8 +182,8 @@ app
                 if(error) {
                     error(data.data);
                 }
-            }
-            //$scope.dt = $scope.driver.birthday;
+            } 
+
         }).error(function(e) {
             if(layer) {
                 layer.alert(e.message);
@@ -199,9 +206,15 @@ app
         });
 
         $http.get(url, data).success(function(data) {
-            $ionicLoading.hide();
+
+            window.setTimeout(function() {
+                $ionicLoading.hide();
+            }, 250);
+
             if(data.code == 0) {
+
                 success(data.data);
+
             } else {
                 var errorMsg = "";
                 if(data.data.msg) {
@@ -218,7 +231,7 @@ app
                     error(data.data);
                 }
             }
-            //$scope.dt = $scope.driver.birthday;
+            
         }).error(function(e) {
             $ionicLoading.hide();
             if(layer) {

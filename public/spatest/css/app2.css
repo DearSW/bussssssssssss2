@@ -280,7 +280,7 @@
 .jqztc-tabs .tab-item.active, 
 .jqztc-tabs .tab-item.activated {
     border-bottom: 3px solid #FB9626 !important;
-    border-color: #FB9626 !important;
+    border-color: #444 !important;
 }
 
 .jqztc-tabs .picture img {

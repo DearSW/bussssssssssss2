@@ -1,0 +1,64 @@
+<ion-view ng-controller="userCenter" view-title="个人中心" can-swipe-back="" cache-view="" hide-back-button="" hide-nav-bar="true">
+
+    <style>
+
+        .spinner svg {
+            stroke: #ddd;
+            fill: #ddd;
+        }
+        
+        .fix_userCenterAvatar {
+            top: 10px;
+            left: 50%;
+            margin-left: -30px;
+            width: 100%;
+            max-width: 60px;
+            max-height: 60px;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+        }
+
+    </style>
+
+    <!-- 用户中心 -->
+
+    <ion-content class="padding-top" style="background: #ffffff;">
+
+        <div class="list card">
+
+            <div class="item item-avatar" style="height: 150px; padding: 0; padding-top: 85px; text-align: center;">
+                <img  src="/spatest/images/avtar.png" ng-click="goMyUser()" style="top: 10px; left: 50%; margin-left: -30px; width: 100%; max-width: 60px; max-height: 60px; width: 100%; height: 100%; border-radius: 50%;">
+                <h2>{{user.username}}</h2>
+                <p><i class="icon ion-ios-flame" style="margin-right: 5px; color: #a2a2a2; font-size: 15px;"></i>白金会员</p>
+            </div>
+                    
+            <a  class="item item-icon-left" ng-click="goMyPlan()">
+                <i class="icon ion-android-map" style="font-size: 23px;"></i>
+                <i class="icon ion-ios-circle-filled" ng-if="false" style="font-size: 10px; position: absolute; top: -11px; left: 26px;  color: #e42112;"></i>                
+                行程
+            </a>
+    
+            <a  class="item item-icon-left">
+                <i class="icon ion-card" style="font-size: 23px;"></i>
+                <i class="icon ion-ios-circle-filled" ng-if="true" style="font-size: 10px; position: absolute; top: -11px; left: 26px;  color: #e42112;"></i>
+                钱包
+            </a>
+
+            <a  class="item item-icon-left">
+                <i class="icon ion-ios-telephone" style="font-size: 23px;"></i>
+                <i class="icon ion-ios-circle-filled" ng-if="false" style="font-size: 10px; position: absolute; top: -11px; left: 26px;  color: #e42112;"></i>                
+                客服
+            </a>
+    
+            <a class="item item-icon-left">
+                <i class="icon ion-ios-gear" style="font-size: 23px;"></i>
+                <i class="icon ion-ios-circle-filled" ng-if="true" style="font-size: 10px; position: absolute; top: -11px; left: 26px;  color: #e42112;"></i>                
+                设置
+            </a>
+        
+        </div>
+
+    </ion-content>
+
+</ion-view>
