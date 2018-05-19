@@ -22,9 +22,9 @@
                 width: 100%;
                 white-space: normal;
             }
-                
+
             .jqztc-tabs .pl {
-                padding-top: 0; 
+                padding-top: 0;
                 padding-bottom: 0;
                 /* margin-top: 32px; */
             }
@@ -49,13 +49,13 @@
             }
 
     </style>
-               
+
     <div class="jqztc-tabs">
 
         <div class="tabs-top tabs-icon-left tabs-background-positive tabs-color-light">
 
             <!-- 导航栏 -->
-            <div class="tabs" style="margin-top: 95px;">
+            <div class="tabs" style="margin-top: 45px; background-image: none;">
                 <a class="tab-item"  style="color:black;border: none;" ng-class="{'active':focusIndex==0}" href="javascript:;" ng-click="focus(0)">
                     <i class="icon ion-android-bus" style="color:black"></i>
                     路线
@@ -69,44 +69,44 @@
             <!-- 内容区 -->
             <div class="pages">
 
-                <div class="page" style="margin-top: 149px;" ng-if="focusIndex==0">
+                <div class="page" style="margin-top: 85px;" ng-if="focusIndex==0">
 
-                    <div style="position: fixed; top: 46px; left: 0; width: 100%; white-space: normal; border-bottom: 1px solid #e8e7e7;">
+                    <div style="position: fixed; top: 92px; left: 0; width: 100%; white-space: normal; border-bottom: 1px solid #e8e7e7;">
 
                         <div class="notice">
                                 <p style="margin-left: 5px;">
-                                    <i class="icon ion-ios-information" style="color:crimson;font-size: 14px;"></i> 
+                                    <i class="icon ion-ios-information" style="color:crimson;font-size: 14px;"></i>
                                     如行程有变，请于发车前1小时以上，申请退款，超时或验票后不能退款。
                                 </p>
                         </div>
-        
+
                         <div style="display: block; height: 44px; text-align: center; color: #3D3E3F; width: 100%; background: #ffd63e;">
-            
+
                             <div class="row" style="font-size: 14px;">
-        
+
                                 <div class="col col-30" ng-click="prevDay()" style="text-align: left;">
-        
+
                                     <i class="icon ion-ios-arrow-left" style="margin-left: 10px;"></i>
-                                    
+
                                     <span style="display: inline-block;margin-left: 15px;">前一天</span>
                                 </div>
-                        
+
                                 <div class="col col-40" ng-click="selectDay()" style="background: #f8f8f8; border-radius: 4px; padding: 5px; text-align: center; ">
                                     <span>{{currentSelectedDate}} {{currentSelectedDate2}}</span>
                                 </div>
-                        
+
                                 <div class="col col-30" ng-click="nextDay()" style="text-align:right;">
                                     <span style="display: inline-block;/* margin: 0 15px; */margin-right: 15px;">后一天</span>
                                     <i class="icon ion-ios-arrow-right" style="margin-right: 10px;"></i>
                                 </div>
-        
+
                             </div>
-                    
+
                         </div>
 
                     </div>
 
-                    <ion-content class="has-header lx" style="background: #f9f9f9;margin-top: 112px;" has-tabs="true">
+                    <ion-content class="has-header lx" style="background: #f9f9f9;margin-top: 147px;" has-tabs="true">
 
                         <!-- <ion-refresher pulling-text="下拉刷新" pulling-icon="ion-ios-arrow-thin-down" on-refresh="doRefreshRoad()" spinner="dots" ></ion-refresher> -->
 
@@ -122,16 +122,16 @@
                                 <div ng-if="ticketsInfo1.plans != null">
 
                                     <ion-item style="padding: 5px 0;">
-                                            
+
                                         <div  ng-click="purchase(ticketsInfo1, i)">
 
                                                 <div class="row">
-                                                    
+
                                                     <div class="col" style="white-space: normal;">
                                                             <span style="margin-left: 10px;">
                                                                     <div class="btnfont" my-tag my-tags="ticketsInfo1_prodcutType2"></div>
                                                             </span>
-                                                            
+
                                                             <span style="font-size: 17px;" class="btnfont4" ng-if="ticketsInfo1.plans[0].bdidType == 0">{{ticketsInfo1.plans[0].departtime}}</span>
                                                             <span style="font-size: 17px;" class="btnfont4" ng-if="ticketsInfo1.plans[0].bdidType != 0">{{ticketsInfo1.plans[0].departtime}}-{{ticketsInfo1.plans[1].departtime}}</span>
 
@@ -149,7 +149,7 @@
                                                             <span class="station-address2">{{ticketsInfo1_station[1]}}</span>
                                                         </div>
                                                 </div>
-            
+
                                                 <div class="row purchase">
 
                                                     <div class="col col-75">
@@ -157,10 +157,10 @@
                                                             <div ng-if="ticketsInfo1.plans[0].bdidType == 0">
                                                                 <div style="margin: 0 0 8px 11px;white-space: normal;" >发车地点: {{ticketsInfo1_departAddr}}</div>
                                                             </div>
-                            
+
                                                             <div ng-if="ticketsInfo1.plans[0].bdidType != 0">
                                                                 <div style="margin: 0 0 8px 11px;white-space: normal;" >发车地点: {{ticketsInfo1_departAddr}}</div>
-                                                                <div style="margin: 0 0 8px 11px;white-space: normal;" >返程地点: {{ticketsInfo1_arriveAddr}}</div>                                                            
+                                                                <div style="margin: 0 0 8px 11px;white-space: normal;" >返程地点: {{ticketsInfo1_arriveAddr}}</div>
                                                             </div>
 
                                                     </div>
@@ -173,14 +173,14 @@
 
                                                 </div>
                                         </div>
-                                        
+
                                     </ion-item>
 
                                 </div>
 
                                 <!-- 无车票时 -->
                                 <div ng-if="ticketsInfo1.plans == null">
-                                    
+
                                     <!-- 有门票时 -->
                                     <div ng-if="ticketsInfo1.viewInfo != null">
 
@@ -189,24 +189,24 @@
                                             <div ng-click="purchase(ticketsInfo1, i)">
 
                                                 <div class="row">
-                                                        
+
                                                     <div class="col" style="white-space: normal;">
                                                             <span style="margin-left: 10px;">
                                                                     <div class="btnfont btnfontblue">门票</div>
                                                             </span>
-                                                            
+
                                                             <span>有效时间：</span><span style="font-size: 17px;">{{currentSelectedDate}}</span>
-                                                            
+
                                                     </div>
 
                                                 </div>
-                                                    
+
                                                 <div class="row startposition">
                                                         <div class="col">
                                                             <span class="station-address">{{ticketsInfo1.viewInfo.viewName}}</span>
                                                         </div>
                                                 </div>
-            
+
                                                 <div class="row purchase">
 
                                                     <div class="col col-75">
@@ -222,7 +222,7 @@
                                                 </div>
 
                                             </div>
-                                            
+
                                         </ion-item>
 
                                     </div>
@@ -230,30 +230,30 @@
                                     <!-- 无门票时 -->
                                     <!-- <div ng-if="ticketsInfo1.viewInfo == null">
                                         <div style="text-align: center;margin: 8px;">
-                                            <i class="icon ion-ios-information-outline" style="color:crimson;font-size: 14px;"></i>                                
+                                            <i class="icon ion-ios-information-outline" style="color:crimson;font-size: 14px;"></i>
                                             加载中( ¯ □ ¯ )......
                                         </div>
                                     </div> -->
-                                    
+
                                 </div>
 
                             </div>
 
-                            <!-- 接口 数据 手动搜索-->                        
+                            <!-- 接口 数据 手动搜索-->
                             <div ng-if="!sourceComeType">
 
                                     <ion-item ng-repeat="item in ticketsInfo2 track by $index" style="padding: 5px 0;">
-                                        
+
                                         <!-- 有车票时 -->
                                         <div ng-if="item.plans != null" ng-click="purchase(item, i)">
 
                                                 <div class="row">
-                                                        
+
                                                     <div class="col" style="white-space: normal;">
                                                             <span style="margin-left: 10px;">
                                                                     <div class="btnfont" my-tag my-tags="item.productType"></div>
                                                             </span>
-                                                            
+
                                                             <span style="font-size: 17px;" class="btnfont4" ng-if="item.plans[0].bdidType == 0">{{item.plans[0].departtime}}</span>
                                                             <span style="font-size: 17px;" class="btnfont4" ng-if="item.plans[0].bdidType != 0">{{item.plans[0].departtime}}-{{item.plans[1].departtime}}</span>
 
@@ -271,16 +271,16 @@
                                                             <span class="station-address2">{{item.plans[0].arriveName}}</span>
                                                         </div>
                                                 </div>
-            
+
                                                 <div class="row purchase">
                                                     <div class="col col-75">
                                                             <div ng-if="item.plans[0].bdidType == 0">
                                                                 <div style="margin: 0 0 8px 11px;white-space: normal;" >发车地点: {{item.plans[0].departaddr}}</div>
                                                             </div>
-                            
+
                                                             <div ng-if="item.plans[0].bdidType != 0">
                                                                 <div style="margin: 0 0 8px 11px;white-space: normal;" >发车地点: {{item.plans[0].departaddr}}</div>
-                                                                <div style="margin: 0 0 8px 11px;white-space: normal;" >返程地点: {{item.plans[1].departaddr}}</div>                                                            
+                                                                <div style="margin: 0 0 8px 11px;white-space: normal;" >返程地点: {{item.plans[1].departaddr}}</div>
                                                             </div>
                                                     </div>
 
@@ -299,24 +299,24 @@
                                             <div ng-if="item.viewInfo != null" ng-click="purchase(item, i)">
 
                                                 <div class="row">
-                                                        
+
                                                     <div class="col" style="white-space: normal;">
                                                             <span style="margin-left: 10px;">
                                                                     <div class="btnfont btnfontblue">门票</div>
                                                             </span>
-                                                            
+
                                                             <span>有效时间：</span><span style="font-size: 17px;">{{currentSelectedDate}}</span>
-                                                            
+
                                                     </div>
-        
+
                                                 </div>
-                                                    
+
                                                 <div class="row startposition">
                                                         <div class="col">
                                                             <span class="station-address">{{item.viewInfo.viewName}}</span>
                                                         </div>
                                                 </div>
-            
+
                                                 <div class="row purchase">
 
                                                     <div class="col col-75">
@@ -337,34 +337,34 @@
                                             <!-- <div ng-if="item.viewInfo == null">
 
                                                 <div style="text-align: center;margin: 8px;">
-                                                    <i class="icon ion-ios-information-outline" style="color:crimson;font-size: 14px;"></i>                                
+                                                    <i class="icon ion-ios-information-outline" style="color:crimson;font-size: 14px;"></i>
                                                     加载中( ¯ □ ¯ )......
                                                 </div>
 
                                             </div> -->
-                                                
+
                                         </div>
-            
+
                                     </ion-item>
 
                             </div>
 
-                        </ion-list> 
+                        </ion-list>
 
                     </ion-content>
 
                 </div>
 
-                <div class="page" style="margin-top: 55px;" ng-if="focusIndex==1">
-                    
+                <div class="page" style="margin-top: 139px;" ng-if="focusIndex==1">
+
                         <ion-content class="has-header" style="top: 92px;">
 
                                 <ion-refresher pulling-text="下拉刷新" pulling-icon="ion-ios-arrow-thin-down" on-refresh="doRefreshComment()" spinner="dots"></ion-refresher>
-            
+
                                 <div class="pl">
                                     <!-- 接口 评论显示  -->
                                     <ion-list>
-                                        
+
                                         <ion-item ng-repeat="item in commentsInfo track by $index">
                                             <div class="row comment">
                                                 <div class="col" style="white-space: normal;">{{item.orderhie}}</div>
@@ -384,36 +384,36 @@
                                                 </div>
                                             </div>
                                         </ion-item>
-                
+
                                         <div ng-if="isNoComment" style="text-align: center;margin: 8px;">
-                                            <i class="icon ion-ios-information-outline" style="color:crimson;font-size: 14px;"></i>                                
+                                            <i class="icon ion-ios-information-outline" style="color:crimson;font-size: 14px;"></i>
                                             还没有评价( ¯ □ ¯ )
                                         </div>
-                                        
-                                    </ion-list> 
+
+                                    </ion-list>
                                 </div>
-            
+
                                 <ion-infinite-scroll ng-if="hasmore" on-infinite="loadMoreComment()" distance="5%" icon="ion-loading-c"></ion-infinite-scroll>
-            
+
                         </ion-content>
 
                 </div>
 
             </div>
-               
+
         </div>
-    
+
         <!-- 图片遮罩层  -->
-        <div class="mask" close-Pic>  
-            <div class="mask-box"></div>  
-            <div class="big-pic-wrap">  
-                <img src="" alt="" class="bigPic" />  
+        <div class="mask" close-Pic>
+            <div class="mask-box"></div>
+            <div class="big-pic-wrap">
+                <img src="" alt="" class="bigPic" />
                 <span class="close-pic">
                     <i class="icon ion-ios-close"></i>
-                </span>   
-            </div>  
-        </div>  
-    
+                </span>
+            </div>
+        </div>
+
     </div>
 
 </ion-view>

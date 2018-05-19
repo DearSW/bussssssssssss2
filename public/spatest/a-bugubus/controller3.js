@@ -1,25 +1,28 @@
 /**
- * Created by 滕召维 
+ * Created by 滕召维
  * 2017.07.25
- * @sessionStorage命名方式 项目名简称_页面名简称_用途全称
  */
-/**************************************** 
- * 
+
+/****************************************
+ *
  * @贵旅景区直通车 我的线路、行程、账户
- * 
+ *
  ****************************************/
+
+//  @定义一个Angular模块
 var app = angular.module('app');
 
 /**
  * @描述：HTTP请求的Error回调函数
  */
 var errorFn = function() {
-        console.log("你好，数据请求失败");
+    console.log("师法大梦川报告：出现了状况，数据请求失败");
 };
 
 /**
  * @描述：存储数据
  * @参数：命名，数据
+ * @sessionStorage命名方式 项目名简称_页面名简称_用途全称
  */
 var storageData = function(name, data) {
     sessionStorage.setItem(name, JSON.stringify(data));
@@ -35,12 +38,12 @@ var getStorageData = function(name) {
 }
 
 /**
- * @描述：格式化请求参数对象，去掉其中值为空的属性 
+ * @描述：格式化请求参数对象，去掉其中值为空的属性
  * @参数：需要格式化的对象
  * @返回：格式化之后的对象
  */
 var formatParamObject = function(obj) {
-    for (var key in obj) {  
+    for (var key in obj) {
         if(obj[key] === '' && obj[key] !== false) {
                 delete obj[key];
            }
@@ -49,7 +52,7 @@ var formatParamObject = function(obj) {
 }
 
 /**
- * @描述：数组差集 
+ * @描述：求数组差集
  * @参数：求差集的两个数组
  * @返回：差集数组
  */
@@ -69,8 +72,8 @@ var arrayMinus = function (arrA, arrB) {
     return result;
 };
 
-/* 
- *  @描述：浮点数运算对象，解决JS运算精度丢失的问题
+/*
+ *  @描述：浮点数运算对象，主要解决JS运算精度丢失的问题
  */
 var floatObj = function() {
     /*
@@ -168,30 +171,321 @@ var floatObj = function() {
     }
 }();
 
-/* 
- *  @描述：页面控制器
+/*
+ *  @页面控制器Controller
  */
 app
+
+	/**
+     * @root 控制器
+     */
+	.controller('rootController', function($rootScope, $scope, $state, $timeout, $interval, $ionicHistory, $ionicModal, $myHttpService) {
+
+		$rootScope.appLoginNext = true;
+		$rootScope.appLoginNextBtn = true;
+		$rootScope.appLoginBtn = true;
+		$rootScope.appRegisterBtn = false;
+
+		// @下一步 函数
+		$rootScope.appLoginNextFunc = function() {
+			$rootScope.appLoginNext = !$rootScope.appLoginNext;
+
+		}
+
+		// @上一步 函数
+		$rootScope.appLoginBeforeFunc = function() {
+			$rootScope.appLoginNext = !$rootScope.appLoginNext;
+		}
+
+		$rootScope.appLoginInfo = {
+			phone: null,
+			password: null
+		}
+
+		// @登录电话检测函数
+		$rootScope.appLoginPhoneCheck = function() {
+
+			console.log('师法大梦川报告：root页，电话检测函数执行');
+
+			if($rootScope.appLoginInfo.phone !=  undefined) {
+                if($rootScope.appLoginInfo.phone.length == 11) {
+                    var phone = $rootScope.appLoginInfo.phone.toString();
+                    if(!(/^1(3|4|5|7|8)\d{9}$/.test(phone))) { // 正则检测
+
+						$rootScope.appLoginFlowStyle = {
+							"color": "red"
+						}
+                        $rootScope.appLoginNextBtn = true; // 禁用下一步按钮
+                        return false;
+                    } else {
+						$rootScope.appLoginFlowStyle = {
+							"color": "#28a54c"
+						}
+                        $rootScope.appLoginNextBtn = false; // 启用下一步按钮
+                    }
+                } else{
+					$rootScope.appLoginFlowStyle = {
+						"color": "red"
+					}
+                    $rootScope.appLoginNextBtn = true; // 禁用获取验证码按钮
+                }
+            }
+
+		}
+
+		// @登录密码检测函数
+		$rootScope.appLoginPasswordCheck = function(password) {
+
+			console.log('师法大梦川报告：root页，密码检测函数执行');
+
+			if(typeof password != 'undefined') {
+
+				if(password.length <= 6) {
+					$rootScope.appLoginBtn = true;
+					$rootScope.appLoginFlowStyle2 = {
+						"color": "red"
+					}
+				} else {
+					$rootScope.appLoginBtn = false;
+					$rootScope.appLoginFlowStyle2 = {
+						"color": "#28a54c"
+					}
+				}
+			}
+
+		}
+
+		// @一个全局的登录页
+        $rootScope.appLoginOrRegisterModal = $ionicModal.fromTemplate('<ion-modal-view style="background: rgba(0, 0, 0, 0.84);">'+
+			'		'+
+			'        <ion-content style="background: #ffffff; width: 95%; padding: 5px; margin: 50px auto; box-shadow: rgba(204, 200, 200, 0.5) 1px 2px 7px 4px;">'+
+
+			'			<div style="text-align: right;">'+
+			'						<i class="icon ion-ios-close-empty" style="font-size: 30px;" ng-click="appLoginOrRegister_close()"></i>' +
+			'			</div>	'+
+
+			'			 <div>'+
+
+			'					<div class="row" style="color: #111;">'+
+			'						<div class="col col-50" ng-style="appLoginFlowStyle">'+
+			'								1 <i class="icon ion-ios-checkmark-outline"></i>'+
+			'						</div>'+
+			'						<div class="col col-50" ng-style="appLoginFlowStyle2">'+
+			'								2 <i class="icon ion-ios-checkmark-outline"></i>'+
+			'						</div>'+
+			'					</div>'+
+
+			'					<div class="row" ng-if="appLoginNext">'+
+			'						<div class="col">'+
+			'							<input type="text" placeholder="输入手机号" ng-model="appLoginInfo.phone" ng-change="appLoginPhoneCheck()" style="width: 100%;">'+
+			'						</div>'+
+			'					</div>'+
+
+			'					<div ng-if="appLoginNext">'+
+			'						<button ng-disabled="appLoginNextBtn" ng-class="{true: \'appLoginNextBtn2\', false: \'appLoginNextBtn1\'}[appLoginNextBtn]"  class="button button-block button-positive" ng-click="appLoginNextFunc();" style="border-radius: 0px;">下一步</button>'+
+			'					</div>'+
+
+			'					<div class="row" ng-if="!appLoginNext">'+
+
+			'						<div class="col" ng-click="appLoginBeforeFunc();">'+
+			'							<div>{{appLoginInfo.phone}}</div>'+
+			'						</div>'+
+
+			'					</div>'+
+
+			'					<div class="row" ng-if="!appLoginNext">'+
+
+			'						<div class="col">'+
+			'							<input type="password" placeholder="输入密码，不低于6位" ng-model="appLoginInfo.password" ng-change="appLoginPasswordCheck(appLoginInfo.password)" style="width: 100%;">'+
+			'						</div>'+
+
+			'					</div>' +
+
+			'					<div class="padding" ng-if="!appLoginNext">'+
+			'						<button ng-disabled="appLoginBtn" ng-class="{true: \'appLoginNextBtn2\', false: \'appLoginNextBtn1\'}[appLoginBtn]" class="button button-block button-positive" ng-click="appLoginMethod()" style="border-radius: 0px;">登录</button>'+
+			'					</div>'+
+
+            '			</div>'+
+            '			'+
+            '			'+
+            '        </ion-content>'+
+            '		'+
+            '      </ion-modal-view>', {
+            scope: $scope,
+            animation: 'slide-in-up'
+        });
+
+		// @登录打开函数
+        $rootScope.appLoginOrRegister_open = function(state) {
+
+            console.log("师法大梦川报告：登录页启动");
+			$rootScope.appLoginOrRegisterModal.show();
+			$rootScope.appLoginCurrentUrl = state;
+
+        }
+
+		// @登录关闭函数
+        $rootScope.appLoginOrRegister_close = function() {
+
+            console.log("师法大梦川报告：登录页关闭");
+            $rootScope.appLoginOrRegisterModal.hide();
+
+		}
+
+		// @登录函数
+		$rootScope.appLoginMethod = function(state) {
+
+			state = $rootScope.appLoginCurrentUrl;
+
+			// @进行登录，会发生什么？
+			$myHttpService.post("api/product/login", {
+
+				phone: "18585830057",
+				password: "123456"
+
+			}, function(data) {
+
+				console.log("师法大梦川报告：root页，登录返回的数据");
+				console.log(data);
+
+				// @获取用户对象
+				$rootScope.session.user.userInfo = data.userInfo;
+
+				// @取出 程序用户的信息
+				$myHttpService.post("api/product/queryUserinfo", {
+
+					userid: $rootScope.session.user.userInfo.userid
+
+				}, function(data2) {
+
+					console.log("师法大梦川报告：root页，查询用户个人信息返回的数据");
+					console.log(data2);
+
+					if(data2.flag) {
+
+						storageData('app_user_info', data2.user);
+
+						$rootScope.app_user_info_name_bool = true;
+						$rootScope.app_user_info_name = data2.user.username;
+
+						// @进行页面拦截，并返回主页
+						if(typeof state != 'undefined' && state != null) {
+
+							if( state.indexOf("i.") !=-1
+								|| state.indexOf("myplan") !=-1
+								|| state.indexOf("order_confirm_pay") !=-1
+								|| state.indexOf("order_detail_refund") !=-1
+								|| state.indexOf("order_check_comment") !=-1
+								|| state.indexOf("ticket_admission_detail") !=-1
+								|| state.indexOf("bus_position") !=-1
+								|| state.indexOf("bus_position2") !=-1
+								|| state.indexOf("ticketdetail") !=-1
+								|| state.indexOf("userinfo") !=-1
+								|| state.indexOf("bus_service_all") !=-1
+								|| state.indexOf("bus_submit_success") !=-1
+								|| state.indexOf("bus_service_pay") !=-1
+								|| state.indexOf("bus_service_history") !=-1 ) {
+
+								// $ionicHistory.clearHistory();
+								// $state.go("app.search");
+
+								$ionicHistory.goBack(-9);
+
+							}
+
+						}
+
+						$rootScope.appLoginOrRegister_close();
+
+
+					} else {
+
+						$rootScope.app_user_info_name = "您好，请登录";
+
+					}
+
+				})
+
+
+			})
+
+		}
+
+		// @注册函数
+		$rootScope.appRegisterMethod = function() {
+
+		}
+
+		// @一般对于没有申明的变量使用 typeof 去检测，如果使用 == undefined 的话，是会报错的。
+		if( typeof $rootScope.app_user_info_name == "undefined") {
+			$rootScope.app_user_info_name_bool = false;
+			$rootScope.app_user_info_name = "您好，请登录"
+		}
+
+		console.log("师法大梦川报告：root页");
+		console.log($rootScope.app_user_info_name);
+
+		// @做一些预备工作
+
+        // $scope.$on("$ionicView.enter", function(event, data) {
+
+        //     console.log("师法大梦川报告：root页，$ionicView.enter执行");
+
+        //     // @预取出 程序用户的信息
+        //     $myHttpService.postNoLoad("api/product/queryUserinfo", {
+
+        //         userid: $rootScope.session.user.userInfo.userid
+
+        //     }, function(data) {
+
+        //         console.log("师法大梦川报告：root页，预处理，查询用户个人信息返回的数据");
+        //         console.log(data);
+
+        //         if(data.flag) {
+
+        //             storageData('app_user_info', data.user);
+
+        //             $rootScope.app_user_info_name = data.user.username;
+
+        //         } else {
+
+        //             $rootScope.app_user_info_name = "您好，请登录";
+
+        //         }
+        //     });
+
+        // });
+
+	})
 
     /**
      * @app-center 控制器
      */
-    .controller('app_center', function($rootScope, $scope, $state, $timeout, $interval, $ionicHistory) {
+    .controller('app_center', function($rootScope, $scope, $state, $timeout, $interval, $ionicHistory, $ionicModal, $myHttpService) {
 
         $scope.clearWorks = function() {
-            console.log('师法大梦川报告：on-deselect执行');
+            console.log('师法大梦川报告：home页，on-deselect执行');
             $interval.cancel($rootScope.searchSlideImageTimer);
         }
-        
+
         $rootScope.myGoBack = function() {
-            console.log('师法大梦川报告：myGoBack执行');            
+            console.log('师法大梦川报告：home页，myGoBack执行');
             $ionicHistory.goBack();
         };
 
         $rootScope.myGoHome = function() {
-            console.log('师法大梦川报告：myGoHome执行');            
+            console.log('师法大梦川报告：home页，myGoHome执行');
             $ionicHistory.goBack(-9);
         };
+
+
+        /************************************************************ */
+
+
+
+        /************************************************************ */
+
+
 
     })
 
@@ -199,11 +493,11 @@ app
      * @首页、搜索、控制器
      */
     .controller('City_select', function($rootScope, $scope, $state, $timeout, $interval, $myLocationService, $myHttpService, $ionicSlideBoxDelegate, $ionicActionSheet, $selectCity, $filter, ionicDatePicker, $ionicScrollDelegate, $ionicModal, $ionicSideMenuDelegate, $jsonCity) {
-        
+
         /************************************************************ */
-        
+
         $rootScope.searchSlideImageTimer = null; // @图片定时器
-        
+
         // @流程控制，确保推荐在未关闭Ng页面之前仅仅请求一次，优化
         if(sessionStorage.getItem("recommendImgCount") == null) { // @首次加载
 
@@ -221,13 +515,13 @@ app
         $scope.dataContainer = { // @数据容器
             input: "" // @用户输入
         }
-        
+
         if(recommendImgCount == 1) { // @首次加载
 
             sessionStorage.setItem("recommendImgCount", 2);
 
             $rootScope.showDefaultImg = true; // @推荐图片不存在时，默认的placeholder
-        
+
             // @请求获取推荐路线数据  /web/product/queryRecommendProductList
             $myHttpService.postNoLoad('api/product/queryRecommendProductList', {}, function(data) {
                 console.log("师法大梦川报告：首页，图片推荐API返回的数据");
@@ -250,7 +544,7 @@ app
             // $rootScope.recommendProducts2Index = 0;
 
         }
-        
+
         /************************************************************ */
 
         // @轮播
@@ -272,7 +566,7 @@ app
             slideImage();
         }, 4000);
 
-        /************************************************************ */        
+        /************************************************************ */
 
         // @推荐路线 数据详情，点击图片进行跳转到 产品 页面
         $scope.recommendProductsDetail = function(item, i) {
@@ -286,7 +580,7 @@ app
 
         };
 
-        /************************************************************ */        
+        /************************************************************ */
 
         // @所在城市
         /*
@@ -345,10 +639,10 @@ app
             }
             return r;
         }
-        
+
         /*
             if(recommendImgCount == 1) {
-                $rootScope.tempsz = []; // 区域数组变量            
+                $rootScope.tempsz = []; // 区域数组变量
                 $myHttpService.postNoLoad('api/product/queryBuslineRegion', {}, function(data) {
                     $scope.citysz  = unique2(data.regions, 'regionName');
                     // $rootScope.tempsz = []; // 区域数组变量
@@ -393,12 +687,12 @@ app
 
         if(recommendImgCount == 1) {
 
-            // @路线数据 数组，展现在路线选择的弹窗中 
+            // @路线数据 数组，展现在路线选择的弹窗中
             $rootScope.roadLineData = [];
 
             // @搜索关键字 wechat/product/queryProductKeywords
             $myHttpService.postNoLoad('api/product/queryProductKeywords', {}, function(data) {
-                
+
                 console.log("师法大梦川报告：首页，搜索关键字API返回的数据");
                 console.log(data);
 
@@ -415,13 +709,13 @@ app
             $rootScope.isSearchBtnDisabled = true; // @是否开启搜索按钮的可点击状态，true 不开启（默认、初始），false开启
 
         }
-        
+
         // @选择路线的自定义弹窗
         $scope.roadSelectModal = $ionicModal.fromTemplate('<ion-modal-view>'+
             '	  '+
             '        <ion-header-bar class="bar bar-header modal-one" style="margin-top: 35%;box-shadow: none;" >'+
             '		'+
-            //    '		   <button class="button  button-balanced" ng-click="chooseScenicSpotTicket()" style="background: rgba(240, 248, 255, 0.09);color: #676464;">取消</button>'+
+            //    '		   <button class="button  button-balanced" ng-click="chooseScenicSpotTicket()" style="background: rgba(240, 248, 255, 0.09);color: #676464;">取消</>'+
             '          <h1 class="title" style="font-weight: normal;color: #525151;"> 线路选择 </h1>'+
             '          <button class="button button-balanced" ng-click="roadSelectModal.hide()" style="background: rgba(240, 248, 255, 0.09);color: rgba(103, 100, 100, 0.67);">取消</button>'+
             '		  '+
@@ -437,7 +731,7 @@ app
             scope: $scope,
             animation: 'slide-in-up'
         });
-            
+
         // @打开路线选择弹窗
         $scope.openRoadLine = function() {
 
@@ -446,7 +740,7 @@ app
         }
 
         // @给每个路线选择弹窗中的路线绑定的事件函数
-        $scope.selectedRoadLine = function(item) { 
+        $scope.selectedRoadLine = function(item) {
 
             $rootScope.isSelectedRoadLineBoolean = false; // @隐藏“主题/路线/目的地”等字段
 
@@ -575,12 +869,12 @@ app
             });
 
         }
-        
+
         // console.log("师法大梦川报告：全局城市数组数据");
         // console.log($rootScope.citys);
 
         // @字母modal的显示或者隐藏布尔值
-        $scope.showLetter = false; 
+        $scope.showLetter = false;
 
         // @跳转到点击字母位置并显示点击的字母，如果点击#号则跳到顶部
         $scope.jumper = function (key) {
@@ -593,7 +887,7 @@ app
             } else  if(key == 'current') {
 
                 var el = document.getElementById('current'); // @这个代码最骚，获取元素
-                
+
                 if (el) {
                     var scrollPosition = el.offsetTop; // @返回当前元素的y坐标
                     // @滚动到点击热门的位置。由于上面多了一个搜索框，所以y坐标高度要稍微加一点
@@ -604,7 +898,7 @@ app
             } else if(key == 'history') {
 
                 var el = document.getElementById('history'); // @这个代码最骚，获取元素
-                
+
                 if (el) {
                     var scrollPosition = el.offsetTop; // @返回当前元素的y坐标
                     // @滚动到点击热门的位置。由于上面多了一个搜索框，所以y坐标高度要稍微加一点
@@ -615,7 +909,7 @@ app
             } else if(key == 'hot') {
 
                 var el = document.getElementById('hot'); // @这个代码最骚，获取元素
-                
+
                 if (el) {
                     var scrollPosition = el.offsetTop; // @返回当前元素的y坐标
                     // @滚动到点击热门的位置。由于上面多了一个搜索框，所以y坐标高度要稍微加一点
@@ -647,43 +941,43 @@ app
 
             }
         }
-        
+
         // @搜索框样式动态渲染布尔值
-        $scope.searchCityBoxShadow = false; 
+        $scope.searchCityBoxShadow = false;
 
         // @使用节流函数的滚动函数。用法：on-scroll="scrollpin()"
         $scope.scrollpin = throttle(function() { // @注意：在滚动事件中移除dom操作
-            
+
             var scrollTop = $ionicScrollDelegate.$getByHandle('cityScroll').getScrollPosition().top;
-            
+
             console.log(scrollTop);
 
             if(scrollTop > 10) {
-                
+
                 $scope.searchCityBoxShadow = true;
                 // aim.style.boxShadow = '0 0 5px 5px #ADADAD';
-        
+
             } else {
-                
+
                 $scope.searchCityBoxShadow = false;
                 // aim.style,boxShadow = 'none';
-                
+
             }
             console.log($scope.searchCityBoxShadow);
             $scope.$apply();
 
         }, 500, 1000);
-        
+
         // @简单的节流函数
         function throttle(func, wait, mustRun) {
             var timeout,
                 startTime = new Date();
-        
+
             return function() {
                 var context = this,
                     args = arguments,
                     curTime = new Date();
-        
+
                 clearTimeout(timeout);
                 // 如果达到了规定的触发时间间隔，触发 handler
                 if(curTime - startTime >= mustRun){
@@ -723,14 +1017,14 @@ app
 
             $scope.letter = key;
 
-            $scope.showLetter=true;    
-          
-            var scroll = document.getElementById("city-" + $scope.letter).offsetTop - $ionicScrollDelegate.$getByHandle('cityScroll').getScrollPosition().top; 
+            $scope.showLetter=true;
+
+            var scroll = document.getElementById("city-" + $scope.letter).offsetTop - $ionicScrollDelegate.$getByHandle('cityScroll').getScrollPosition().top;
             $ionicScrollDelegate.$getByHandle('cityScroll').scrollBy(0, scroll, true);
 
             var ele2 = angular.element(document.getElementsByTagName("ion-content"));
             ele2[1].style.cssText = "overflow: auto !important";
-            
+
         };
 
         // @滑动结束函数，做一些清理工作，隐藏字母modal
@@ -742,18 +1036,18 @@ app
         };
 
         // @清空搜索框的布尔值
-        $scope.clearInputSearch = false; 
+        $scope.clearInputSearch = false;
 
         // @城市搜索函数
         $scope.searchCity = function () {
             // @搜索框搜索之后又清空列表数据为初始数据
 
-            $ionicScrollDelegate.$getByHandle('cityScroll').scrollTop(true); // @返回顶部            
+            $ionicScrollDelegate.$getByHandle('cityScroll').scrollTop(true); // @返回顶部
 
             if ($scope.data.search == null || $scope.data.search == '') {
 
                 $scope.clearInputSearch = false;
-                
+
                 $rootScope.citys = [];
 
                 angular.forEach($rootScope.cityMap, function (value, key) {
@@ -797,10 +1091,10 @@ app
 
         // @城市搜索框清空函数
         $scope.searchCityEmpty = function() {
-            console.log("searchCityEmpty");   
+            console.log("searchCityEmpty");
             $scope.data.search = '';
             $scope.clearInputSearch = false;
-            
+
             $rootScope.citys = [];
 
             angular.forEach($rootScope.cityMap, function (value, key) {
@@ -860,7 +1154,7 @@ app
         }
 
         /************************************************************ */
-        
+
 
         // @点击搜索的同时，需要把数据传递到下一个tabs页面
         $scope.goTabs = function() {
@@ -951,11 +1245,19 @@ app
         // @离开页面时，做一些清除工作
         // @当DOM元素从页面中被移除时，ng将会在$scope中触发$destory事件。
         $scope.$on("$destroy", function() { // @清除定时器，防止定时的叠加效应
-            console.log("师法大梦川报告：首页，$destroy触发了");
+            console.log("师法大梦川报告：首页，$destroy执行");
             $interval.cancel($rootScope.searchSlideImageTimer); // @专业的清除函数
             $scope.roadSelectModal.remove();
             $scope.citySelectModal.remove();
             $scope.messageModal.remove();
+        });
+
+        $scope.$on("$ionicView.beforeLeave", function(event, data) {
+            console.log("师法大梦川报告：首页，$ionicView.beforeLeave执行");
+            // handle event
+            console.log("State Params: ", data.stateParams);
+            sessionStorage.removeItem("Tabs_enter_Count");
+
         });
 
         /************************************************************ */
@@ -967,8 +1269,27 @@ app
      */
     .controller('Tabs', function($rootScope, $scope, $state, $timeout, $myHttpService, $myLocationService, $filter, ionicDatePicker, $ionicModal, $ionicLoading) {
 
+        /************************************************************ */
+
+        // @流程控制，确保推荐在未关闭Ng页面之前仅仅请求一次，优化
+        if(sessionStorage.getItem("Tabs_enter_Count") == null) { // @首次加载
+
+            var flowControll = 1; // @流程控制变量
+
+        } else {
+
+            var flowControll = sessionStorage.getItem("Tabs_enter_Count"); // @读取次数变量
+
+        }
+
+        // if(flowControll == 1) { // @首次加载
+        //     sessionStorage.setItem("Tabs_enter_Count", 2);
+        // }
+
 
         /************************************************************ */
+
+        // @tab功能实现
 
         // @定义要聚焦的索引
         $scope.focusIndex = 0;
@@ -978,35 +1299,38 @@ app
         }
 
         /************************************************************ */
-        
+
         // @接收 首页 传递过来的参数，并解析，打印
         var paramsData = JSON.parse($state.params.data);
         console.log("产品页：从首页传递过来的参数打印。");
         console.log(paramsData);
 
-        if(paramsData != null) { // @进入产品页 有参数时
+
+        if(flowControll == 1) { // @进入产品页 有参数时
 
             $rootScope.jqztc_tab1_dateArr = []; // @不可用的日期数组 !!!
 
             $scope.ticketsInfo1 = []; // @图片推荐产品 数据
-            
+
             $scope.ticketsInfo2 = []; // @手动搜索产品 数据
-    
+
             $scope.commentsInfo = []; // @点评 数据
-    
+
             $scope.paramsProductId = ''; // @产品ID，查询评论用
             $scope.sourceComeType = ''; // @类型来源判断，true：图片推荐接口来的；false：手动搜索接口来的
-    
+
             // $rootScope.currentSelectedDate = null; // @当前的时间选择
 
-            console.log("产品页：有参数的流程。");
+            console.log("师法大梦川报告：产品页，流程控制为1");
+
+
 
             if(paramsData.hasOwnProperty('productid')) { // @一、图片推荐类型的产品列表
 
                 console.log("产品页：图片推荐类型流程，有参数，productid");
-                
+
                 $rootScope.currentSelectedDate = $filter('date')(new Date(), 'yyyy-MM-dd'); // @当前的时间选择
-                $rootScope.currentSelectedDate2 = "周" + "日一二三四五六".charAt(new Date($rootScope.currentSelectedDate).getDay());                
+                $rootScope.currentSelectedDate2 = "周" + "日一二三四五六".charAt(new Date($rootScope.currentSelectedDate).getDay());
 
                 $scope.sourceComeType = true; // @类型来源 判断
 
@@ -1015,89 +1339,91 @@ app
                 sessionStorage.setItem('jqztc_cpy_paramsProductId', paramsData.productid); // @给没有参数进入产品页时使用 存储数据，以便后用
 
                 $scope.paramsProductId = paramsData.productid;  // @产品ID，查询评论用
-                
+
 
                 var requestData = {
                     productid: paramsData.productid,
                     departDate: $filter('date')(new Date(), 'yyyy-MM-dd')
                 };
 
+
+
                 // @图片推荐类型产品列表 /web/product/queryProduct
                 $myHttpService.post('api/product/queryProduct', requestData, function(data) {
 
                     console.log("产品页：图片推荐产品列表API返回的数据");
-                    console.log(data);   
-                            
+                    console.log(data);
+
                     $scope.ticketsInfo1 = data.product; // @产品对象
 
                     // @ $rootScope.jqztc_tab1_dateArr @不可用日期数组的构造
                     if($scope.ticketsInfo1.counts != null && $scope.ticketsInfo1.counts.length != 0) {
-            
+
                         $scope.dateArrTemp = [];
-            
+
                         getTodayToAfterTwoMonthRegionArray($scope.dateArrTemp);
-            
+
                         // @格式化
                         for(var i = 0; i < $scope.ticketsInfo1.counts.length; i++) {
                             $scope.ticketsInfo1.counts[i] = $filter('date')($scope.ticketsInfo1.counts[i], 'yyyy/MM/dd');
                         }
-            
+
                         // removeByValue($scope.dateArr, $filter('date')(new Date('2017-12-25'), 'yyyy-MM-dd'));
-            
+
                         console.log("测试");
                         console.log($scope.ticketsInfo1.counts);
                         console.log($scope.dateArrTemp);
-            
+
                         $rootScope.jqztc_tab1_dateArr = arrayMinus($scope.dateArrTemp, $scope.ticketsInfo1.counts);
                         console.log($rootScope.jqztc_tab1_dateArr);
-                        
+
                     }
-            
+
                     // @格式化不可用日期数组
                     for(var i = 0; i < $rootScope.jqztc_tab1_dateArr.length; i++) {
                         $rootScope.jqztc_tab1_dateArr[i] = new Date($rootScope.jqztc_tab1_dateArr[i]);
                     }
-                    
-                    storageData('jqztc_cpy_ticketsInfo1', $scope.ticketsInfo1); // @存储数据，以便后用 
+
+                    storageData('jqztc_cpy_ticketsInfo1', $scope.ticketsInfo1); // @存储数据，以便后用
 
                     if($scope.ticketsInfo1 != null) {
-                        
+
                         if($scope.ticketsInfo1.plans != null) { // @产品 有车票时
-                            
+
                             $scope.ticketsInfo1_havePlans = true; // @有无车票
-    
+
                             $scope.ticketsInfo1_prodcutType = $scope.ticketsInfo1.productType.split("&"); // @产品类型
                             $scope.ticketsInfo1_prodcutType2 = $scope.ticketsInfo1.productType.replace("&", "+"); // @产品类型
-    
+
                             $scope.ticketsInfo1_station = $scope.ticketsInfo1.plans[0].linename.split("-"); // @出发/返回 站点名
-    
+
                             if($scope.ticketsInfo1.plans[0].bdidType == 0) { // @单程票
-    
+
                                 $scope.ticketsInfo1_plansType = true; // @车票类型
-    
+
                                 $scope.ticketsInfo1_departAddr = $scope.ticketsInfo1.plans[0].departaddr; // @出发发车地址
                                 $scope.ticketsInfo1_driveTime = $scope.ticketsInfo1.plans[0].drivetime; // @行程时间
-                                
+
                             } else { // @往返票
-                                
+
                                 $scope.ticketsInfo1_plansType = false; // @车票类型
                                 $scope.ticketsInfo1_departAddr = $scope.ticketsInfo1.plans[0].departaddr; // @出发发车地址
                                 $scope.ticketsInfo1_arriveAddr = $scope.ticketsInfo1.plans[1].departaddr; // @返回发车地址
                                 $scope.ticketsInfo1_driveTime = $scope.ticketsInfo1.plans[0].drivetime; // @行程时间
-    
+
                             }
-    
+
                         } else { // @产品 无车票时
-    
+
                             $scope.ticketsInfo1_havePlans = false;
-    
+
                             if($scope.ticketsInfo1.viewInfo != null) { // @单独的门票
-    
+
                                 $scope.ticketsInfo1_viewName = $scope.ticketsInfo1.viewInfo.viewName; // @景点名字
                                 $scope.ticketsInfo1_viewAddr = $scope.ticketsInfo1.viewInfo.viewaddr; // @景点地址
-    
-                            } 
-    
+
+                            }
+
                         }
 
                     } else {
@@ -1118,21 +1444,21 @@ app
                     }
 
                 }, errorFn);
-                
+
             } else { // @二、手动搜索类型的产品列表
 
-                console.log("产品页：手动搜索类型流程，有参数，productid");                                
+                console.log("产品页：手动搜索类型流程，有参数，productid");
 
                 $scope.sourceComeType = false; // @数据来源 判断
 
                 $rootScope.currentSelectedDate = paramsData.date; // @当前选择的时间
-                $rootScope.currentSelectedDate2 = "周" + "日一二三四五六".charAt(new Date($rootScope.currentSelectedDate).getDay());                                
+                $rootScope.currentSelectedDate2 = "周" + "日一二三四五六".charAt(new Date($rootScope.currentSelectedDate).getDay());
 
                 sessionStorage.setItem('jqztc_cpy_requestUrlType', '1'); // @数据来源 判断 存储数据，以便后用
 
                 sessionStorage.setItem('tabsParamsDataInput', paramsData.input); // @存储数据，以便后用
                 sessionStorage.setItem('tabsParamsDataDate', paramsData.date); // @存储数据，以便后用
-                
+
                 var requestData = { // @请求参数封装
                     keyword: paramsData.input,
                     departDate: paramsData.date
@@ -1148,22 +1474,22 @@ app
 
                     // @ $rootScope.jqztc_tab1_dateArr @不可用日期数组的构造
                     if($scope.ticketsInfo1.counts != null && $scope.ticketsInfo1.counts.length != 0) {
-            
+
                         $scope.dateArrTemp = [];
-            
+
                         getTodayToAfterTwoMonthRegionArray($scope.dateArrTemp);
-            
+
                         // @格式化
                         for(var i = 0; i < $scope.ticketsInfo1.counts.length; i++) {
                             $scope.ticketsInfo1.counts[i] = $filter('date')($scope.ticketsInfo1.counts[i], 'yyyy/MM/dd');
                         }
-            
+
                         // removeByValue($scope.dateArr, $filter('date')(new Date('2017-12-25'), 'yyyy-MM-dd'));
-            
+
                         console.log("测试");
                         console.log($scope.ticketsInfo1.counts);
                         console.log($scope.dateArrTemp);
-            
+
                         $rootScope.jqztc_tab1_dateArr = arrayMinus($scope.dateArrTemp, $scope.ticketsInfo1.counts);
                         console.log($rootScope.jqztc_tab1_dateArr);
                         // @格式化不可用日期数组
@@ -1171,13 +1497,13 @@ app
                             $rootScope.jqztc_tab1_dateArr[i] = new Date($rootScope.jqztc_tab1_dateArr[i]);
                         }
                     }
-            
+
                     storageData('jqztc_cpy_ticketsInfo2', $scope.ticketsInfo2); // @存储数据，以便后用
 
                     if($scope.ticketsInfo2.length != 0) {
 
                         $scope.paramsProductId = $scope.ticketsInfo2[0].productid;  // @产品ID，查询评论用
-                        
+
                     } else {
 
                         layer.open({
@@ -1202,10 +1528,10 @@ app
 
             $scope.commentsInfo = []; // @点评 数据，由于评论并未保存，所以需要再次重置
 
-            console.log("产品页：无参数的流程。");            
+            console.log("师法大梦川报告：产品页，流程控制为1");
 
             if(sessionStorage.getItem('jqztc_cpy_requestUrlType') == '0') {  // @一、图片推荐类型的产品列表
- 
+
                 $scope.sourceComeType = true; // @来源类型 判断
 
                 $scope.paramsProductId = sessionStorage.getItem('jqztc_cpy_paramsProductId'); // @产品ID，查询评论用
@@ -1214,9 +1540,9 @@ app
                 $scope.ticketsInfo1 = getStorageData('jqztc_cpy_ticketsInfo1'); // @获取数据
 
                 if($scope.ticketsInfo1 != null) {
-                    
+
                     if($scope.ticketsInfo1.plans != null) { // @产品 有车票时
-                        
+
                         $scope.ticketsInfo1_havePlans = true; // @有无车票
 
                         $scope.ticketsInfo1_prodcutType = $scope.ticketsInfo1.productType.split("&"); // @产品类型
@@ -1230,9 +1556,9 @@ app
 
                             $scope.ticketsInfo1_departAddr = $scope.ticketsInfo1.plans[0].departaddr; // @出发发车地址
                             $scope.ticketsInfo1_driveTime = $scope.ticketsInfo1.plans[0].drivetime; // @行程时间
-                            
+
                         } else { // @往返票
-                            
+
                             $scope.ticketsInfo1_plansType = false; // @车票类型
                             $scope.ticketsInfo1_departAddr = $scope.ticketsInfo1.plans[0].departaddr; // @出发发车地址
                             $scope.ticketsInfo1_arriveAddr = $scope.ticketsInfo1.plans[1].departaddr; // @返回发车地址
@@ -1249,7 +1575,7 @@ app
                             $scope.ticketsInfo1_viewName = $scope.ticketsInfo1.viewInfo.viewName; // @景点名字
                             $scope.ticketsInfo1_viewAddr = $scope.ticketsInfo1.viewInfo.viewaddr; // @景点地址
 
-                        } 
+                        }
 
                     }
 
@@ -1269,7 +1595,7 @@ app
                     });
 
                 }
-                
+
             } else if(sessionStorage.getItem('jqztc_cpy_requestUrlType') == '1') {  // @二、手动搜索类型的产品列表
 
                 $scope.sourceComeType = false; // @来源类型 判断
@@ -1280,7 +1606,7 @@ app
                 $scope.ticketsInfo2 = getStorageData('jqztc_cpy_ticketsInfo2'); // @获取数据
 
                 if($scope.ticketsInfo2.length != 0) {
-                    
+
                     $scope.paramsProductId = $scope.ticketsInfo2[0].productid;  // @产品ID，查询评论用
 
                 } else {
@@ -1312,31 +1638,31 @@ app
                         productid: item.productid,
                         departDate: $filter('date')(new Date(), 'yyyy-MM-dd')
                     };
-    
+
                     // @图片推荐类型产品列表 /web/product/queryProduct
                     $myHttpService.post('api/product/queryProduct', requestData, function(data) {
-    
+
                         console.log("产品页：图片推荐产品列表API返回的数据");
-                        console.log(data);   
-                                
+                        console.log(data);
+
                         var ticketsInfo1_temp = data.product; // @产品对象
-    
+
                         // @jqztc_tab1_dateArr @不可用日期数组的构造
                         if(ticketsInfo1_temp.counts != null && ticketsInfo1_temp.counts.length != 0) {
-                
+
                             var dateArrTemp = [];
-                
+
                             getTodayToAfterTwoMonthRegionArray(dateArrTemp);
-                
+
                             // @格式化
                             for(var i = 0; i < ticketsInfo1_temp.counts.length; i++) {
                                 ticketsInfo1_temp.counts[i] = $filter('date')(ticketsInfo1_temp.counts[i], 'yyyy/MM/dd');
                             }
-            
+
                             console.log("测试");
                             console.log(ticketsInfo1_temp.counts);
                             console.log(dateArrTemp);
-                
+
                             var jqztc_tab1_dateArr = arrayMinus(dateArrTemp, ticketsInfo1_temp.counts);
                             console.log(jqztc_tab1_dateArr);
 
@@ -1344,78 +1670,78 @@ app
                             for(var i = 0; i < jqztc_tab1_dateArr.length; i++) {
                                 jqztc_tab1_dateArr[i] = new Date(jqztc_tab1_dateArr[i]);
                             }
-                            
+
                         }
-                
-                        
+
+
 
                         var ipObj1 = {
                             callback: function (val) {  // @必选
-            
+
                                 var val2 = new Date(val);
                                 $rootScope.currentSelectedDate = $filter('date')(val2, 'yyyy-MM-dd');
                                 $rootScope.currentSelectedDate2 = "周" + "日一二三四五六".charAt(new Date($rootScope.currentSelectedDate).getDay());
-    
+
                                 // @重新拉取数据
                                 if($scope.sourceComeType == true) { // @图片推荐类型
-    
+
                                     var requestData = {
                                         productid: sessionStorage.getItem('jqztc_cpy_paramsProductId'),
                                         departDate: $rootScope.currentSelectedDate
                                     };
-                    
+
                                     // @图片推荐类型产品列表 /web/product/queryProduct
                                     $myHttpService.post('api/product/queryProduct', requestData, function(data) {
-                    
+
                                         console.log("产品页：图片推荐产品列表API返回的数据");
-                                        console.log(data);   
-                                                
+                                        console.log(data);
+
                                         $scope.ticketsInfo1 = data.product; // @产品对象
-                                        
-                                        storageData('jqztc_cpy_ticketsInfo1', $scope.ticketsInfo1); // @存储数据，以便后用 
-                    
+
+                                        storageData('jqztc_cpy_ticketsInfo1', $scope.ticketsInfo1); // @存储数据，以便后用
+
                                         if($scope.ticketsInfo1 != null) {
-                                            
+
                                             if($scope.ticketsInfo1.plans != null) { // @产品 有车票时
-                                                
+
                                                 $scope.ticketsInfo1_havePlans = true; // @有无车票
-                        
+
                                                 $scope.ticketsInfo1_prodcutType = $scope.ticketsInfo1.productType.split("&"); // @产品类型
                                                 $scope.ticketsInfo1_prodcutType2 = $scope.ticketsInfo1.productType.replace("&", "+"); // @产品类型
-                        
+
                                                 $scope.ticketsInfo1_station = $scope.ticketsInfo1.plans[0].linename.split("-"); // @出发/返回 站点名
-                        
+
                                                 if($scope.ticketsInfo1.plans[0].bdidType == 0) { // @单程票
-                        
+
                                                     $scope.ticketsInfo1_plansType = true; // @车票类型
-                        
+
                                                     $scope.ticketsInfo1_departAddr = $scope.ticketsInfo1.plans[0].departaddr; // @出发发车地址
                                                     $scope.ticketsInfo1_driveTime = $scope.ticketsInfo1.plans[0].drivetime; // @行程时间
-                                                    
+
                                                 } else { // @往返票
-                                                    
+
                                                     $scope.ticketsInfo1_plansType = false; // @车票类型
                                                     $scope.ticketsInfo1_departAddr = $scope.ticketsInfo1.plans[0].departaddr; // @出发发车地址
                                                     $scope.ticketsInfo1_arriveAddr = $scope.ticketsInfo1.plans[1].departaddr; // @返回发车地址
                                                     $scope.ticketsInfo1_driveTime = $scope.ticketsInfo1.plans[0].drivetime; // @行程时间
-                        
+
                                                 }
-                        
+
                                             } else { // @产品 无车票时
-                        
+
                                                 $scope.ticketsInfo1_havePlans = false;
-                        
+
                                                 if($scope.ticketsInfo1.viewInfo != null) { // @单独的门票
-                        
+
                                                     $scope.ticketsInfo1_viewName = $scope.ticketsInfo1.viewInfo.viewName; // @景点名字
                                                     $scope.ticketsInfo1_viewAddr = $scope.ticketsInfo1.viewInfo.viewaddr; // @景点地址
-                        
-                                                } 
-                        
+
+                                                }
+
                                             }
-                    
+
                                         } else {
-                    
+
                                             layer.open({
                                                 content: '客官，您当前选择的推荐主题路线已售完，请返回进行主题线路搜索 (╯-╰)',
                                                 btn: '确定',
@@ -1428,34 +1754,34 @@ app
                                                     }, 250)
                                                 }
                                             });
-                    
+
                                         }
-                    
+
                                     }, errorFn);
-    
+
                                 } else { // @手动搜索类型
-    
+
                                     var requestData = { // @请求参数封装
                                         keyword: sessionStorage.getItem('tabsParamsDataInput'),
                                         departDate: $rootScope.currentSelectedDate
                                     };
-                    
+
                                     // @手动搜索类型的产品列表 wechat/product/queryProductList
                                     $myHttpService.post('api/product/queryProductList', requestData, function(data) {
-                    
+
                                         console.log("产品页：手动搜索类型的产品列表API返回的数据");
                                         console.log(data);
-                    
+
                                         $scope.ticketsInfo2 = data.products;
-                    
+
                                         storageData('jqztc_cpy_ticketsInfo2', $scope.ticketsInfo2); // @存储数据，以便后用
-                    
+
                                         if($scope.ticketsInfo2.length != 0) {
-                    
+
                                             $scope.paramsProductId = $scope.ticketsInfo2[0].productid;  // @产品ID，查询评论用
-                                            
+
                                         } else {
-                    
+
                                             layer.open({
                                                 content: '没有找到相关产品信息，请重新搜索 (╯-╰)',
                                                 btn: '确定',
@@ -1467,13 +1793,13 @@ app
                                                     layer.closeAll();
                                                 }
                                             });
-                    
+
                                         }
-                    
+
                                     }, errorFn);
-    
+
                                 }
-            
+
                             },
                             titleLabel: '选择日期',
                             closeLabel: '返回',
@@ -1486,10 +1812,10 @@ app
                             templateType: 'modal',
                             // disableWeekdays: $scope.disabledWeeks
                         };
-                        ionicDatePicker.openDatePicker(ipObj1);      
-                        
+                        ionicDatePicker.openDatePicker(ipObj1);
+
                     }, errorFn);
-                    
+
                 } else {
 
                     $ionicLoading.show({
@@ -1503,7 +1829,7 @@ app
                         $ionicLoading.hide();
                         $state.go('app.order_confirm_pay', {data: JSON.stringify(item)});
                     }, 250);
-    
+
                 }
 
 
@@ -1524,38 +1850,10 @@ app
 
             }
 
-
-            // console.log("产品页：点击购买按钮传递的参数");
-            // console.log(item);
-            // $state.go('order_confirm_pay', {data: JSON.stringify(item)});
-
         };
 
-        var check_click_count = 0; // @检测 产品tab 的点击次数
-        var check_click_count2 = 0; // @检测 点评tab 的点击次数
-
-        // @产品 信息 tab函数
-        $scope.tab_road = function() {
-
-            if(check_click_count < 1) {
-                console.log('产品tab');
-            }
-            check_click_count++;
-
-        }
-
-        // @点评 信息 tab函数
-        $scope.tab_comment = function() {
-
-            if(check_click_count2 < 1) {
-                console.log('点评tab');
-            }
-            check_click_count2++;
-
-        }
-
         /************************************************************ */
-        
+
         // @产品信息 下拉刷新
         /*
             $scope.doRefreshRoad = function() {
@@ -1578,11 +1876,11 @@ app
                                 time: 1
                             });
                         }, function() {
-                            $scope.$broadcast('scroll.refreshComplete');                        
+                            $scope.$broadcast('scroll.refreshComplete');
                         });
 
                     } else if(sessionStorage.getItem('jqztc_cpy_requestUrlType') == '1') { // @二、手动搜索类型的产品列表
-                        
+
                         var requestData = {
                             keyword: $rootScope.currentSelectedRoadLine,
                             departDate: $rootScope.currentSelectedDate,
@@ -1600,14 +1898,14 @@ app
                                 time: 1
                             });
                         }, function() {
-                            $scope.$broadcast('scroll.refreshComplete');                        
+                            $scope.$broadcast('scroll.refreshComplete');
                         });
                     }
 
                 } else {
 
                     if(sessionStorage.getItem('jqztc_cpy_requestUrlType') == '0') {
-                            
+
                         var requestData = {
                             productid: sessionStorage.getItem('jqztc_cpy_paramsProductId')
                         };
@@ -1621,9 +1919,9 @@ app
                                 time: 1
                             });
                         }, function() {
-                            $scope.$broadcast('scroll.refreshComplete');                        
+                            $scope.$broadcast('scroll.refreshComplete');
                         });
-                                            
+
                     } else if(sessionStorage.getItem('jqztc_cpy_requestUrlType') == '1') {
 
                         var requestData = {
@@ -1643,20 +1941,25 @@ app
                                 time: 1
                             });
                         }, function() {
-                            $scope.$broadcast('scroll.refreshComplete');                        
+                            $scope.$broadcast('scroll.refreshComplete');
                         });
                     }
                 }
             };
         */
 
+        /************************************************************ */
+
+        // @评论下拉刷新
+
         // @点评信息 下拉刷新
         $scope.isNoComment = false;
         $scope.pageCount = 1;
+        // @点评 下拉刷新函数
         $scope.doRefreshComment = function() {
 
             console.log("产品页：doRefreshComment已执行");
-            
+
             // var productid = $scope.paramsProductId;
             $scope.pageCount = 1;
 
@@ -1684,9 +1987,10 @@ app
 
         };
 
-        // @点评信息 上拉加载
+
         $scope.hasmore = true;
         var run = false;
+        // @点评信息 上拉加载函数
         $scope.loadMoreComment = function() {
 
             console.log("产品页：loadMoreComment已执行");
@@ -1709,14 +2013,14 @@ app
 
                     console.log("产品页：产品评价API返回的数据(上拉加载)");
                     console.log(data);
-                    if (data.buslineHierarchys.length < 10) { 
-                        $scope.hasmore = false; // @这里判断是否还能获取到数据，如果没有获取数据，则不再触发加载事件 
-                    } 
-                    $scope.pageCount++; 
+                    if (data.buslineHierarchys.length < 10) {
+                        $scope.hasmore = false; // @这里判断是否还能获取到数据，如果没有获取数据，则不再触发加载事件
+                    }
+                    $scope.pageCount++;
                     console.log("计数： " + $scope.pageCount);
                     run = false;
                     console.log("评论加载");
-                    // console.log($scope.commentsInfo);                    
+                    // console.log($scope.commentsInfo);
                     $scope.commentsInfo = $scope.commentsInfo.concat(data.buslineHierarchys);
                     console.log($scope.commentsInfo);
                     $scope.$broadcast('scroll.infiniteScrollComplete');
@@ -1735,12 +2039,12 @@ app
         $scope.onLeave = function(){};
 
         /************************************************************ */
-        
-        // @日期选择
 
-        // @后一天 
+        // @日期选择功能
+
+        // @后一天
         $scope.nextDay = function() {
-            
+
             var nextDayTime = new Date($rootScope.currentSelectedDate).getTime() + (1 * 86400000); // @ms
             var temp1 = new Date();
             var temp2 = $filter('date')(temp1, 'yyyy-MM-dd');
@@ -1759,59 +2063,59 @@ app
                         productid: sessionStorage.getItem('jqztc_cpy_paramsProductId'),
                         departDate: $rootScope.currentSelectedDate
                     };
-    
+
                     // @图片推荐类型产品列表 /web/product/queryProduct
                     $myHttpService.post('api/product/queryProduct', requestData, function(data) {
-    
+
                         console.log("产品页：图片推荐产品列表API返回的数据");
-                        console.log(data);   
-                                
+                        console.log(data);
+
                         $scope.ticketsInfo1 = data.product; // @产品对象
-                        
-                        storageData('jqztc_cpy_ticketsInfo1', $scope.ticketsInfo1); // @存储数据，以便后用 
-    
+
+                        storageData('jqztc_cpy_ticketsInfo1', $scope.ticketsInfo1); // @存储数据，以便后用
+
                         if($scope.ticketsInfo1 != null) {
-                            
+
                             if($scope.ticketsInfo1.plans != null) { // @产品 有车票时
-                                
+
                                 $scope.ticketsInfo1_havePlans = true; // @有无车票
-        
+
                                 $scope.ticketsInfo1_prodcutType = $scope.ticketsInfo1.productType.split("&"); // @产品类型
                                 $scope.ticketsInfo1_prodcutType2 = $scope.ticketsInfo1.productType.replace("&", "+"); // @产品类型
-        
+
                                 $scope.ticketsInfo1_station = $scope.ticketsInfo1.plans[0].linename.split("-"); // @出发/返回 站点名
-        
+
                                 if($scope.ticketsInfo1.plans[0].bdidType == 0) { // @单程票
-        
+
                                     $scope.ticketsInfo1_plansType = true; // @车票类型
-        
+
                                     $scope.ticketsInfo1_departAddr = $scope.ticketsInfo1.plans[0].departaddr; // @出发发车地址
                                     $scope.ticketsInfo1_driveTime = $scope.ticketsInfo1.plans[0].drivetime; // @行程时间
-                                    
+
                                 } else { // @往返票
-                                    
+
                                     $scope.ticketsInfo1_plansType = false; // @车票类型
                                     $scope.ticketsInfo1_departAddr = $scope.ticketsInfo1.plans[0].departaddr; // @出发发车地址
                                     $scope.ticketsInfo1_arriveAddr = $scope.ticketsInfo1.plans[1].departaddr; // @返回发车地址
                                     $scope.ticketsInfo1_driveTime = $scope.ticketsInfo1.plans[0].drivetime; // @行程时间
-        
+
                                 }
-        
+
                             } else { // @产品 无车票时
-        
+
                                 $scope.ticketsInfo1_havePlans = false;
-        
+
                                 if($scope.ticketsInfo1.viewInfo != null) { // @单独的门票
-        
+
                                     $scope.ticketsInfo1_viewName = $scope.ticketsInfo1.viewInfo.viewName; // @景点名字
                                     $scope.ticketsInfo1_viewAddr = $scope.ticketsInfo1.viewInfo.viewaddr; // @景点地址
-        
-                                } 
-        
+
+                                }
+
                             }
-    
+
                         } else {
-    
+
                             layer.open({
                                 content: '客官，您当前选择的推荐主题路线已售完，请返回进行主题线路搜索 (╯-╰)',
                                 btn: '确定',
@@ -1824,9 +2128,9 @@ app
                                     }, 250)
                                 }
                             });
-    
+
                         }
-    
+
                     }, errorFn);
 
                 } else { // @手动搜索类型
@@ -1835,23 +2139,23 @@ app
                         keyword: sessionStorage.getItem('tabsParamsDataInput'),
                         departDate: $rootScope.currentSelectedDate
                     };
-    
+
                     // @手动搜索类型的产品列表 wechat/product/queryProductList
                     $myHttpService.post('api/product/queryProductList', requestData, function(data) {
-    
+
                         console.log("产品页：手动搜索类型的产品列表API返回的数据");
                         console.log(data);
-    
+
                         $scope.ticketsInfo2 = data.products;
-    
+
                         storageData('jqztc_cpy_ticketsInfo2', $scope.ticketsInfo2); // @存储数据，以便后用
-    
+
                         if($scope.ticketsInfo2.length != 0) {
-    
+
                             $scope.paramsProductId = $scope.ticketsInfo2[0].productid;  // @产品ID，查询评论用
-                            
+
                         } else {
-    
+
                             layer.open({
                                 content: '没有找到相关产品信息，请重新搜索 (╯-╰)',
                                 btn: '确定',
@@ -1863,13 +2167,13 @@ app
                                     layer.closeAll();
                                 }
                             });
-    
+
                         }
-    
+
                     }, errorFn);
 
                 }
-        
+
             } else {
                 layer.open({
                     content: '不在预售范围内，预售期仅为60天，请重新选择！',
@@ -1877,7 +2181,7 @@ app
                 });
             }
         }
-            
+
         // @前一天
         $scope.prevDay = function() {
 
@@ -1896,8 +2200,8 @@ app
 
                 var temp = new Date(prevDayTime);
                 $rootScope.currentSelectedDate = $filter('date')(temp, 'yyyy-MM-dd');
-                $rootScope.currentSelectedDate2 = "周" + "日一二三四五六".charAt(new Date($rootScope.currentSelectedDate).getDay());                
-               
+                $rootScope.currentSelectedDate2 = "周" + "日一二三四五六".charAt(new Date($rootScope.currentSelectedDate).getDay());
+
                 // @重新拉取数据
                 if($scope.sourceComeType == true) { // @图片推荐类型
 
@@ -1905,59 +2209,59 @@ app
                         productid: sessionStorage.getItem('jqztc_cpy_paramsProductId'),
                         departDate: $rootScope.currentSelectedDate
                     };
-    
+
                     // @图片推荐类型产品列表 /web/product/queryProduct
                     $myHttpService.post('api/product/queryProduct', requestData, function(data) {
-    
+
                         console.log("产品页：图片推荐产品列表API返回的数据");
-                        console.log(data);   
-                                
+                        console.log(data);
+
                         $scope.ticketsInfo1 = data.product; // @产品对象
-                        
-                        storageData('jqztc_cpy_ticketsInfo1', $scope.ticketsInfo1); // @存储数据，以便后用 
-    
+
+                        storageData('jqztc_cpy_ticketsInfo1', $scope.ticketsInfo1); // @存储数据，以便后用
+
                         if($scope.ticketsInfo1 != null) {
-                            
+
                             if($scope.ticketsInfo1.plans != null) { // @产品 有车票时
-                                
+
                                 $scope.ticketsInfo1_havePlans = true; // @有无车票
-        
+
                                 $scope.ticketsInfo1_prodcutType = $scope.ticketsInfo1.productType.split("&"); // @产品类型
                                 $scope.ticketsInfo1_prodcutType2 = $scope.ticketsInfo1.productType.replace("&", "+"); // @产品类型
-        
+
                                 $scope.ticketsInfo1_station = $scope.ticketsInfo1.plans[0].linename.split("-"); // @出发/返回 站点名
-        
+
                                 if($scope.ticketsInfo1.plans[0].bdidType == 0) { // @单程票
-        
+
                                     $scope.ticketsInfo1_plansType = true; // @车票类型
-        
+
                                     $scope.ticketsInfo1_departAddr = $scope.ticketsInfo1.plans[0].departaddr; // @出发发车地址
                                     $scope.ticketsInfo1_driveTime = $scope.ticketsInfo1.plans[0].drivetime; // @行程时间
-                                    
+
                                 } else { // @往返票
-                                    
+
                                     $scope.ticketsInfo1_plansType = false; // @车票类型
                                     $scope.ticketsInfo1_departAddr = $scope.ticketsInfo1.plans[0].departaddr; // @出发发车地址
                                     $scope.ticketsInfo1_arriveAddr = $scope.ticketsInfo1.plans[1].departaddr; // @返回发车地址
                                     $scope.ticketsInfo1_driveTime = $scope.ticketsInfo1.plans[0].drivetime; // @行程时间
-        
+
                                 }
-        
+
                             } else { // @产品 无车票时
-        
+
                                 $scope.ticketsInfo1_havePlans = false;
-        
+
                                 if($scope.ticketsInfo1.viewInfo != null) { // @单独的门票
-        
+
                                     $scope.ticketsInfo1_viewName = $scope.ticketsInfo1.viewInfo.viewName; // @景点名字
                                     $scope.ticketsInfo1_viewAddr = $scope.ticketsInfo1.viewInfo.viewaddr; // @景点地址
-        
-                                } 
-        
+
+                                }
+
                             }
-    
+
                         } else {
-    
+
                             layer.open({
                                 content: '客官，您当前选择的推荐主题路线已售完，请返回进行主题线路搜索 (╯-╰)',
                                 btn: '确定',
@@ -1970,9 +2274,9 @@ app
                                     }, 250)
                                 }
                             });
-    
+
                         }
-    
+
                     }, errorFn);
 
                 } else { // @手动搜索类型
@@ -1981,23 +2285,23 @@ app
                         keyword: sessionStorage.getItem('tabsParamsDataInput'),
                         departDate: $rootScope.currentSelectedDate
                     };
-    
+
                     // @手动搜索类型的产品列表 wechat/product/queryProductList
                     $myHttpService.post('api/product/queryProductList', requestData, function(data) {
-    
+
                         console.log("产品页：手动搜索类型的产品列表API返回的数据");
                         console.log(data);
-    
+
                         $scope.ticketsInfo2 = data.products;
-    
+
                         storageData('jqztc_cpy_ticketsInfo2', $scope.ticketsInfo2); // @存储数据，以便后用
-    
+
                         if($scope.ticketsInfo2.length != 0) {
-    
+
                             $scope.paramsProductId = $scope.ticketsInfo2[0].productid;  // @产品ID，查询评论用
-                            
+
                         } else {
-    
+
                             layer.open({
                                 content: '没有找到相关产品信息，请重新搜索 (╯-╰)',
                                 btn: '确定',
@@ -2009,9 +2313,9 @@ app
                                     layer.closeAll();
                                 }
                             });
-    
+
                         }
-    
+
                     }, errorFn);
 
                 }
@@ -2030,137 +2334,137 @@ app
         function isLeap(year) {
             return year % 4 == 0 ? (year % 100 != 0 ? 1 : (year % 400 == 0 ? 1 : 0)) : 0;
         }
-  
+
         function _getDateRegionArray(y, m, dateArr, compareDate, flag) {
-    
+
             if (m > 11) {
                 y += 1;
                 m = 0;
             }
-    
+
             var i, k,
                 firstday = new Date(y, m, 1), // @获取当月的第一天
                 dayOfWeek = firstday.getDay(), // @判断第一天是星期几(返回[0-6]中的一个，0代表星期天，1代表星期一，以此类推)
                 days_per_month = new Array(31, 28 + isLeap(y), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31), // @创建月份数组
                 str_nums = Math.ceil((dayOfWeek + days_per_month[m]) / 7); // @确定日期表格所需的行数
-    
+
             for (i = 0; i < str_nums; i += 1) { // @二维数组创建日期表格
-    
+
                 for (k = 0; k < 7; k++) {
                     var idx = 7 * i + k; // @为每个表格创建索引,从0开始
                     var date = idx - dayOfWeek + 1; // @将当月的1号与星期进行匹配
-    
+
                     var temp_date = idx - dayOfWeek + 1;
-    
+
                     if (temp_date <= 0 || temp_date > days_per_month[m]) { // @无效的时间
-    
+
                     } else { // @有效的时间
-    
-    
+
+
                         if(flag == 0) { // @start日期
-    
+
                             // var temp_m = Number.parseInt(m);
                             var temp_m = Number.parseInt(m) + 1;
                             var temp_date_str = y + '/' + temp_m + '/' + temp_date;
-    
+
                             if(new Date(temp_date_str) >= compareDate) {
                                 // $filter('date')(new Date(temp_date_str), 'yyyy-MM-dd')
                                 dateArr.push($filter('date')(new Date(temp_date_str), 'yyyy/MM/dd'));
                             }
 
                         } else if(flag == 1) { // @截止日期
-    
+
                             // var temp_m = Number.parseInt(m);
                             var temp_m = Number.parseInt(m) + 1;
                             var temp_date_str = y + '/' + temp_m + '/' + temp_date;
-    
+
                             if(new Date(temp_date_str) <= compareDate) {
                                 dateArr.push($filter('date')(new Date(temp_date_str), 'yyyy/MM/dd'));
                             }
-    
+
                         } else { // @无限制
-    
+
                             // var temp_m = Number.parseInt(m);
                             var temp_m = Number.parseInt(m) + 1;
                             var temp_date_str = y + '/' + temp_m + '/' + temp_date;
-                            
+
                             dateArr.push($filter('date')(new Date(temp_date_str), 'yyyy/MM/dd'));
-    
+
                         }
-    
+
                     }
-    
+
                 }
             }
             console.log(dateArr);
         }
-    
+
         // @从今天往后推两个月时间
         function getTodayToAfterTwoMonthRegionArray(dateArr) {
-    
+
             // @初始化数据
             var today = new Date(); // @获取当前日期
             var y = today.getFullYear(); // @获取日期中的年份
             var m = today.getMonth(); // @获取日期中的月份(需要注意的是：月份是从0开始计算，获取的值比正常月份的值少1)
             var d = today.getDate(); // @获取日期中的日(方便在建立日期表格时高亮显示当天)
-            var temp_days_per_month = new Array(31, 28 + isLeap(y), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31); // @创建月份数组 
-    
+            var temp_days_per_month = new Array(31, 28 + isLeap(y), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31); // @创建月份数组
+
             var compareTime = new Date().getTime() + (60 * 86400000); // @60天时间的时间段，用来比较的
-    
+
             if(dateArr.length == 0) {
-    
+
                 dateArr.push($filter('date')(today, 'yyyy/MM/dd'));
-    
+
                 _getDateRegionArray(y, m, dateArr, new Date(), 0);
             }
-    
+
             if(dateArr.length < temp_days_per_month[m]) {
-    
+
                 var y2 = y;
                 var m2 = m + 1;
-    
+
                 if(m2 > 11) {
-    
+
                     y2 += 1;
                     m2 = 0;
-    
+
                 }
-    
+
                 _getDateRegionArray(y2, m2, dateArr, new Date(), 3);
-    
+
                 if(dateArr.length < 60) {
-                    
+
                     var y3 = y2;
                     var m3 = m2 + 1;
-    
+
                     if(m3 > 11) {
-                        
+
                         y3 += 1;
                         m3 = 0;
-    
+
                     }
-    
+
                     _getDateRegionArray(y3, m3, dateArr, new Date(compareTime), 1);
-    
+
                 }
-    
-                
+
+
             } else if(dateArr.length == temp_days_per_month[m]) {
-    
+
                 var y2 = y;
                 var m2 = m + 1;
-    
+
                 if(m2 > 11) {
-    
+
                     y2 += 1;
                     m2 = 0;
-    
+
                 }
-    
+
                 _getDateRegionArray(y2, m2, dateArr, new Date(), 3);
-    
+
             }
-    
+
         }
 
         // @从数组中删除某个元素
@@ -2188,59 +2492,59 @@ app
                             productid: sessionStorage.getItem('jqztc_cpy_paramsProductId'),
                             departDate: $rootScope.currentSelectedDate
                         };
-        
+
                         // @图片推荐类型产品列表 /web/product/queryProduct
                         $myHttpService.post('api/product/queryProduct', requestData, function(data) {
-        
+
                             console.log("产品页：图片推荐产品列表API返回的数据");
-                            console.log(data);   
-                                    
+                            console.log(data);
+
                             $scope.ticketsInfo1 = data.product; // @产品对象
-                            
-                            storageData('jqztc_cpy_ticketsInfo1', $scope.ticketsInfo1); // @存储数据，以便后用 
-        
+
+                            storageData('jqztc_cpy_ticketsInfo1', $scope.ticketsInfo1); // @存储数据，以便后用
+
                             if($scope.ticketsInfo1 != null) {
-                                
+
                                 if($scope.ticketsInfo1.plans != null) { // @产品 有车票时
-                                    
+
                                     $scope.ticketsInfo1_havePlans = true; // @有无车票
-            
+
                                     $scope.ticketsInfo1_prodcutType = $scope.ticketsInfo1.productType.split("&"); // @产品类型
                                     $scope.ticketsInfo1_prodcutType2 = $scope.ticketsInfo1.productType.replace("&", "+"); // @产品类型
-            
+
                                     $scope.ticketsInfo1_station = $scope.ticketsInfo1.plans[0].linename.split("-"); // @出发/返回 站点名
-            
+
                                     if($scope.ticketsInfo1.plans[0].bdidType == 0) { // @单程票
-            
+
                                         $scope.ticketsInfo1_plansType = true; // @车票类型
-            
+
                                         $scope.ticketsInfo1_departAddr = $scope.ticketsInfo1.plans[0].departaddr; // @出发发车地址
                                         $scope.ticketsInfo1_driveTime = $scope.ticketsInfo1.plans[0].drivetime; // @行程时间
-                                        
+
                                     } else { // @往返票
-                                        
+
                                         $scope.ticketsInfo1_plansType = false; // @车票类型
                                         $scope.ticketsInfo1_departAddr = $scope.ticketsInfo1.plans[0].departaddr; // @出发发车地址
                                         $scope.ticketsInfo1_arriveAddr = $scope.ticketsInfo1.plans[1].departaddr; // @返回发车地址
                                         $scope.ticketsInfo1_driveTime = $scope.ticketsInfo1.plans[0].drivetime; // @行程时间
-            
+
                                     }
-            
+
                                 } else { // @产品 无车票时
-            
+
                                     $scope.ticketsInfo1_havePlans = false;
-            
+
                                     if($scope.ticketsInfo1.viewInfo != null) { // @单独的门票
-            
+
                                         $scope.ticketsInfo1_viewName = $scope.ticketsInfo1.viewInfo.viewName; // @景点名字
                                         $scope.ticketsInfo1_viewAddr = $scope.ticketsInfo1.viewInfo.viewaddr; // @景点地址
-            
-                                    } 
-            
+
+                                    }
+
                                 }
-        
+
                             } else {
-        
+
                                 layer.open({
                                     content: '客官，您当前选择的推荐主题路线已售完，请返回进行主题线路搜索 (╯-╰)',
                                     btn: '确定',
@@ -2253,9 +2557,9 @@ app
                                         }, 250)
                                     }
                                 });
-        
+
                             }
-        
+
                         }, errorFn);
 
                     } else { // @手动搜索类型
@@ -2264,23 +2568,23 @@ app
                             keyword: sessionStorage.getItem('tabsParamsDataInput'),
                             departDate: $rootScope.currentSelectedDate
                         };
-        
+
                         // @手动搜索类型的产品列表 wechat/product/queryProductList
                         $myHttpService.post('api/product/queryProductList', requestData, function(data) {
-        
+
                             console.log("产品页：手动搜索类型的产品列表API返回的数据");
                             console.log(data);
-        
+
                             $scope.ticketsInfo2 = data.products;
-        
+
                             storageData('jqztc_cpy_ticketsInfo2', $scope.ticketsInfo2); // @存储数据，以便后用
-        
+
                             if($scope.ticketsInfo2.length != 0) {
-        
+
                                 $scope.paramsProductId = $scope.ticketsInfo2[0].productid;  // @产品ID，查询评论用
-                                
+
                             } else {
-        
+
                                 layer.open({
                                     content: '没有找到相关产品信息，请重新搜索 (╯-╰)',
                                     btn: '确定',
@@ -2292,9 +2596,9 @@ app
                                         layer.closeAll();
                                     }
                                 });
-        
+
                             }
-        
+
                         }, errorFn);
 
                     }
@@ -2315,7 +2619,11 @@ app
 
         }
 
+        /************************************************************ */
+
+
         $scope.$on('$destroy', function() {
+            console.log("师法大梦川报告：产品页，$destroy执行");
             $ionicLoading.hide();
         });
 
@@ -2323,7 +2631,7 @@ app
 
     /**
      * @订单页 确认、支付 控制器
-     */ 
+     */
     .controller('order_confirm_pay', function($rootScope, $filter, $scope, $state, $myHttpService, $interval, $ionicModal, ionicDatePicker) {
 
         if(JSON.parse($state.params.data) == null) { // @访问此订单页时，如果没有传递过来参数那么将直接倒退2个页面
@@ -2331,18 +2639,18 @@ app
             window.history.go(-2); // @倒退回到首页，此动作不可逆
             return false; // @兼容处理
 
-        } 
+        }
 
         console.log("订单页：日期");
         console.log($rootScope.currentSelectedDate);
 
         var paramsData = JSON.parse($state.params.data); // @解析传递过来的参数
-        
+
         console.log("订单页：传递到订单页的参数");
         console.log(paramsData);
 
         $scope.ticketInfo = paramsData; // @产品对象 ！！！
-        
+
         // @访问订单页时，有参数的情况，走正常流程
 
         $scope.floatObj = floatObj; // @票价处理的运算对象
@@ -2356,7 +2664,7 @@ app
 
         $scope.singlePrice = $scope.ticketInfo.productPrice; // @产品单价
         $scope.sumPrice = $scope.ticketInfo.productPrice; // @产品总价
-        
+
         $scope.coupon = 0; // @优惠总价
 
         $rootScope.customerPhone = "18302505303"; // @客服电话
@@ -2365,7 +2673,7 @@ app
         // $scope.currentSelectedDateOrTime2 = "周" + "日一二三四五六".charAt(new Date($scope.currentSelectedDateOrTime).getDay()); // @周几
 
         $scope.paramsProductid = $scope.ticketInfo.productid; // @产品ID
-        
+
         $scope.checkPhoneState = false; // 检测电话号码是否正确
         $scope.verificationCodeBtnDisabled = true; // 控制获取验证码按钮的状态
         $scope.verificationCodeInputDisabled = true; // 控制验证码输入框的状态
@@ -2377,55 +2685,55 @@ app
 
 
         // ************************************************************************************************
-        
+
 
         // @检测产品对象 是否有车票
-        if($scope.ticketInfo.plans != null) { 
-            
-            $scope.ticketInfo_Ticket_tempRequestParamArr = []; // @临时的车票 请求参数数组  
-            
+        if($scope.ticketInfo.plans != null) {
+
+            $scope.ticketInfo_Ticket_tempRequestParamArr = []; // @临时的车票 请求参数数组
+
             // @票价计算
             if($scope.ticketInfo.viewInfo != null) { // @有门票时
 
                 $scope.ticketSinglePrice = $scope.floatObj.subtract($scope.singlePrice, $scope.ticketInfo.viewInfo.viewPrices[0].couponPrice, 2); // @车票单价
                 $scope.ticketSumPrice = $scope.ticketSinglePrice; // @车票总价
-        
+
             } else { // @无门票时
 
-                $scope.ticketSinglePrice = $scope.singlePrice; // @车票单价                
+                $scope.ticketSinglePrice = $scope.singlePrice; // @车票单价
                 $scope.ticketSumPrice = $scope.ticketSinglePrice; // @车票总价
 
             }
 
             // @类型 去程票
-            if($scope.ticketInfo.plans[0] != null) { 
-                
+            if($scope.ticketInfo.plans[0] != null) {
+
                 $scope.ticketInfo_Ticket_tempRequestParamArr[0] = [
                     $scope.ticketInfo.plans[0].bdid, // @去程票 线路ID
                     $scope.dataContainer.count // @去程票 数量
-                ]; 
+                ];
 
 
-            } 
+            }
 
-            // @类型 反程票 
-            if($scope.ticketInfo.plans[1] != null) { 
-                
+            // @类型 反程票
+            if($scope.ticketInfo.plans[1] != null) {
+
                 $scope.ticketInfo_Ticket_tempRequestParamArr[1] = [
                     $scope.ticketInfo.plans[1].bdid, // @返程票 线路ID
                     $scope.dataContainer.count // @返程票 数量
-                ]; 
+                ];
 
-            } 
+            }
 
         }
 
         // @检测产品对象 是否有门票
-        if($scope.ticketInfo.viewInfo != null) { 
+        if($scope.ticketInfo.viewInfo != null) {
 
             // @票价计算
-            $scope.ticketViewSinglePrice = $scope.ticketInfo.viewInfo.viewPrices[0].couponPrice; // @门票单价        
-            $scope.ticketViewSumPrice = $scope.ticketViewSinglePrice; // @门票总价     
+            $scope.ticketViewSinglePrice = $scope.ticketInfo.viewInfo.viewPrices[0].couponPrice; // @门票单价
+            $scope.ticketViewSumPrice = $scope.ticketViewSinglePrice; // @门票总价
 
             $scope.ticketInfo_viewInfo_tempRequestParamArr = []; // @临时的门票 请求参数数组
 
@@ -2435,7 +2743,7 @@ app
             ];
 
         }
-        
+
         // ************************************************************************************************
 
         // @加减函数
@@ -2449,7 +2757,7 @@ app
                     $scope.dataContainer.count += 1;
 
                     // @产品总价
-                    $scope.sumPrice =  $scope.floatObj.multiply($scope.ticketInfo.productPrice, $scope.dataContainer.count, 2);                  
+                    $scope.sumPrice =  $scope.floatObj.multiply($scope.ticketInfo.productPrice, $scope.dataContainer.count, 2);
 
                     // @车票总价
                     $scope.ticketSumPrice = $scope.floatObj.multiply($scope.ticketSinglePrice, $scope.dataContainer.count, 2)
@@ -2459,7 +2767,7 @@ app
 
                     console.log("订单页：产品总价");
                     console.log($scope.sumPrice);
-            
+
                     console.log("订单页：车票总价");
                     console.log($scope.ticketSumPrice);
 
@@ -2469,12 +2777,12 @@ app
                     if($scope.ticketInfo.plans[0] != null) {
 
                         $scope.ticketInfo_Ticket_tempRequestParamArr[0][1] = $scope.dataContainer.count;
-                
+
                     }
 
                     if($scope.ticketInfo.plans[1] != null) {
 
-                        $scope.ticketInfo_Ticket_tempRequestParamArr[1][1] = $scope.dataContainer.count;                        
+                        $scope.ticketInfo_Ticket_tempRequestParamArr[1][1] = $scope.dataContainer.count;
 
                     }
 
@@ -2497,26 +2805,26 @@ app
                     $scope.dataContainer.count += 1;
 
                     // @产品总价
-                    $scope.sumPrice =  $scope.floatObj.multiply($scope.ticketInfo.productPrice, $scope.dataContainer.count, 2);                  
+                    $scope.sumPrice =  $scope.floatObj.multiply($scope.ticketInfo.productPrice, $scope.dataContainer.count, 2);
 
                     // @车票总价
                     $scope.ticketSumPrice = $scope.floatObj.multiply($scope.ticketSinglePrice, $scope.dataContainer.count, 2)
 
                     console.log("订单页：产品总价");
                     console.log($scope.sumPrice);
-            
+
                     console.log("订单页：车票总价");
                     console.log($scope.ticketSumPrice);
 
                     if($scope.ticketInfo.plans[0] != null) {
 
                         $scope.ticketInfo_Ticket_tempRequestParamArr[0][1] = $scope.dataContainer.count;
-                
+
                     }
 
                     if($scope.ticketInfo.plans[1] != null) {
 
-                        $scope.ticketInfo_Ticket_tempRequestParamArr[1][1] = $scope.dataContainer.count;                        
+                        $scope.ticketInfo_Ticket_tempRequestParamArr[1][1] = $scope.dataContainer.count;
 
                     }
 
@@ -2536,7 +2844,7 @@ app
                     $scope.dataContainer.count += 1;
 
                     // @产品总价
-                    $scope.sumPrice =  $scope.floatObj.multiply($scope.ticketInfo.productPrice, $scope.dataContainer.count, 2);                  
+                    $scope.sumPrice =  $scope.floatObj.multiply($scope.ticketInfo.productPrice, $scope.dataContainer.count, 2);
 
                     // @门票总价
                     $scope.ticketViewSumPrice = $scope.floatObj.multiply($scope.ticketViewSinglePrice, $scope.dataContainer.count, 2)
@@ -2548,7 +2856,7 @@ app
                     console.log($scope.ticketViewSumPrice);
 
                     $scope.ticketInfo_viewInfo_tempRequestParamArr[0][1] = $scope.dataContainer.count;
-                    
+
                     console.log($scope.ticketInfo_viewInfo_tempRequestParamArr);
 
                 }
@@ -2567,7 +2875,7 @@ app
                     $scope.dataContainer.count -= 1;
 
                     // @产品总价
-                    $scope.sumPrice =  $scope.floatObj.multiply($scope.ticketInfo.productPrice, $scope.dataContainer.count, 2);                  
+                    $scope.sumPrice =  $scope.floatObj.multiply($scope.ticketInfo.productPrice, $scope.dataContainer.count, 2);
 
                     // @车票总价
                     $scope.ticketSumPrice = $scope.floatObj.multiply($scope.ticketSinglePrice, $scope.dataContainer.count, 2)
@@ -2577,7 +2885,7 @@ app
 
                     console.log("订单页：产品总价");
                     console.log($scope.sumPrice);
-            
+
                     console.log("订单页：车票总价");
                     console.log($scope.ticketSumPrice);
 
@@ -2587,12 +2895,12 @@ app
                     if($scope.ticketInfo.plans[0] != null) {
 
                         $scope.ticketInfo_Ticket_tempRequestParamArr[0][1] = $scope.dataContainer.count;
-                
+
                     }
 
                     if($scope.ticketInfo.plans[1] != null) {
 
-                        $scope.ticketInfo_Ticket_tempRequestParamArr[1][1] = $scope.dataContainer.count;                        
+                        $scope.ticketInfo_Ticket_tempRequestParamArr[1][1] = $scope.dataContainer.count;
 
                     }
 
@@ -2610,26 +2918,26 @@ app
                     $scope.dataContainer.count -= 1;
 
                     // @产品总价
-                    $scope.sumPrice =  $scope.floatObj.multiply($scope.ticketInfo.productPrice, $scope.dataContainer.count, 2);                  
+                    $scope.sumPrice =  $scope.floatObj.multiply($scope.ticketInfo.productPrice, $scope.dataContainer.count, 2);
 
                     // @车票总价
                     $scope.ticketSumPrice = $scope.floatObj.multiply($scope.ticketSinglePrice, $scope.dataContainer.count, 2)
 
                     console.log("订单页：产品总价");
                     console.log($scope.sumPrice);
-            
+
                     console.log("订单页：车票总价");
                     console.log($scope.ticketSumPrice);
 
                     if($scope.ticketInfo.plans[0] != null) {
 
                         $scope.ticketInfo_Ticket_tempRequestParamArr[0][1] = $scope.dataContainer.count;
-                
+
                     }
 
                     if($scope.ticketInfo.plans[1] != null) {
 
-                        $scope.ticketInfo_Ticket_tempRequestParamArr[1][1] = $scope.dataContainer.count;                        
+                        $scope.ticketInfo_Ticket_tempRequestParamArr[1][1] = $scope.dataContainer.count;
 
                     }
 
@@ -2644,7 +2952,7 @@ app
                     $scope.dataContainer.count -= 1;
 
                     // @产品总价
-                    $scope.sumPrice =  $scope.floatObj.multiply($scope.ticketInfo.productPrice, $scope.dataContainer.count, 2);                  
+                    $scope.sumPrice =  $scope.floatObj.multiply($scope.ticketInfo.productPrice, $scope.dataContainer.count, 2);
 
                     // @门票总价
                     $scope.ticketViewSumPrice = $scope.floatObj.multiply($scope.ticketViewSinglePrice, $scope.dataContainer.count, 2)
@@ -2662,12 +2970,12 @@ app
                 }
 
             }
-            
+
         }
 
 
         // ************************************************************************************************
-        
+
 
         // @函数 验证手机号码
         $scope.checkPhone = function() {
@@ -2675,10 +2983,10 @@ app
                 if($scope.dataContainer.phone.length == 11) {
                     var phone = $scope.dataContainer.phone.toString();
                     if(!(/^1(3|4|5|7|8)\d{9}$/.test(phone))) { // 正则检测
-                        layer.msg("输入的手机号码有误"); 
+                        layer.msg("输入的手机号码有误");
                         $scope.verificationCodeBtnDisabled = true; // 禁用获取验证码按钮
                         $scope.payBtnDisabled = true; // 禁用确认支付按钮
-                        return false; 
+                        return false;
                     } else {
                         $scope.verificationCodeBtnDisabled = false; // 启用获取验证码按钮
                     }
@@ -2687,13 +2995,13 @@ app
                     $scope.payBtnDisabled = true; // 禁用确认支付按钮
                 }
             } else {
-                // 
+                //
             }
         }
 
 
         // ************************************************************************************************
-        
+
 
         // @验证码倒计时 处理流程
         var defaultCountdown = 60; // @默认60秒的倒计时时间
@@ -2734,14 +3042,14 @@ app
 
             var departDate = $filter('date')($rootScope.currentSelectedDate, 'yyyy-MM-dd');
             var checkcode = parseInt($scope.dataContainer.phone) % parseInt($scope.dataContainer.phone.substring(1,4)) ;
-            
+
             // @参数分情况封装
             if($scope.ticketInfo.plans != null) { // @有车票时
 
                 if($scope.ticketInfo.plans[0] != null && $scope.ticketInfo.plans[1] == null) { // @有去程，无返程的情况
 
-                    var bsids = $scope.ticketInfo.plans[0].linename + '&' + departDate + '&' + $scope.ticketInfo.plans[0].departtime;                      
-                    
+                    var bsids = $scope.ticketInfo.plans[0].linename + '&' + departDate + '&' + $scope.ticketInfo.plans[0].departtime;
+
                     var requestData = {
                         phone: $scope.dataContainer.phone,
                         servicename: 'UserBuyViewTicket',
@@ -2750,16 +3058,16 @@ app
                     };
 
                 } else if($scope.ticketInfo.plans[0] != null && $scope.ticketInfo.plans[1] != null) { // @有去程，有返程的情况
- 
+
                     var bsids = $scope.ticketInfo.plans[0].linename + '&' + departDate + '&' + $scope.ticketInfo.plans[0].departtime;
-                    
+
                     var requestData = {
                         phone: $scope.dataContainer.phone,
                         servicename: 'UserBuyViewTicket',
                         checkcode: checkcode.toString(),
                         bsids: bsids
                     };
-    
+
                 }
 
             } else { // @无车票时，只有门票
@@ -2786,13 +3094,13 @@ app
             $myHttpService.postNoLoad('api/utils/sendCheckAuthcode', requestData, function(data) {
 
                 console.log("订单页：获取短信验证码API返回的数据");
-            
+
                 console.log(data);
 
             });
 
         }
-    
+
 
         // ************************************************************************************************
 
@@ -2834,7 +3142,7 @@ app
             type: ''
         };
 
-        $scope.checkCoupon2 = function() { 
+        $scope.checkCoupon2 = function() {
 
             // @查询用户是否有优惠卷 wechat/product/queryUserBuslineCoupon
             $myHttpService.post('api/product/queryUserBuslineCoupon', {userid: $rootScope.session.user.userInfo.userid}, function(data) {
@@ -2848,7 +3156,7 @@ app
 
                     if($scope.couponArr[0] == null) { // @优惠券数组为空
                         $scope.noCouponTxt = true;
-                        $scope.noCouponTxt3 = false; 
+                        $scope.noCouponTxt3 = false;
                         $scope.useCoupon = false;
                     } else {
                         $scope.couponType = { // @优惠券类型，同时也是 brcid
@@ -2870,7 +3178,7 @@ app
         }
 
         $scope.coupon_OKFn = function() { // @优惠券弹窗中的 确定函数
-            
+
             for(var item in $scope.couponArr) {
 
                 var objTemp = $scope.couponArr[item];
@@ -2881,14 +3189,14 @@ app
                     $scope.noCouponTxt2 = true;
                     $scope.noCouponTxt3 = false;
                     $scope.useCoupon = true;
-                    
+
                 }
             }
 
             console.log("订单页：优惠券类型");
             console.log($scope.couponType.type);
 
-            $scope.couponChooseModal.hide();            
+            $scope.couponChooseModal.hide();
 
         }
 
@@ -2906,8 +3214,8 @@ app
             console.log("订单页：优惠券类型");
             console.log($scope.couponType.type);
 
-            $scope.couponChooseModal.hide();            
-            
+            $scope.couponChooseModal.hide();
+
         }
 
         // ************************************************************************************************
@@ -2918,10 +3226,10 @@ app
             if($scope.dataContainer.phone !=  undefined) {
                 if($scope.dataContainer.phone.length == 11) {
                     var phone = $scope.dataContainer.phone.toString();
-                    if(!(/^1(3|4|5|7|8)\d{9}$/.test(phone))) { 
-                        layer.msg("输入的手机号码有误"); 
+                    if(!(/^1(3|4|5|7|8)\d{9}$/.test(phone))) {
+                        layer.msg("输入的手机号码有误");
                         $scope.checkPhoneState = false;
-                        return false; 
+                        return false;
                     } else {
                         $scope.checkPhoneState = true;
                     }
@@ -2929,7 +3237,7 @@ app
                     $scope.checkPhoneState = false;
                 }
             } else {
-                $scope.checkPhoneState = false;                
+                $scope.checkPhoneState = false;
             }
             if($scope.checkPhoneState) {
                 if($scope.dataContainer.verificationCode) {
@@ -2946,9 +3254,9 @@ app
         $scope.recharge = function() {
 
             // @支付参数封装
-            
+
             // @车票参数数组提取
-            var bdids = '';                
+            var bdids = '';
             if($scope.ticketInfo_Ticket_tempRequestParamArr != null) {
 
                 for(var i = 0, len = $scope.ticketInfo_Ticket_tempRequestParamArr.length; i < len; i++) {
@@ -2971,15 +3279,15 @@ app
 
                     if($scope.ticketInfo_viewInfo_tempRequestParamArr[i] != undefined) {
                         if(i == len - 1) {
-                            viewPrices += $scope.ticketInfo_viewInfo_tempRequestParamArr[i][0] + '&' + $scope.ticketInfo_viewInfo_tempRequestParamArr[i][1];                     
+                            viewPrices += $scope.ticketInfo_viewInfo_tempRequestParamArr[i][0] + '&' + $scope.ticketInfo_viewInfo_tempRequestParamArr[i][1];
                         } else {
-                            viewPrices += $scope.ticketInfo_viewInfo_tempRequestParamArr[i][0] + '&' + $scope.ticketInfo_viewInfo_tempRequestParamArr[i][1] + '&&';                                             
+                            viewPrices += $scope.ticketInfo_viewInfo_tempRequestParamArr[i][0] + '&' + $scope.ticketInfo_viewInfo_tempRequestParamArr[i][1] + '&&';
                         }
                     }
-                    
+
                 }
             }
-                        
+
             var departDate = $filter('date')($rootScope.currentSelectedDate, 'yyyy-MM-dd');
             var userid = $rootScope.session.user.userInfo.userid;
             var openid = $rootScope.session.user.userInfo.openid;
@@ -2987,8 +3295,8 @@ app
             var productid = $scope.paramsProductid;
             var couponuse = $scope.useCoupon + ''; // @将 布尔 false 转成字符串 'false'
             var brcid = $scope.couponType.type;
-            
-            var data2 = { 
+
+            var data2 = {
                 departDate: departDate,
                 bdids: bdids,
                 couponuse: couponuse,
@@ -3003,7 +3311,7 @@ app
             data2 = formatParamObject(data2);
 
             console.log("订单页：支付购买的请求参数");
-            console.log(data2); 
+            console.log(data2);
 
             // @传递到支付成功页的参数封装
 
@@ -3026,7 +3334,7 @@ app
                         data3_count = $scope.ticketInfo_Ticket_tempRequestParamArr[i][1];
                     } else if(i == 1) {
                         data3_backbdid = $scope.ticketInfo_Ticket_tempRequestParamArr[i][0];
-                        data3_backCount = $scope.ticketInfo_Ticket_tempRequestParamArr[i][1];                        
+                        data3_backCount = $scope.ticketInfo_Ticket_tempRequestParamArr[i][1];
                     }
                 }
 
@@ -3038,7 +3346,7 @@ app
                 for(var i = 0; i < $scope.ticketInfo_viewInfo_tempRequestParamArr.length; i++) {
 
                     if($scope.ticketInfo_viewInfo_tempRequestParamArr[i] != undefined) {
-                        data3_doorCount += Number.parseInt($scope.ticketInfo_viewInfo_tempRequestParamArr[i][1]);                    
+                        data3_doorCount += Number.parseInt($scope.ticketInfo_viewInfo_tempRequestParamArr[i][1]);
                     }
 
                 }
@@ -3056,7 +3364,7 @@ app
                 viewid: data3_viewid
             };
 
-            console.log("订单页：传递到支付成功页的参数");                        
+            console.log("订单页：传递到支付成功页的参数");
             console.log(data3);
 
 
@@ -3067,11 +3375,11 @@ app
                 console.log(data);
 
                 if(data.counponUse != null) {
-                    
+
                     if(data.updateCoupon) {
-                        console.log("订单页：优惠券支付成功，传递到支付成功页的参数");                        
+                        console.log("订单页：优惠券支付成功，传递到支付成功页的参数");
                         console.log(data3);
-                        $state.go('app.order_detail_refund', {data: JSON.stringify(data3)});                        
+                        $state.go('app.order_detail_refund', {data: JSON.stringify(data3)});
                     } else {
                         layer.open({
                             content: '支付失败',
@@ -3084,12 +3392,12 @@ app
                     $scope.rechargeid = data.rechargeid;
 
                     var wxData = {
-                        "appId": data.appId,   //公众号名称，由商户传入     
-                        "timeStamp": data.timeStamp,    //时间戳，自1970年以来的秒数     
-                        "nonceStr": data.nonceStr, //随机串     
-                        "package": data.package,     
-                        "signType": data.signType,   //微信签名方式：     
-                        "paySign": data.paySign //微信签名 
+                        "appId": data.appId,   //公众号名称，由商户传入
+                        "timeStamp": data.timeStamp,    //时间戳，自1970年以来的秒数
+                        "nonceStr": data.nonceStr, //随机串
+                        "package": data.package,
+                        "signType": data.signType,   //微信签名方式：
+                        "paySign": data.paySign //微信签名
                     };
 
                     function onBridgeReady() {
@@ -3144,7 +3452,7 @@ app
         }
 
         // ************************************************************************************************
-        
+
 
         // @弹窗须知函数
         $scope.yonghuxuzhi_Fn = $ionicModal.fromTemplate('<ion-modal-view>'+
@@ -3167,7 +3475,7 @@ app
         });
 
         // ************************************************************************************************
-        
+
         // @清除工作
         $scope.$on('$destroy', function() {
             console.log("师法大梦川报告：订单页，$destroy执行");
@@ -3175,7 +3483,7 @@ app
             $scope.yonghuxuzhi_Fn.remove();
         });
 
-        
+
     })
 
     /**
@@ -3191,11 +3499,11 @@ app
             $scope.ticketsInfo = getStorageData('jqztc_zfcgy_ticketsInfo');
             $scope.ticketsViewInfo = getStorageData('jqztc_zfcgy_ticketsViewInfo');
             $ionicSlideBoxDelegate.update();
-            
+
         } else { // @访问此页面时，如果有参数传递过来
 
             $scope.ticketsInfoTemp = []; // @车票 临时变量
-            
+
             var paramsData = JSON.parse($state.params.data); // @参数解析
 
             paramsData = formatParamObject(paramsData); // @参数格式化
@@ -3246,38 +3554,38 @@ app
                 storageData('jqztc_zfcgy_ticketsViewInfo', $scope.ticketsViewInfo);
 
             }, errorFn);
-            
+
         }
 
         // @车辆位置 函数
         $scope.getBusPosition = function(item) {
-            
+
             var data = {
                 carid: item.carid,
                 lineid: item.lineid
             };
             $state.go('app.bus_position', {data: JSON.stringify(data)});
         }
-               
+
     })
 
     /**
      * @我的行程页 门票、车票 控制器
-     */ 
+     */
     .controller('myplan', function($rootScope, $scope, $filter, $myHttpService, $state, $timeout, $ionicTabsDelegate, $ionicScrollDelegate) {
 
         if($rootScope.jqztc_xdxcy_current_tab_index) { // @tab项控制跳转
-            
+
             if($rootScope.jqztc_xdxcy_current_tab_index == 0) {
-                
+
                 $timeout(function() {
-                    $ionicTabsDelegate.select(0); 
+                    $ionicTabsDelegate.select(0);
                 }, 5);
 
             } else if($rootScope.jqztc_xdxcy_current_tab_index == 1) {
 
                 $timeout(function() {
-                    $ionicTabsDelegate.select(1); 
+                    $ionicTabsDelegate.select(1);
                 }, 5);
 
             } else if($rootScope.jqztc_xdxcy_current_tab_index == 2) {
@@ -3312,7 +3620,7 @@ app
 
             sessionStorage.setItem("myplanCount", 2);
             $rootScope.hasmore2 = false; // @首次进入页面时  关闭掉上拉加载行为 ion-infinite-scroll，false为关闭；true为开启
-            
+
             // @当前的 tab index索引
             $rootScope.jqztc_xdxcy_current_tab_index = 0;
 
@@ -3323,7 +3631,7 @@ app
 
         $scope.tab_all = function() { // @每次点击tab项时，就会执行一遍这个函数 15张
 
-            console.log("我的行程页：tab_all执行");   
+            console.log("我的行程页：tab_all执行");
 
             if($rootScope.jqztc_xdxcy_current_tab_index != 0) {
                 $rootScope.jqztc_xdxcy_ticketsInfo = []; // @tab_all 全部 车票集合数组
@@ -3334,7 +3642,7 @@ app
 
             console.log("我的行程页：当前索引");
             console.log($rootScope.jqztc_xdxcy_current_tab_index);
-            
+
             var requestData = {
                 userid: $rootScope.session.user.userInfo.userid,
                 offset: 0,
@@ -3346,22 +3654,22 @@ app
 
                 console.log("我的行程页：获取所有订单的列表API返回的数据");
                 console.log(data);
-                
+
                 $rootScope.jqztc_xdxcy_ticketsInfo = data.userViewList;
                 $rootScope.jqztc_xdxcy_ticketsViewInfo = data.ticketOrders;
-                
+
                 $scope.$broadcast('scroll.refreshComplete');
 
                 console.log("我的行程页：全部车票数组");
                 console.log($rootScope.jqztc_xdxcy_ticketsInfo);
 
                 console.log("我的行程页：全部门票数组");
-                console.log($rootScope.jqztc_xdxcy_ticketsViewInfo);   
+                console.log($rootScope.jqztc_xdxcy_ticketsViewInfo);
 
                 if($rootScope.jqztc_xdxcy_ticketsInfo.length == 0 && $rootScope.jqztc_xdxcy_ticketsViewInfo.length == 0) {
 
                     $timeout(function() {
-                        $scope.ticketsInfoIsEmpty = true;                        
+                        $scope.ticketsInfoIsEmpty = true;
                     }, 700);
 
                 }
@@ -3374,15 +3682,15 @@ app
                 }
 
             }, function() {
-                $scope.$broadcast('scroll.refreshComplete'); 
+                $scope.$broadcast('scroll.refreshComplete');
             });
 
         }
-        
+
         // @tab_all 票据信息 下拉刷新函数 15张
         $scope.refresh_tab_all = function() {
 
-            console.log("我的行程页：doRefreshTicket执行");           
+            console.log("我的行程页：doRefreshTicket执行");
 
             var requestData = {
                 userid: $rootScope.session.user.userInfo.userid,
@@ -3398,19 +3706,19 @@ app
 
                 $rootScope.jqztc_xdxcy_ticketsInfo = data.userViewList;
                 $rootScope.jqztc_xdxcy_ticketsViewInfo = data.ticketOrders;
-                
+
                 $scope.$broadcast('scroll.refreshComplete');
 
                 console.log("我的行程页：全部车票数组");
                 console.log($rootScope.jqztc_xdxcy_ticketsInfo);
 
                 console.log("我的行程页：全部门票数组");
-                console.log($rootScope.jqztc_xdxcy_ticketsViewInfo);   
+                console.log($rootScope.jqztc_xdxcy_ticketsViewInfo);
 
                 if($rootScope.jqztc_xdxcy_ticketsInfo.length == 0 && $rootScope.jqztc_xdxcy_ticketsViewInfo.length == 0) {
 
                     $timeout(function() {
-                        $scope.ticketsInfoIsEmpty = true;                        
+                        $scope.ticketsInfoIsEmpty = true;
                     }, 700);
 
                 } else {
@@ -3425,14 +3733,14 @@ app
                     $rootScope.hasmore2 = false;
                 } else {
                     // $timeout(function() {
-                    //     $rootScope.hasmore2 = true;                    
+                    //     $rootScope.hasmore2 = true;
                     // }, 2000);
-                    $rootScope.hasmore2 = true; 
+                    $rootScope.hasmore2 = true;
                     $scope.pageCount = 2;
                 }
 
             }, function() {
-                $scope.$broadcast('scroll.refreshComplete'); 
+                $scope.$broadcast('scroll.refreshComplete');
             });
         };
 
@@ -3452,9 +3760,9 @@ app
                     val2 = Number(val2) / 10000;
                 }
                 return val2 - val1;
-            } 
+            }
         }
-        
+
         // @ tab_all 上拉加载更多票信息 15张
         $scope.load_more_tab_all = function() {
 
@@ -3470,10 +3778,10 @@ app
             if(!run) {
 
                 run = true;
-                
+
                 $myHttpService.postNoLoad('api/product/queryUserProductTicketList', requestData, function(data) {
 
-                    console.log("我的行程页：获取所有订单的列表API返回的数据(上拉加载)");  
+                    console.log("我的行程页：获取所有订单的列表API返回的数据(上拉加载)");
                     console.log(data);
 
                     $rootScope.jqztc_xdxcy_ticketsInfo = $rootScope.jqztc_xdxcy_ticketsInfo.concat(data.userViewList); // @车票
@@ -3483,7 +3791,7 @@ app
                     console.log($rootScope.jqztc_xdxcy_ticketsInfo);
 
                     console.log("我的行程页：全部门票数组");
-                    console.log($rootScope.jqztc_xdxcy_ticketsViewInfo);                    
+                    console.log($rootScope.jqztc_xdxcy_ticketsViewInfo);
 
                     $rootScope.jqztc_xdxcy_ticketsInfo.sort(compare('departDate'));  // @车票排序
 
@@ -3492,7 +3800,7 @@ app
                     if($rootScope.jqztc_xdxcy_ticketsInfo.length == 0  && $rootScope.jqztc_xdxcy_ticketsViewInfo.length == 0) { // @无票
 
                         $timeout(function() {
-                            $scope.ticketsInfoIsEmpty = true;                        
+                            $scope.ticketsInfoIsEmpty = true;
                         }, 700);
 
                     } else {
@@ -3503,8 +3811,8 @@ app
                         });
                     }
 
-                    if ( (data.userViewList.length + data.ticketOrders.length) < 15) { 
-                        $scope.hasmore = false; // @这里判断是否还能获取到数据，如果没有获取数据，则不再触发加载事件 
+                    if ( (data.userViewList.length + data.ticketOrders.length) < 15) {
+                        $scope.hasmore = false; // @这里判断是否还能获取到数据，如果没有获取数据，则不再触发加载事件
                         $rootScope.hasmore2 = false;
                     } else {
                         $scope.pageCount++; // @计数
@@ -3519,13 +3827,13 @@ app
 
         // @tab_nouse 未使用的票据 20张
         $scope.tab_nouse = function() { // @每次点击tab项时，就会执行一遍这个函数
-            
-            console.log("我的行程页：tab_nouse执行");   
 
-            $rootScope.jqztc_xdxcy_current_tab_index = $ionicTabsDelegate.selectedIndex(); // @获取当前索引     
+            console.log("我的行程页：tab_nouse执行");
+
+            $rootScope.jqztc_xdxcy_current_tab_index = $ionicTabsDelegate.selectedIndex(); // @获取当前索引
             console.log("我的行程页：当前索引");
-            console.log($rootScope.jqztc_xdxcy_current_tab_index);       
-            
+            console.log($rootScope.jqztc_xdxcy_current_tab_index);
+
             var requestData = {
                 userid: $rootScope.session.user.userInfo.userid,
                 viewOrderStatus: 2,
@@ -3548,38 +3856,38 @@ app
 
                 $rootScope.jqztc_xdxcy_ticketsInfo_nouse = data.userViewList;
                 $rootScope.jqztc_xdxcy_ticketsViewInfo_nouse = data.ticketOrders;
-                
+
                 $scope.$broadcast('scroll.refreshComplete');
 
                 console.log("我的行程页：未使用车票数组");
                 console.log($rootScope.jqztc_xdxcy_ticketsInfo_nouse);
 
                 console.log("我的行程页：未使用门票数组");
-                console.log($rootScope.jqztc_xdxcy_ticketsViewInfo_nouse);   
+                console.log($rootScope.jqztc_xdxcy_ticketsViewInfo_nouse);
 
                 if($rootScope.jqztc_xdxcy_ticketsInfo_nouse.length == 0 && $rootScope.jqztc_xdxcy_ticketsViewInfo_nouse.length == 0) {
 
                     $timeout(function() {
-                        $scope.jqztc_xdxcy_ticketsInfo_nouse_ticketsInfoIsEmpty = true;                        
+                        $scope.jqztc_xdxcy_ticketsInfo_nouse_ticketsInfoIsEmpty = true;
                     }, 700);
 
                 }
 
             }, function() {
-                $scope.$broadcast('scroll.refreshComplete'); 
+                $scope.$broadcast('scroll.refreshComplete');
             });
-            
+
         }
 
         // @tab_refund 退款中的票据 20张
         $scope.tab_refund = function() { // @每次点击tab项时，就会执行一遍这个函数
-            
-            console.log("我的行程页：tab_refund执行");   
 
-            $rootScope.jqztc_xdxcy_current_tab_index = $ionicTabsDelegate.selectedIndex(); // @获取当前索引 
+            console.log("我的行程页：tab_refund执行");
+
+            $rootScope.jqztc_xdxcy_current_tab_index = $ionicTabsDelegate.selectedIndex(); // @获取当前索引
             console.log("我的行程页：当前索引");
-            console.log($rootScope.jqztc_xdxcy_current_tab_index);           
-            
+            console.log($rootScope.jqztc_xdxcy_current_tab_index);
+
             var requestData = {
                 userid: $rootScope.session.user.userInfo.userid,
                 viewOrderStatus: 4,
@@ -3602,27 +3910,27 @@ app
 
                 $rootScope.jqztc_xdxcy_ticketsInfo_refund = data.userViewList;
                 $rootScope.jqztc_xdxcy_ticketsViewInfo_refund = data.ticketOrders;
-                
+
                 $scope.$broadcast('scroll.refreshComplete');
 
                 console.log("我的行程页：未使用车票数组");
                 console.log($rootScope.jqztc_xdxcy_ticketsInfo_refund);
 
                 console.log("我的行程页：未使用门票数组");
-                console.log($rootScope.jqztc_xdxcy_ticketsViewInfo_refund);   
+                console.log($rootScope.jqztc_xdxcy_ticketsViewInfo_refund);
 
                 if($rootScope.jqztc_xdxcy_ticketsInfo_refund.length == 0 && $rootScope.jqztc_xdxcy_ticketsViewInfo_refund.length == 0) {
 
                     $timeout(function() {
-                        $scope.jqztc_xdxcy_ticketsInfo_refund_ticketsInfoIsEmpty = true;                        
+                        $scope.jqztc_xdxcy_ticketsInfo_refund_ticketsInfoIsEmpty = true;
                     }, 700);
 
                 }
 
             }, function() {
-                $scope.$broadcast('scroll.refreshComplete'); 
+                $scope.$broadcast('scroll.refreshComplete');
             });
-            
+
         }
 
         // @点击 未使用 车票进入 车票详情界面
@@ -3685,7 +3993,7 @@ app
 
         $scope.selectedDate1;
         $scope.selectedDate2;
-    
+
         $scope.openDatePickerOne = function (val) {
           var ipObj1 = {
             callback: function (val) {  //Mandatory
@@ -3707,7 +4015,7 @@ app
           };
           ionicDatePicker.openDatePicker(ipObj1);
         };
-    
+
         $scope.openDatePickerTwo = function (val) {
           var ipObj1 = {
             callback: function (val) {  //Mandatory
@@ -3727,9 +4035,9 @@ app
         }
 
         $scope.$on('$destroy', function() {
-           
+
         });
-        
+
         // 微信上传图片
         var wxConfig = {};
         //获取微信签名
@@ -3781,7 +4089,7 @@ app
                         var guid = $scope.getGuid();   //通过时间戳创建一个随机数，作为键名使用
                         $scope.$apply(function(){
                             $scope.thumb[guid] = {
-                                guid : guid,  
+                                guid : guid,
                             }
                         });
                     }
@@ -3797,11 +4105,11 @@ app
 
     /**
      * @车辆位置页 控制器
-     */ 
+     */
     .controller('BusPositionController', function($scope, $myHttpService, $timeout, $state) {
 
         if(JSON.parse($state.params.data) == null) {
-            
+
             var lineArr = [
                     116.397428, // 经度
                     39.90923 // 纬度
@@ -3844,8 +4152,8 @@ app
             $myHttpService.post('api/product/queryCarLocation', {
                 carid: paramsData.carid,
                 lineid: paramsData.lineid
-            }, function(data) {  
-                
+            }, function(data) {
+
                 console.log("车辆位置页：查询车辆位置API返回的数据");
                 console.log(data);
 
@@ -3902,7 +4210,7 @@ app
 
                 AMapUI.load(['ui/overlay/SimpleMarker'], function(SimpleMarker) {
 
-                    // @路径规划绘制 
+                    // @路径规划绘制
                     AMap.plugin('AMap.Driving', function() {
                         var drving = new AMap.Driving({
                             map: map,
@@ -3972,9 +4280,9 @@ app
                     });
                 })
 
-            /* 
+            /*
                 AMapUI.load(['ui/misc/PathSimplifier', 'ui/overlay/SimpleMarker'], function(PathSimplifier, SimpleMarker) {
-                    
+
                     if (!PathSimplifier.supportCanvas) {
                         alert('当前环境不支持 Canvas！');
                         // 起点站点 经纬度
@@ -3996,7 +4304,7 @@ app
                         });
                         return;
                     }
-                    
+
                     var pathSimplifierIns = new PathSimplifier({
                         zIndex: 100,
                         //autoSetFitView:false,
@@ -4005,9 +4313,9 @@ app
                             return pathData.path;
                         },
                         getHoverTitle: function(pathData, pathIndex, pointIndex) {
-            
+
                             if (pointIndex >= 0) {
-                                //point 
+                                //point
                                 return pathData.name + '，点：' + pointIndex + '/' + pathData.path.length;
                             }
                             return pathData.name + '，点数量' + pathData.path.length;
@@ -4022,7 +4330,7 @@ app
                             }
                         }
                     });
-                    
+
                     window.pathSimplifierIns = pathSimplifierIns;
 
                     //设置数据
@@ -4045,17 +4353,17 @@ app
                         });
 
                     }
-                    
+
                     //对第一条线路（即索引 0）创建一个巡航器
                     var navg1 = pathSimplifierIns.createPathNavigator(0, {
                         loop: true, //循环播放
                         speed: 2500 //巡航速度，单位千米/小时
                     });
-            
+
                     navg1.start();
                 });
             */
-                
+
                 $timeout(function() {
                     var marker = new AMap.Marker({
                         map: map,
@@ -4104,19 +4412,19 @@ app
         $scope.timeText = "距离发车时间还剩";
 
         $scope.lunXunTimer = null; // @轮询定时器
-        
+
         $scope.isCheckedTicket = false; // @未验票
 
         // @倒计时间处理函数
         var stopCountDown = null;
-        function ShowCountDown(endTime) { 
-			var now = new Date(); 
+        function ShowCountDown(endTime) {
+			var now = new Date();
 			var leftTime = endTime - now.getTime();
 			if(leftTime > 0) {
 				var leftsecond = parseInt(leftTime / 1000);
 				$scope.day = Math.floor(leftsecond / (60 * 60 * 24));
-				$scope.hour = Math.floor((leftsecond - $scope.day * 24 * 60 * 60) / 3600); 
-				$scope.minute = Math.floor((leftsecond - $scope.day * 24 * 60 * 60 - $scope.hour * 3600) / 60); 
+				$scope.hour = Math.floor((leftsecond - $scope.day * 24 * 60 * 60) / 3600);
+				$scope.minute = Math.floor((leftsecond - $scope.day * 24 * 60 * 60 - $scope.hour * 3600) / 60);
 				$scope.second = Math.floor(leftsecond - $scope.day * 24 * 60 * 60 - $scope.hour * 3600 - $scope.minute * 60);
 			} else {
                 clearInterval(stopCountDown);
@@ -4129,9 +4437,9 @@ app
 
             var viewOrderid = sessionStorage.getItem('jqztc_cpxqy_viewOrderid'); // @订单ID
 
-            // @查询订单详情 wechat/product/queryUserProductTicketDetails            
+            // @查询订单详情 wechat/product/queryUserProductTicketDetails
             $myHttpService.post('api/product/queryUserProductTicketDetails', {viewOrderid: viewOrderid}, function(data) {
-                
+
                 console.log("车票详情页：查询订单详情API返回的数据");
                 console.log(data);
 
@@ -4158,7 +4466,7 @@ app
 
                 // @退款参数封装
                 if(data.viewOrder.rechargeid != null) {
-                    
+
                     $scope.refundData = {
                         rechargeid: data.viewOrder.rechargeid,
                         userid: $rootScope.session.user.userInfo.userid,
@@ -4206,7 +4514,7 @@ app
 
             // @查询订单详情 wechat/product/queryUserProductTicketDetails
             $myHttpService.post('api/product/queryUserProductTicketDetails', requestData, function(data) {
-                
+
                 console.log("车票详情页：查询订单详情API返回的数据");
                 console.log(data);
 
@@ -4252,7 +4560,7 @@ app
                     };
 
                 }
-                
+
                 // @倒计时处理
                 $timeout(function() {
                     $scope.timeShow = true;
@@ -4268,7 +4576,7 @@ app
 
         }
 
-        $scope.$on("$destroy", function() { 
+        $scope.$on("$destroy", function() {
             $interval.cancel(stopTime); // @定时器销毁
             $interval.cancel(lunXunTimer); // @定时器销毁
         });
@@ -4293,7 +4601,7 @@ app
                             console.log("车票详情页: 退款申请API返回的数据");
                             console.log(data);
 
-                            if(data.counponUse == true) {  
+                            if(data.counponUse == true) {
 
                                 if(data.couponRefund == true) {
                                     $scope.refundBtnState = true;
@@ -4354,7 +4662,7 @@ app
 
     /**
      * @车票评价页 控制器 3 一种状态 已使用（已评价、未评价）
-     */ 
+     */
     .controller('order_check_comment', function($rootScope, $scope, $timeout, $state, $filter, $myHttpService) {
 
         $scope.submitBtnIsDiasbled = true; // 控制提交按钮的状态
@@ -4370,13 +4678,13 @@ app
 
             var paramsData = JSON.parse($state.params.data);
 
-            console.log("车票评价页：接收参数");            
+            console.log("车票评价页：接收参数");
             console.log(paramsData);
 
             $scope.ticketInfo = paramsData; // @车票对象
             $scope.productid = $scope.ticketInfo.productid; // @产品ID
             $scope.viewOrderid = $scope.ticketInfo.viewOrderid; // @订单ID
-            
+
             // @由于ionic的原因，必须要是对象来接收数据
             $scope.dataContainer = {
                 text: ""
@@ -4410,7 +4718,7 @@ app
                     orderid: $scope.viewOrderid // @订单ID
                 };
 
-                console.log("车票评价页：评论提交参数");                
+                console.log("车票评价页：评论提交参数");
                 console.log(data);
 
                 // @插入评论wechat/product/insertViewOrderHierarchy
@@ -4429,7 +4737,7 @@ app
                             layer.close(index);
                         }
                     });
-                    
+
                 }, errorFn);
             };
 
@@ -4453,7 +4761,7 @@ app
 
         // @查询用户已购买景区门票详情 wechat/ticketorder/queryUserDoorTicketDetails
         $myHttpService.post('api/ticketorder/queryUserDoorTicketDetails', {orderid: paramsData.orderid}, function(data) {
-            
+
             console.log("门票详情页：查询订单详情API返回的数据");
             console.log(data);
 
@@ -4502,7 +4810,7 @@ app
             }
 
         }, errorFn);
-        
+
         // @退款函数
         $scope.refund = function() {
 
@@ -4521,7 +4829,7 @@ app
                             console.log("门票详情页: 退款申请API返回的数据");
                             console.log(data);
 
-                            if(data.counponUse == true) {  
+                            if(data.counponUse == true) {
 
                                 if(data.couponRefund == true) {
                                     $scope.refundBtnState = true;
@@ -4569,7 +4877,7 @@ app
                 });
         }
 
-        $scope.$on("$destroy", function() { 
+        $scope.$on("$destroy", function() {
             $interval.cancel(lunXunTimer); // @定时器销毁
         });
 
@@ -4579,77 +4887,94 @@ app
      * @我的个人信息 保存 编辑 控制器
      */
     .controller('IUserController', function($rootScope, $scope, $location, $state, $myHttpService) {
-        
-        $scope.tempUser = {};
-        var tempUser2 = {};
 
-        $myHttpService.postNoLoad("api/product/queryUserinfo", {
-            userid: $rootScope.session.user.userInfo.userid
-        }, function(data) {
+        // @取出 程序用户的信息
+		var temp = getStorageData("app_user_info");
 
-            console.log("个人信息页：查询用户个人信息返回的数据");
-            console.log(data);
+		console.log("师法大梦川报告：个人信息页，用户信息打印");
+		console.log(temp);
 
-            if(data.flag) {
-                $scope.user = data.user;
-                if($scope.user.userid.length > 4) {
-                    $scope.userOther = $scope.user.userid.substring(0, 6) + "*****" + $scope.user.userid.substring($scope.user.userid.length-4);
-                } else {
-                    $scope.userOther = $scope.user.userid.substring(0, 6) + "*****";                    
-                }
-                tempUser2 = angular.copy($scope.user);
-            } else {
-                $state.go('auth.login');
-            }
-        });
+        if(temp != null) {
 
-        $scope.editMode = false;
-        $scope.editCance = false;
-        $scope.editButtonText = "设置";
+            $scope.tempUser = {};
+            var tempUser2 = {};
 
-        $scope.edit = function() {
-            if($scope.editMode == false) {
-                $scope.editCance = true;
-                $scope.editMode = !$scope.editMode;
-                $scope.tempUser = angular.copy($scope.user);
-                $scope.editButtonText = "保存";
-            } else {
-                // 加个判断，当用户输入长度有误时进行提醒
-                if( $scope.tempUser.username.length < 2 || $scope.tempUser.username.length > 4 || !(/^[\u4e00-\u9fa5]{2,4}$/.test($scope.tempUser.username)) || $scope.tempUser.phone.length != 11 || !(/^1(3|4|5|7|8)\d{9}$/.test($scope.tempUser.phone)) ) {
-                    if($scope.tempUser.username.length > 4 || $scope.tempUser.username.length < 2 || !(/^[\u4e00-\u9fa5]{2,4}$/.test($scope.tempUser.username))) {
-                        layer.open({
-                            content: '输入的姓名格式有误，长度为2-4个中文',
-                            btn: '确定'
-                        });
-                    } else if($scope.tempUser.phone.length != 11) {
-                        layer.open({
-                            content: '输入的手机号有误，长度为11个数字',
-                            btn: '确定'
-                        });
-                    } else if(!(/^1(3|4|5|7|8)\d{9}$/.test($scope.tempUser.phone))) {
-                        layer.open({
-                            content: '输入的手机号格式有误',
-                            btn: '确定'
-                        });
-                    }
-                } else {
-                    $scope.editMode = !$scope.editMode;
-                    $scope.editButtonText = "设置";
-                    $scope.editCance = false;                
-                    //保存用户信息
-                    $myHttpService.post("api/product/modifyUserInfo", $scope.tempUser, function(data) {
-                        $scope.user = angular.copy($scope.tempUser);
-                    });
-                }
-            }
+
+
+			$scope.user = temp.user;
+			if($scope.user.userid.length > 4) {
+				$scope.userOther = $scope.user.userid.substring(0, 6) + "*****" + $scope.user.userid.substring($scope.user.userid.length-4);
+			} else {
+				$scope.userOther = $scope.user.userid.substring(0, 6) + "*****";
+			}
+			tempUser2 = angular.copy($scope.user);
+
+
+			$scope.editMode = false;
+			$scope.editCance = false;
+			$scope.editButtonText = "设置";
+
+			$scope.edit = function() {
+
+				if($scope.editMode == false) {
+
+					$scope.editCance = true;
+					$scope.editMode = !$scope.editMode;
+					$scope.tempUser = angular.copy($scope.user);
+					$scope.editButtonText = "保存";
+
+				} else {
+
+					// 加个判断，当用户输入长度有误时进行提醒
+					if( $scope.tempUser.username.length < 2 || $scope.tempUser.username.length > 6 || !(/^[\u4e00-\u9fa5]{2,6}$/.test($scope.tempUser.username)) || $scope.tempUser.phone.length != 11 || !(/^1(3|4|5|7|8)\d{9}$/.test($scope.tempUser.phone)) ) {
+						if($scope.tempUser.username.length > 6 || $scope.tempUser.username.length < 2 || !(/^[\u4e00-\u9fa5]{2,6}$/.test($scope.tempUser.username))) {
+							layer.open({
+								content: '输入的姓名格式有误，长度为2-6个中文',
+								btn: '确定'
+							});
+						} else if($scope.tempUser.phone.length != 11) {
+							layer.open({
+								content: '输入的手机号有误，长度为11个数字',
+								btn: '确定'
+							});
+						} else if(!(/^1(3|4|5|7|8)\d{9}$/.test($scope.tempUser.phone))) {
+							layer.open({
+								content: '输入的手机号格式有误',
+								btn: '确定'
+							});
+						}
+					} else {
+
+						$scope.editMode = !$scope.editMode;
+						$scope.editButtonText = "设置";
+						$scope.editCance = false;
+
+						// @保存用户信息
+						storageData('app_user_info', $scope.tempUser);
+						$rootScope.app_user_info_name = $scope.tempUser.username;
+
+						$myHttpService.post("api/product/modifyUserInfo", $scope.tempUser, function(data) {
+
+							$scope.user = angular.copy($scope.tempUser);
+
+						});
+
+					}
+				}
+			}
+
+			$scope.cancel = function() {
+				$scope.editMode = false;
+				$scope.editButtonText = "设置";
+				$scope.editCance = false;
+				$scope.user = angular.copy(tempUser2);
+			}
+
+        } else {
+            $rootScope.appLoginOrRegister_open();
+            return;
         }
 
-        $scope.cancel = function() {
-            $scope.editMode = false;
-            $scope.editButtonText = "设置";
-            $scope.editCance = false;
-            $scope.user = angular.copy(tempUser2);
-        }
     })
 
     /**
@@ -4657,28 +4982,31 @@ app
      */
     .controller('userCenter', function($rootScope, $scope, $location, $state, $myHttpService) {
 
-        $myHttpService.postNoLoad("api/product/queryUserinfo", {
-            userid: $rootScope.session.user.userInfo.userid
-        }, function(data) {
+		// @如果用户信息不为空才进行正常的逻辑处理，不然的话跳转到登录页。
 
-            console.log("用户中心页：查询用户个人信息返回的数据");
-            console.log(data);
-            if(data.flag) {
-                $scope.user = data.user;
-            } else {
-                $state.go('auth.login');
-            }
-        });
+		$scope.userCenterGuard =  function(index) {
 
-        // @去往 行程
-        $scope.goMyPlan = function() {
-            $state.go('app.myplan');
-        }
+			console.log("师法大梦川报告：用户中心页，userCenterGuard执行了");
+			console.log($rootScope.app_user_info_name_bool);
 
-        // @去往 我的个人资料
-        $scope.goMyUser = function() {
-            $state.go('app.user');
-        }
+			if($rootScope.app_user_info_name_bool == true) {
+
+
+				if(index == '1') {
+					// @去往 行程
+					$state.go('app.myplan');
+				} else if(index == '2') {
+					// @去往 我的个人资料
+					$state.go('app.user');
+				}
+
+			} else {
+
+				$rootScope.appLoginOrRegister_open();
+
+			}
+
+		}
 
     })
 
@@ -4704,6 +5032,5 @@ app
  *   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
  *                     佛祖保佑        永无BUG
  *                     佛祖保佑        永无BUG
- * 
+ *
  */
-    
