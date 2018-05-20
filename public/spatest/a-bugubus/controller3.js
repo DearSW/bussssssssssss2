@@ -1,11 +1,10 @@
 /**
  * Created by 滕召维
- * 2017.07.25
  */
 
 /****************************************
  *
- * @贵旅景区直通车 我的线路、行程、账户
+ * @APP 我的线路、行程、账户
  *
  ****************************************/
 
@@ -258,15 +257,15 @@ app
 		// @一个全局的登录页
         $rootScope.appLoginOrRegisterModal = $ionicModal.fromTemplate('<ion-modal-view style="background: rgba(0, 0, 0, 0.84);">'+
 			'		'+
-			'        <ion-content style="background: #ffffff; width: 95%; padding: 5px; margin: 50px auto; box-shadow: rgba(204, 200, 200, 0.5) 1px 2px 7px 4px;">'+
+			'        <ion-content style="background: #ffffff; width: 90%; padding: 5px; margin: 60px auto; box-shadow: rgba(204, 200, 200, 0.5) 1px 2px 7px 4px;">'+
 
 			'			<div style="text-align: right;">'+
-			'						<i class="icon ion-ios-close-empty" style="font-size: 30px;" ng-click="appLoginOrRegister_close()"></i>' +
+			'						<i class="icon ion-ios-close-empty" style="font-size: 35px;margin: 0 8px;padding: 0 2px;" ng-click="appLoginOrRegister_close()"></i>' +
 			'			</div>	'+
 
 			'			 <div>'+
 
-			'					<div class="row" style="color: #111;">'+
+			'					<div class="row" style="color: #111;font-size: 20px;font-weight: 100;">'+
 			'						<div class="col col-50" ng-style="appLoginFlowStyle">'+
 			'								1 <i class="icon ion-ios-checkmark-outline"></i>'+
 			'						</div>'+
@@ -318,7 +317,7 @@ app
 		// @登录打开函数
         $rootScope.appLoginOrRegister_open = function(state) {
 
-            console.log("师法大梦川报告：登录页启动");
+            console.log("师法大梦川报告：全局登录页启动");
 			$rootScope.appLoginOrRegisterModal.show();
 			$rootScope.appLoginCurrentUrl = state;
 
@@ -416,14 +415,14 @@ app
 
 		}
 
-		// @一般对于没有申明的变量使用 typeof 去检测，如果使用 == undefined 的话，是会报错的。
+		// @一般对于没有事先申明的变量，请使用 typeof 去检测，如果使用 == undefined 的话，是会报错的。
 		if( typeof $rootScope.app_user_info_name == "undefined") {
 			$rootScope.app_user_info_name_bool = false;
 			$rootScope.app_user_info_name = "您好，请登录"
 		}
 
-		console.log("师法大梦川报告：root页");
-		console.log($rootScope.app_user_info_name);
+		console.log("师法大梦川报告：root页，当前的用户名字：" + $rootScope.app_user_info_name);
+		console.log("师法大梦川报告：root页，当前的登录状态：" + $rootScope.app_user_info_name_bool);
 
 		// @做一些预备工作
 
@@ -4899,9 +4898,7 @@ app
             $scope.tempUser = {};
             var tempUser2 = {};
 
-
-
-			$scope.user = temp.user;
+			$scope.user = temp;
 			if($scope.user.userid.length > 4) {
 				$scope.userOther = $scope.user.userid.substring(0, 6) + "*****" + $scope.user.userid.substring($scope.user.userid.length-4);
 			} else {
@@ -4952,9 +4949,11 @@ app
 						// @保存用户信息
 						storageData('app_user_info', $scope.tempUser);
 						$rootScope.app_user_info_name = $scope.tempUser.username;
+						$rootScope.app_user_info_name_bool = true;
 
-						$myHttpService.post("api/product/modifyUserInfo", $scope.tempUser, function(data) {
+						$myHttpService.postNoLoad("api/product/modifyUserInfo", $scope.tempUser, function(data) {
 
+							console.log("师法大梦川报告：个人中心页，修改信息成功");
 							$scope.user = angular.copy($scope.tempUser);
 
 						});
@@ -4982,15 +4981,14 @@ app
      */
     .controller('userCenter', function($rootScope, $scope, $location, $state, $myHttpService) {
 
-		// @如果用户信息不为空才进行正常的逻辑处理，不然的话跳转到登录页。
-
+		// @用户中心守卫函数
 		$scope.userCenterGuard =  function(index) {
 
 			console.log("师法大梦川报告：用户中心页，userCenterGuard执行了");
-			console.log($rootScope.app_user_info_name_bool);
+			console.log("师法大梦川报告：用户中心页，当前的用户登录状态为：" + $rootScope.app_user_info_name_bool);
 
+			// @登录状态为true时
 			if($rootScope.app_user_info_name_bool == true) {
-
 
 				if(index == '1') {
 					// @去往 行程
@@ -5000,7 +4998,7 @@ app
 					$state.go('app.user');
 				}
 
-			} else {
+			} else { //@登录状态为false时
 
 				$rootScope.appLoginOrRegister_open();
 

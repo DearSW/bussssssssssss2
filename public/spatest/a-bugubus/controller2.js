@@ -1,9 +1,11 @@
 /******************************
- * 
- ****** 贵旅景区直通车  包车管理
- * 
+ *
+ ****** APP  包车管理
+ *
 ******************************/
+
 var app = angular.module('app');
+
 app
     /* 填写包车申请 % */
     .controller('bus_service_1', function($rootScope, $scope, $state, $filter, $myLocationService, $location, $myHttpService, $stateParams) {
@@ -63,7 +65,7 @@ app
             sessionStorage.setItem("onewayformdata_charterStartTime", $filter('date')($scope.onewayformdata.charterStartTime, 'yyyy-MM-dd HH:mm'));
         };
         $scope.sessionStorageDate2 = function() {
-            sessionStorage.setItem("onewayformdata_charterEndTime", $filter('date')($scope.onewayformdata.charterEndTime, 'yyyy-MM-dd HH:mm'));     
+            sessionStorage.setItem("onewayformdata_charterEndTime", $filter('date')($scope.onewayformdata.charterEndTime, 'yyyy-MM-dd HH:mm'));
         }
         $scope.sessionStoragePerson1 = function() {
             sessionStorage.setItem("onewayformdata_charterCount", $scope.onewayformdata.charterCount);
@@ -75,7 +77,7 @@ app
         $scope.sessionStorageDate4 = function() {
             sessionStorage.setItem("backformdata_charterEndTime", $filter('date')($scope.backformdata.charterEndTime, 'yyyy-MM-dd HH:mm'));
         }
-        $scope.sessionStoragePerson2 = function() {           
+        $scope.sessionStoragePerson2 = function() {
             sessionStorage.setItem("backformdata_charterCount", $scope.backformdata.charterCount);
         }
         // 包天
@@ -83,7 +85,7 @@ app
             sessionStorage.setItem("thenerveformadata_charterStartTime", $filter('date')($scope.thenerveformadata.charterStartTime, 'yyyy-MM-dd HH:mm'));
         };
         $scope.sessionStorageDate6 = function() {
-            sessionStorage.setItem("thenerveformadata_charterEndTime", $filter('date')($scope.thenerveformadata.charterEndTime, 'yyyy-MM-dd HH:mm'));            
+            sessionStorage.setItem("thenerveformadata_charterEndTime", $filter('date')($scope.thenerveformadata.charterEndTime, 'yyyy-MM-dd HH:mm'));
         }
         $scope.sessionStoragePerson3 = function() {
             sessionStorage.setItem("thenerveformadata_charterCount", $scope.thenerveformadata.charterCount);
@@ -110,7 +112,7 @@ app
             charterEndTime: onewayformdata_charterEndTime,
             charterCount: onewayformdata_charterCount
         };
-        /* 往返数据设置  */        
+        /* 往返数据设置  */
         if(sessionStorage.getItem("backformdata_charterStartTime") != null) {
             var backformdata_charterStartTime = sessionStorage.getItem("backformdata_charterStartTime");
         } else {
@@ -131,7 +133,7 @@ app
             charterEndTime: backformdata_charterEndTime,
             charterCount: backformdata_charterCount
         };
-        /* 包天数据设置  */        
+        /* 包天数据设置  */
         if(sessionStorage.getItem("thenerveformadata_charterStartTime") != null) {
             var thenerveformadata_charterStartTime = sessionStorage.getItem("thenerveformadata_charterStartTime");
         } else {
@@ -291,7 +293,7 @@ app
         };
 
     })
-    
+
     /* 进一步完善包车申请信息 % */
     .controller('bus_service_2',function($rootScope, $scope, $state, $myHttpService) {
         $scope.argee=true;
@@ -887,5 +889,5 @@ app
  *   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
  *                     佛祖保佑        永无BUG
  *                     佛祖保佑        永无BUG
- * 
+ *
  */
