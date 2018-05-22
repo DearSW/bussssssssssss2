@@ -348,8 +348,12 @@ angular.module('app', [
                     isCommented: null,
                     isCommentedText: null,
                     isCommentedScore: null
-                },
-                templateUrl: basePath + 'tpl/jqztc_order_check_comment.html'
+				},
+				views: {
+					"user-center": {
+						templateUrl: basePath + 'tpl/jqztc_order_check_comment.html'
+					}
+				}
             })
 
             /*景区直通车：我的行程*/
@@ -368,8 +372,12 @@ angular.module('app', [
                 url: '/ticketdetail',
                 params: {
                     data: null
-                },
-                templateUrl: basePath + 'tpl/jqztc_ticket_detail.html'
+				},
+				views: {
+					"user-center": {
+						templateUrl: basePath + 'tpl/jqztc_ticket_detail.html'
+					}
+				}
             })
 
             /*景区直通车：车辆位置地图2*/
@@ -404,8 +412,12 @@ angular.module('app', [
                 url: '/ticket_admission_detail',
                 params: {
                     data: null
-                },
-                templateUrl: basePath + 'tpl/jqztc_admission_ticket_detail.html'
+				},
+				views: {
+					"user-center": {
+						templateUrl: basePath + 'tpl/jqztc_admission_ticket_detail.html'
+					}
+				}
             })
 
 

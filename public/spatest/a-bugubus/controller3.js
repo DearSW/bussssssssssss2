@@ -260,7 +260,7 @@ app
 			'        <ion-content style="background: #ffffff; width: 90%; padding: 5px; margin: 60px auto; box-shadow: rgba(204, 200, 200, 0.5) 1px 2px 7px 4px;">'+
 
 			'			<div style="text-align: right;">'+
-			'						<i class="icon ion-ios-close-empty" style="font-size: 35px;margin: 0 8px;padding: 0 2px;" ng-click="appLoginOrRegister_close(\'1\')"></i>' +
+			'						<i class="icon ion-ios-close-empty" style="font-size: 35px;margin: 0 8px;padding: 0 2px;" ng-click="appLoginOrRegister_close()"></i>' +
 			'			</div>	'+
 
 			'			 <div>'+
@@ -324,16 +324,10 @@ app
         }
 
 		// @登录关闭函数
-        $rootScope.appLoginOrRegister_close = function(index) {
+        $rootScope.appLoginOrRegister_close = function() {
 
 			console.log("师法大梦川报告：登录页关闭");
-
-			if(index == '1') {
-				$rootScope.appLoginOrRegisterModal.hide();
-				$ionicHistory.goBack();
-			} else {
-				$rootScope.appLoginOrRegisterModal.hide();
-			}
+			$rootScope.appLoginOrRegisterModal.hide();
 
 		}
 
@@ -503,29 +497,37 @@ app
 
         /************************************************************ */
 
-        $rootScope.searchSlideImageTimer = null; // @图片定时器
+		$rootScope.searchSlideImageTimer = null; // @图片定时器
 
-        // @流程控制，确保推荐在未关闭Ng页面之前仅仅请求一次，优化
+        /************************************************************ */
+
+        // @流程控制
         if(sessionStorage.getItem("recommendImgCount") == null) { // @首次加载
+			var recommendImgCount = 1; // @流程控制变量
 
-            var recommendImgCount = 1; // @流程控制变量
             $rootScope.recommendProducts2 = []; // @推荐图片数组
-
             $rootScope.currentCity = '贵阳市'; // @当前城市
 
         } else {
-
             var recommendImgCount = sessionStorage.getItem("recommendImgCount"); // @读取次数变量
+		}
 
-        }
+		if(recommendImgCount == 1) {
+            sessionStorage.setItem("recommendImgCount", 2);
+		}
+
+        /************************************************************ */
 
         $scope.dataContainer = { // @数据容器
             input: "" // @用户输入
-        }
+		}
 
-        if(recommendImgCount == 1) { // @首次加载
+        /************************************************************ */
 
-            sessionStorage.setItem("recommendImgCount", 2);
+		// @轮播
+		if(recommendImgCount == 1) { // @首次加载
+
+            console.log("师法大梦川报告：首页，流程控制为 1，从HTTP中读取数据");
 
             $rootScope.showDefaultImg = true; // @推荐图片不存在时，默认的placeholder
 
@@ -550,11 +552,7 @@ app
 
             // $rootScope.recommendProducts2Index = 0;
 
-        }
-
-        /************************************************************ */
-
-        // @轮播
+		}
 
         function slideImage() { // @轮播控制函数
             if($rootScope.recommendProducts2 && $rootScope.recommendProducts2.length > 0) {
@@ -1128,9 +1126,7 @@ app
             var tempTime = sessionStorage.getItem('jqztc_search_time');
 
         } else {
-
             var tempTime = new Date();
-
         }
 
         $scope.goDate = {
@@ -1278,21 +1274,15 @@ app
 
         /************************************************************ */
 
-        // @流程控制，确保推荐在未关闭Ng页面之前仅仅请求一次，优化
+        // @流程控制
         if(sessionStorage.getItem("Tabs_enter_Count") == null) { // @首次加载
-
             var flowControll = 1; // @流程控制变量
-
         } else {
-
             var flowControll = sessionStorage.getItem("Tabs_enter_Count"); // @读取次数变量
-
         }
-
-        // if(flowControll == 1) { // @首次加载
-        //     sessionStorage.setItem("Tabs_enter_Count", 2);
-        // }
-
+        if(flowControll == 1) { // @首次加载
+            sessionStorage.setItem("Tabs_enter_Count", 2);
+        }
 
         /************************************************************ */
 
@@ -1315,6 +1305,8 @@ app
 
 		// @进入产品页 流程为 1
         if(flowControll == 1) {
+
+			sessionStorage.setItem()
 
             $rootScope.jqztc_tab1_dateArr = []; // @不可用的日期数组 !!!
 
@@ -3492,15 +3484,25 @@ app
     .controller('order_detail_refund', function($rootScope, $scope, $filter, $state, $myHttpService, $ionicSlideBoxDelegate) {
 
         $scope.ticketsInfo = []; // @车票
-        $scope.ticketsViewInfo = []; // @门票
+		$scope.ticketsViewInfo = []; // @门票
 
-        if(JSON.parse($state.params.data) == null) { // @访问此页面时，如果没有传递过来参数
+        /************************************************************ */
 
-            $scope.ticketsInfo = getStorageData('jqztc_zfcgy_ticketsInfo');
-            $scope.ticketsViewInfo = getStorageData('jqztc_zfcgy_ticketsViewInfo');
-            $ionicSlideBoxDelegate.update();
+		// @流程控制
+        if(sessionStorage.getItem("order_detail_refund_count") == null) { // @首次加载
+            var flowControll = 1; // @流程控制变量
+        } else {
+            var flowControll = sessionStorage.getItem("order_detail_refund_count"); // @读取次数变量
+        }
+        if(flowControll == 1) { // @首次加载
+            sessionStorage.setItem("order_detail_refund_count", 2);
+		}
 
-        } else { // @访问此页面时，如果有参数传递过来
+        /************************************************************ */
+
+		if(flowControll == 1) {
+
+            console.log("师法大梦川报告：支付成功页，流程控制为 1，从HTTP中读取数据");
 
             $scope.ticketsInfoTemp = []; // @车票 临时变量
 
@@ -3508,22 +3510,13 @@ app
 
             paramsData = formatParamObject(paramsData); // @参数格式化
 
-            // backCount:1
-            // backbdid:"2017112910420296374255"
-            // count:1
-            // departDate:"2017-12-01"
-            // doorCount:0
-            // gobdid:"2017112810380901002998"
-            // userid:"2017112409511512371556"
-            // viewid:"2017112711511975860548"
-
-            console.log("支付成功页：请求参数");
+            console.log("师法大梦川报告：支付成功页，请求参数");
             console.log(paramsData);
 
             // @获取用户刚刚购买的票  /web/product/queryProductOrderByBdid
             $myHttpService.post('api/product/queryProductOrderByBdid', paramsData, function(data) {
 
-                console.log("支付成功页：获取用户刚刚购买的票API返回的数据");
+                console.log("师法大梦川报告：支付成功页，获取用户刚刚购买的票API返回的数据");
                 console.log(data);
 
                 // @去程车票数组
@@ -3537,7 +3530,7 @@ app
                     $scope.ticketsInfo = $scope.ticketsInfo.concat(data.backViewOrders);
                 }
 
-                console.log("支付成功页: 车票数组");
+                console.log("师法大梦川报告：支付成功页，车票数组");
                 console.log($scope.ticketsInfo);
 
                 // @门票数组
@@ -3545,7 +3538,7 @@ app
                     $scope.ticketsViewInfo = data.ticketOrders;
                 }
 
-                console.log("支付成功页: 合并之后的门票数组");
+                console.log("师法大梦川报告：支付成功页:，合并之后的门票数组");
                 console.log($scope.ticketsViewInfo);
 
                 $ionicSlideBoxDelegate.update();
@@ -3555,7 +3548,14 @@ app
 
             }, errorFn);
 
-        }
+        } else {
+
+            console.log("师法大梦川报告：支付成功页，流程控制为 2，从HTTP中读取数据");
+
+			$scope.ticketsInfo = getStorageData('jqztc_zfcgy_ticketsInfo');
+            $scope.ticketsViewInfo = getStorageData('jqztc_zfcgy_ticketsViewInfo');
+            $ionicSlideBoxDelegate.update();
+		}
 
         // @车辆位置 函数
         $scope.getBusPosition = function(item) {
@@ -4143,7 +4143,7 @@ app
 
             var paramsData = JSON.parse($state.params.data);
 
-            console.log("车辆位置页：传到定位地图页面的参数");
+            console.log("师法大梦川报告：车辆位置页，传到定位地图页面的参数");
             console.log(paramsData);
 
             $scope.positionArr = {};
@@ -4154,7 +4154,7 @@ app
                 lineid: paramsData.lineid
             }, function(data) {
 
-                console.log("车辆位置页：查询车辆位置API返回的数据");
+                console.log("师法大梦川报告：车辆位置页，查询车辆位置API返回的数据");
                 console.log(data);
 
                 $scope.positionArr = data.car;
