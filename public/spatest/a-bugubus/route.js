@@ -54,7 +54,8 @@ angular.module('app', [
             || toState.name.indexOf("bus_service_history") !=-1 )
             && $rootScope.session.user.userInfo == undefined) {
 
-            event.preventDefault(); // @取消默认跳转行为
+			event.preventDefault(); // @取消默认跳转行为
+
             // @截取字符串
             var url = "/" + toState.name.replace('.', '/');
             if(toStateParams) {
@@ -74,8 +75,8 @@ angular.module('app', [
 
 			var state = toState.name;
 
-			console.log("师法大梦川报告：当前未登录，却想要非法的访问的页面是");
-			console.log(state);
+			console.log("师法大梦川报告：当前未登录，却想要非法的访问的页面是" + state);
+			console.log('师法大梦川报告：准备跳转的路由为非法访问的路由，禁止跳转行为，已被拦截');
 			$rootScope.appLoginOrRegister_open(state);
 
             // $state.go("app.search");

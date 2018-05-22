@@ -260,7 +260,7 @@ app
 			'        <ion-content style="background: #ffffff; width: 90%; padding: 5px; margin: 60px auto; box-shadow: rgba(204, 200, 200, 0.5) 1px 2px 7px 4px;">'+
 
 			'			<div style="text-align: right;">'+
-			'						<i class="icon ion-ios-close-empty" style="font-size: 35px;margin: 0 8px;padding: 0 2px;" ng-click="appLoginOrRegister_close()"></i>' +
+			'						<i class="icon ion-ios-close-empty" style="font-size: 35px;margin: 0 8px;padding: 0 2px;" ng-click="appLoginOrRegister_close(\'1\')"></i>' +
 			'			</div>	'+
 
 			'			 <div>'+
@@ -324,10 +324,16 @@ app
         }
 
 		// @登录关闭函数
-        $rootScope.appLoginOrRegister_close = function() {
+        $rootScope.appLoginOrRegister_close = function(index) {
 
-            console.log("师法大梦川报告：登录页关闭");
-            $rootScope.appLoginOrRegisterModal.hide();
+			console.log("师法大梦川报告：登录页关闭");
+
+			if(index == '1') {
+				$rootScope.appLoginOrRegisterModal.hide();
+				$ionicHistory.goBack();
+			} else {
+				$rootScope.appLoginOrRegisterModal.hide();
+			}
 
 		}
 
@@ -335,6 +341,7 @@ app
 		$rootScope.appLoginMethod = function(state) {
 
 			state = $rootScope.appLoginCurrentUrl;
+			console.log("师法大梦川报告：root页，当前欲访问路由是" + state + "。Sorry，已被拦截，仍然停在本页面。");
 
 			// @进行登录，会发生什么？
 			$myHttpService.post("api/product/login", {
@@ -388,14 +395,15 @@ app
 								// $ionicHistory.clearHistory();
 								// $state.go("app.search");
 
-								$ionicHistory.goBack(-9);
+								// $ionicHistory.goBack(-9);
+								// $ionicHistory.goBack();
+								// console.log("我在拦截");
 
 							}
 
 						}
 
 						$rootScope.appLoginOrRegister_close();
-
 
 					} else {
 
@@ -1305,28 +1313,27 @@ app
         console.log(paramsData);
 
 
-        if(flowControll == 1) { // @进入产品页 有参数时
+		// @进入产品页 流程为 1
+        if(flowControll == 1) {
 
             $rootScope.jqztc_tab1_dateArr = []; // @不可用的日期数组 !!!
 
-            $scope.ticketsInfo1 = []; // @图片推荐产品 数据
+            $scope.ticketsInfo1 = []; // @图片推荐产品 初始化数据
 
-            $scope.ticketsInfo2 = []; // @手动搜索产品 数据
+            $scope.ticketsInfo2 = []; // @手动搜索产品 初始化数据
 
-            $scope.commentsInfo = []; // @点评 数据
+            $rootScope.tabsCommentsInfo = []; // @点评 初始化数据
 
             $scope.paramsProductId = ''; // @产品ID，查询评论用
             $scope.sourceComeType = ''; // @类型来源判断，true：图片推荐接口来的；false：手动搜索接口来的
 
             // $rootScope.currentSelectedDate = null; // @当前的时间选择
 
-            console.log("师法大梦川报告：产品页，流程控制为1");
-
-
+            console.log("师法大梦川报告：产品页，流程控制为 1，从HTTP中读取数据");
 
             if(paramsData.hasOwnProperty('productid')) { // @一、图片推荐类型的产品列表
 
-                console.log("产品页：图片推荐类型流程，有参数，productid");
+                console.log("师法大梦川报告：产品页，点击图片流程，有参数，productid");
 
                 $rootScope.currentSelectedDate = $filter('date')(new Date(), 'yyyy-MM-dd'); // @当前的时间选择
                 $rootScope.currentSelectedDate2 = "周" + "日一二三四五六".charAt(new Date($rootScope.currentSelectedDate).getDay());
@@ -1446,7 +1453,7 @@ app
 
             } else { // @二、手动搜索类型的产品列表
 
-                console.log("产品页：手动搜索类型流程，有参数，productid");
+                console.log("师法大梦川报告：产品页，手动搜索，有参数，productid");
 
                 $scope.sourceComeType = false; // @数据来源 判断
 
@@ -1523,13 +1530,13 @@ app
 
             }
 
-        } else { // @进入产品页 没有参数时
+        } else { // @进入产品页 流程为 2
 
-            $scope.commentsInfo = []; // @点评 数据，由于评论并未保存，所以需要再次重置
+            // $scope.tabsCommentsInfo = []; // @点评 数据，由于评论并未保存，所以需要再次重置
 
-            console.log("师法大梦川报告：产品页，流程控制为1");
+            console.log("师法大梦川报告：产品页，流程控制为 2，从sessionStorage中读取数据");
 
-            if(sessionStorage.getItem('jqztc_cpy_requestUrlType') == '0') {  // @一、图片推荐类型的产品列表
+            if(sessionStorage.getItem('jqztc_cpy_requestUrlType') == '0') {  // @一、图片推荐 的产品列表
 
                 $scope.sourceComeType = true; // @来源类型 判断
 
@@ -1595,7 +1602,7 @@ app
 
                 }
 
-            } else if(sessionStorage.getItem('jqztc_cpy_requestUrlType') == '1') {  // @二、手动搜索类型的产品列表
+            } else if(sessionStorage.getItem('jqztc_cpy_requestUrlType') == '1') {  // @二、手动搜索 的产品列表
 
                 $scope.sourceComeType = false; // @来源类型 判断
 
@@ -1957,7 +1964,7 @@ app
         // @点评 下拉刷新函数
         $scope.doRefreshComment = function() {
 
-            console.log("产品页：doRefreshComment已执行");
+            console.log("师法大梦川报告：产品页，doRefreshComment执行");
 
             // var productid = $scope.paramsProductId;
             $scope.pageCount = 1;
@@ -1968,11 +1975,11 @@ app
                 offset: '0',
                 pagesize: '10'
             }, function(data) {
-                console.log("产品页：产品评价API返回的数据(下拉刷新)");
+                console.log("师法大梦川报告：产品页，产品评价API返回的数据(下拉刷新)");
                 console.log(data);
-                $scope.commentsInfo = data.buslineHierarchys;
+                $rootScope.tabsCommentsInfo = data.buslineHierarchys;
                 $scope.$broadcast('scroll.refreshComplete');
-                if($scope.commentsInfo.length == 0) {
+                if($rootScope.tabsCommentsInfo.length == 0) {
                     $scope.isNoComment = true;
                 } else {
                     $scope.isNoComment = false;
@@ -1986,21 +1993,15 @@ app
 
         };
 
-
         $scope.hasmore = true;
         var run = false;
         // @点评信息 上拉加载函数
         $scope.loadMoreComment = function() {
 
-            console.log("产品页：loadMoreComment已执行");
-            // if($scope.ticketsInfo.length == 0) {
-            //     $scope.isNoComment = true;
-            //     return;
-            // }
-            // var productid = $scope.paramsProductId;
+			console.log("师法大梦川报告：产品页，评论信息loadMoreComment执行");
+
             var offset = ($scope.pageCount - 1) * 10;
             var requestData = {
-                // productid: productid,
                 offset: offset,
                 pagesize: '10'
             };
@@ -2010,7 +2011,7 @@ app
                 // @产品评价wechat/product/queryProductHieList
                 $myHttpService.post('api/product/queryProductHieList', requestData, function(data) {
 
-                    console.log("产品页：产品评价API返回的数据(上拉加载)");
+                    console.log("师法大梦川报告：产品页，产品评价API返回的数据(上拉加载)");
                     console.log(data);
                     if (data.buslineHierarchys.length < 10) {
                         $scope.hasmore = false; // @这里判断是否还能获取到数据，如果没有获取数据，则不再触发加载事件
@@ -2019,11 +2020,11 @@ app
                     console.log("计数： " + $scope.pageCount);
                     run = false;
                     console.log("评论加载");
-                    // console.log($scope.commentsInfo);
-                    $scope.commentsInfo = $scope.commentsInfo.concat(data.buslineHierarchys);
-                    console.log($scope.commentsInfo);
+                    // console.log($rootScope.tabsCommentsInfo);
+                    $rootScope.tabsCommentsInfo = $rootScope.tabsCommentsInfo.concat(data.buslineHierarchys);
+                    console.log($rootScope.tabsCommentsInfo);
                     $scope.$broadcast('scroll.infiniteScrollComplete');
-                    if($scope.commentsInfo.length == 0) {
+                    if($rootScope.tabsCommentsInfo.length == 0) {
                         $scope.isNoComment = true;
                     }
 
