@@ -3572,36 +3572,47 @@ app
     /**
      * @我的行程页 门票、车票 控制器
      */
-    .controller('myplan', function($rootScope, $scope, $filter, $myHttpService, $state, $timeout, $ionicTabsDelegate, $ionicScrollDelegate) {
+    .controller('myplan', function($rootScope, $scope, $filter, $myHttpService, $state, $timeout, $ionicScrollDelegate) {
 
-        if($rootScope.jqztc_xdxcy_current_tab_index) { // @tab项控制跳转
 
-            if($rootScope.jqztc_xdxcy_current_tab_index == 0) {
+        /************************************************************ */
 
-                $timeout(function() {
-                    $ionicTabsDelegate.select(0);
-                }, 5);
-
-            } else if($rootScope.jqztc_xdxcy_current_tab_index == 1) {
-
-                $timeout(function() {
-                    $ionicTabsDelegate.select(1);
-                }, 5);
-
-            } else if($rootScope.jqztc_xdxcy_current_tab_index == 2) {
-
-                $timeout(function() {
-                    $ionicTabsDelegate.select(2);
-                }, 5);
-
-            }
-        }
-
+		// @流程控制
         if(sessionStorage.getItem("myplanCount") == null) { // @流程控制变量
             var myplanCount = 1;
         } else {
             var myplanCount = sessionStorage.getItem("myplanCount");
+		}
+		if(myplanCount == 1) {
+            sessionStorage.setItem("myplanCount", 2);
+		}
+
+		 /************************************************************ */
+
+        // @tab功能实现
+
+		// @首次进入时，默认定义的聚焦索引
+		if(myplanCount == 1) {
+
+			$rootScope.myplan_focusIndex = 0;
+
+		}
+        // @更改要聚焦的tab
+        $rootScope.myplan_focusFunc = function(index) {
+
+			$rootScope.myplan_focusIndex = index;
+
+			if(index == 1) {
+				// $scope.tab_all();
+			} else if(index == 2) {
+				$scope.tab_nouse();
+			} if(index == 3) {
+				$scope.tab_refund();
+			}
+
         }
+
+        /************************************************************ */
 
         $scope.ticketsInfoIsEmpty = false; // @当没有任何票信息时显现无票HTML，无票为 true；默认为有票 false
         $scope.jqztc_xdxcy_ticketsInfo_nouse_ticketsInfoIsEmpty = false;
@@ -3618,30 +3629,23 @@ app
             $rootScope.jqztc_xdxcy_ticketsInfo_refund = []; // @tab_refund 正在退款中的车票
             $rootScope.jqztc_xdxcy_ticketsViewInfo_refund = []; // @tab_refund 正在退款中的门票
 
-            sessionStorage.setItem("myplanCount", 2);
             $rootScope.hasmore2 = false; // @首次进入页面时  关闭掉上拉加载行为 ion-infinite-scroll，false为关闭；true为开启
-
-            // @当前的 tab index索引
-            $rootScope.jqztc_xdxcy_current_tab_index = 0;
 
         }
 
         // @tab_all 全部的票据
-        var run = false; // @防止在短时间内重复出发上拉加载请求函数的执行
+        var run = false; // @防止在短时间内重复触发上拉加载请求函数的执行
 
         $scope.tab_all = function() { // @每次点击tab项时，就会执行一遍这个函数 15张
 
-            console.log("我的行程页：tab_all执行");
+            console.log("师法大梦川报告：我的行程页，tab_all执行");
 
-            if($rootScope.jqztc_xdxcy_current_tab_index != 0) {
+            if($rootScope.myplan_focusIndex != 0) {
                 $rootScope.jqztc_xdxcy_ticketsInfo = []; // @tab_all 全部 车票集合数组
                 $rootScope.jqztc_xdxcy_ticketsViewInfo = []; // @tab_all 全部 门票集合数组
-            }
+			}
 
-            $rootScope.jqztc_xdxcy_current_tab_index = $ionicTabsDelegate.selectedIndex(); // @获取当前索引
-
-            console.log("我的行程页：当前索引");
-            console.log($rootScope.jqztc_xdxcy_current_tab_index);
+            console.log("师法大梦川报告：我的行程页，当前索引：" + $rootScope.myplan_focusIndex);
 
             var requestData = {
                 userid: $rootScope.session.user.userInfo.userid,
@@ -3652,18 +3656,19 @@ app
             // @订单列表 wechat/product/queryUserProductTicketList
             $myHttpService.post('api/product/queryUserProductTicketList', requestData, function(data) {
 
-                console.log("我的行程页：获取所有订单的列表API返回的数据");
+                console.log("师法大梦川报告：我的行程页，获取所有订单的列表API返回的数据");
                 console.log(data);
 
-                $rootScope.jqztc_xdxcy_ticketsInfo = data.userViewList;
+				var temp = data.userViewList.viewOrders.concat(data.userViewList.backViewOrders)
+                $rootScope.jqztc_xdxcy_ticketsInfo = temp;
                 $rootScope.jqztc_xdxcy_ticketsViewInfo = data.ticketOrders;
 
                 $scope.$broadcast('scroll.refreshComplete');
 
-                console.log("我的行程页：全部车票数组");
+                console.log("师法大梦川报告：我的行程页，全部车票数组");
                 console.log($rootScope.jqztc_xdxcy_ticketsInfo);
 
-                console.log("我的行程页：全部门票数组");
+                console.log("师法大梦川报告：我的行程页，全部门票数组");
                 console.log($rootScope.jqztc_xdxcy_ticketsViewInfo);
 
                 if($rootScope.jqztc_xdxcy_ticketsInfo.length == 0 && $rootScope.jqztc_xdxcy_ticketsViewInfo.length == 0) {
@@ -3674,7 +3679,7 @@ app
 
                 }
 
-                if( (data.userViewList.length + data.ticketOrders.length) < 15) {
+                if( (temp.length + data.ticketOrders.length) < 15) {
                     $rootScope.hasmore2 = false;
                 } else {
                     $rootScope.hasmore2 = true;
@@ -3687,10 +3692,14 @@ app
 
         }
 
+		if(myplanCount == 1) {
+			$scope.tab_all();
+		}
+
         // @tab_all 票据信息 下拉刷新函数 15张
         $scope.refresh_tab_all = function() {
 
-            console.log("我的行程页：doRefreshTicket执行");
+            console.log("师法大梦川报告：我的行程页，doRefreshTicket执行");
 
             var requestData = {
                 userid: $rootScope.session.user.userInfo.userid,
@@ -3701,18 +3710,19 @@ app
             // @订单列表 wechat/product/queryUserProductTicketList
             $myHttpService.postNoLoad('api/product/queryUserProductTicketList', requestData, function(data) {
 
-                console.log("我的行程页：获取所有订单的列表API返回的数据(下拉刷新)");
+                console.log("师法大梦川报告：我的行程页，获取所有订单的列表API返回的数据(下拉刷新)");
                 console.log(data);
 
-                $rootScope.jqztc_xdxcy_ticketsInfo = data.userViewList;
+				var temp = data.userViewList.viewOrders.concat(data.userViewList.backViewOrders);
+                $rootScope.jqztc_xdxcy_ticketsInfo = temp;
                 $rootScope.jqztc_xdxcy_ticketsViewInfo = data.ticketOrders;
 
                 $scope.$broadcast('scroll.refreshComplete');
 
-                console.log("我的行程页：全部车票数组");
+                console.log("师法大梦川报告：我的行程页，全部车票数组");
                 console.log($rootScope.jqztc_xdxcy_ticketsInfo);
 
-                console.log("我的行程页：全部门票数组");
+                console.log("师法大梦川报告：我的行程页，全部门票数组");
                 console.log($rootScope.jqztc_xdxcy_ticketsViewInfo);
 
                 if($rootScope.jqztc_xdxcy_ticketsInfo.length == 0 && $rootScope.jqztc_xdxcy_ticketsViewInfo.length == 0) {
@@ -3729,12 +3739,9 @@ app
                     });
                 }
 
-                if( (data.userViewList.length + data.ticketOrders.length) < 15) {
+                if( (temp.length + data.ticketOrders.length) < 15) {
                     $rootScope.hasmore2 = false;
                 } else {
-                    // $timeout(function() {
-                    //     $rootScope.hasmore2 = true;
-                    // }, 2000);
                     $rootScope.hasmore2 = true;
                     $scope.pageCount = 2;
                 }
@@ -3766,7 +3773,7 @@ app
         // @ tab_all 上拉加载更多票信息 15张
         $scope.load_more_tab_all = function() {
 
-            console.log("我的行程页：load_more_tab_all执行");
+            console.log("师法大梦川报告：我的行程页，load_more_tab_all执行");
 
             var offset = ($scope.pageCount - 1) * 15;
             var requestData = {
@@ -3781,16 +3788,17 @@ app
 
                 $myHttpService.postNoLoad('api/product/queryUserProductTicketList', requestData, function(data) {
 
-                    console.log("我的行程页：获取所有订单的列表API返回的数据(上拉加载)");
+                    console.log("师法大梦川报告：我的行程页，获取所有订单的列表API返回的数据(上拉加载)");
                     console.log(data);
 
-                    $rootScope.jqztc_xdxcy_ticketsInfo = $rootScope.jqztc_xdxcy_ticketsInfo.concat(data.userViewList); // @车票
+					var temp = data.userViewList.viewOrders.concat(data.userViewList.backViewOrders);
+                    $rootScope.jqztc_xdxcy_ticketsInfo = $rootScope.jqztc_xdxcy_ticketsInfo.concat(temp); // @车票
                     $rootScope.jqztc_xdxcy_ticketsViewInfo = $rootScope.jqztc_xdxcy_ticketsViewInfo.concat(data.ticketOrders); // @门票
 
-                    console.log("我的行程页：全部车票数组");
+                    console.log("师法大梦川报告：我的行程页，全部车票数组");
                     console.log($rootScope.jqztc_xdxcy_ticketsInfo);
 
-                    console.log("我的行程页：全部门票数组");
+                    console.log("师法大梦川报告：我的行程页，全部门票数组");
                     console.log($rootScope.jqztc_xdxcy_ticketsViewInfo);
 
                     $rootScope.jqztc_xdxcy_ticketsInfo.sort(compare('departDate'));  // @车票排序
@@ -3811,7 +3819,7 @@ app
                         });
                     }
 
-                    if ( (data.userViewList.length + data.ticketOrders.length) < 15) {
+                    if ( (temp.length + data.ticketOrders.length) < 15) {
                         $scope.hasmore = false; // @这里判断是否还能获取到数据，如果没有获取数据，则不再触发加载事件
                         $rootScope.hasmore2 = false;
                     } else {
@@ -3828,11 +3836,9 @@ app
         // @tab_nouse 未使用的票据 20张
         $scope.tab_nouse = function() { // @每次点击tab项时，就会执行一遍这个函数
 
-            console.log("我的行程页：tab_nouse执行");
+            console.log("师法大梦川报告：我的行程页，tab_nouse执行");
 
-            $rootScope.jqztc_xdxcy_current_tab_index = $ionicTabsDelegate.selectedIndex(); // @获取当前索引
-            console.log("我的行程页：当前索引");
-            console.log($rootScope.jqztc_xdxcy_current_tab_index);
+            console.log("师法大梦川报告：我的行程页，当前索引：" + $rootScope.myplan_focusIndex);
 
             var requestData = {
                 userid: $rootScope.session.user.userInfo.userid,
@@ -3844,7 +3850,7 @@ app
             // @订单列表 wechat/product/queryUserProductTicketList
             $myHttpService.post('api/product/queryUserProductTicketList', requestData, function(data) {
 
-                console.log("我的行程页：获取未使用订单的列表API返回的数据");
+                console.log("师法大梦川报告：我的行程页，获取未使用订单的列表API返回的数据");
                 console.log(data);
 
                 if( (data.userViewList.length + data.ticketOrders.length) < 20) {
@@ -3854,15 +3860,17 @@ app
                     $scope.jqztc_xdxcy_ticketsInfo_nouse_pageCount = 2;
                 }
 
-                $rootScope.jqztc_xdxcy_ticketsInfo_nouse = data.userViewList;
+				var temp = data.userViewList.viewOrders.concat(data.userViewList.backViewOrders);
+
+                $rootScope.jqztc_xdxcy_ticketsInfo_nouse = temp;
                 $rootScope.jqztc_xdxcy_ticketsViewInfo_nouse = data.ticketOrders;
 
                 $scope.$broadcast('scroll.refreshComplete');
 
-                console.log("我的行程页：未使用车票数组");
+                console.log("师法大梦川报告：我的行程页，未使用车票数组");
                 console.log($rootScope.jqztc_xdxcy_ticketsInfo_nouse);
 
-                console.log("我的行程页：未使用门票数组");
+                console.log("师法大梦川报告：我的行程页，未使用门票数组");
                 console.log($rootScope.jqztc_xdxcy_ticketsViewInfo_nouse);
 
                 if($rootScope.jqztc_xdxcy_ticketsInfo_nouse.length == 0 && $rootScope.jqztc_xdxcy_ticketsViewInfo_nouse.length == 0) {
@@ -3882,11 +3890,9 @@ app
         // @tab_refund 退款中的票据 20张
         $scope.tab_refund = function() { // @每次点击tab项时，就会执行一遍这个函数
 
-            console.log("我的行程页：tab_refund执行");
+            console.log("师法大梦川报告：我的行程页，tab_refund执行");
 
-            $rootScope.jqztc_xdxcy_current_tab_index = $ionicTabsDelegate.selectedIndex(); // @获取当前索引
-            console.log("我的行程页：当前索引");
-            console.log($rootScope.jqztc_xdxcy_current_tab_index);
+            console.log("师法大梦川报告：我的行程页，当前索引：" + $rootScope.myplan_focusIndex);
 
             var requestData = {
                 userid: $rootScope.session.user.userInfo.userid,
@@ -3898,7 +3904,7 @@ app
             // @订单列表 wechat/product/queryUserProductTicketList
             $myHttpService.post('api/product/queryUserProductTicketList', requestData, function(data) {
 
-                console.log("我的行程页：获取正在退款中订单的列表API返回的数据");
+                console.log("师法大梦川报告：我的行程页，获取正在退款中订单的列表API返回的数据");
                 console.log(data);
 
                 if( (data.userViewList.length + data.ticketOrders.length) < 20) {
@@ -3908,15 +3914,17 @@ app
                     $scope.jqztc_xdxcy_ticketsInfo_refund_pageCount = 2;
                 }
 
-                $rootScope.jqztc_xdxcy_ticketsInfo_refund = data.userViewList;
+				var temp = data.userViewList.viewOrders.concat(data.userViewList.backViewOrders);
+
+                $rootScope.jqztc_xdxcy_ticketsInfo_refund = temp;
                 $rootScope.jqztc_xdxcy_ticketsViewInfo_refund = data.ticketOrders;
 
                 $scope.$broadcast('scroll.refreshComplete');
 
-                console.log("我的行程页：未使用车票数组");
+                console.log("师法大梦川报告：我的行程页，未使用车票数组");
                 console.log($rootScope.jqztc_xdxcy_ticketsInfo_refund);
 
-                console.log("我的行程页：未使用门票数组");
+                console.log("师法大梦川报告：我的行程页，未使用门票数组");
                 console.log($rootScope.jqztc_xdxcy_ticketsViewInfo_refund);
 
                 if($rootScope.jqztc_xdxcy_ticketsInfo_refund.length == 0 && $rootScope.jqztc_xdxcy_ticketsViewInfo_refund.length == 0) {
@@ -3936,9 +3944,9 @@ app
         // @点击 未使用 车票进入 车票详情界面
         $scope.unusedTicketToDetail = function(item, i, $event) {
 
-            console.log("我的行程页：当前元素的位置");
+            console.log("师法大梦川：我的行程页，当前元素的位置");
             console.log($event);
-            $state.go('ticket_detail.ticketdetail', {data: JSON.stringify(item)}, {reload: false});
+            $state.go('app.ticket_detail.ticketdetail', {data: JSON.stringify(item)});
 
         }
 
@@ -3960,12 +3968,12 @@ app
                 isCommentedScore = item.orderScore;
             }
 
-            $state.go('order_check_comment', {
+            $state.go('app.order_check_comment', {
                 data: JSON.stringify(item),
                 isCommented: JSON.stringify(isCommented),
                 isCommentedText: JSON.stringify(isCommentedText),
                 isCommentedScore: JSON.stringify(isCommentedScore)
-            }, {reload: true});
+            });
             layer.closeAll();
 
         }
@@ -3973,14 +3981,14 @@ app
         // @点击 正在退款 车票 进入 车票详情界面
         $scope.refundingToRefund = function(item, i) {
 
-            $state.go('ticket_detail.ticketdetail', {data: JSON.stringify(item)}, {reload: false});
+            $state.go('app.ticket_detail.ticketdetail', {data: JSON.stringify(item)});
 
         }
 
         // @点击 未使用 门票进入 门票详情界面
         $scope.unusedAdmissionTicketToDetail = function(item, i) {
 
-            $state.go('ticket_admission_detail', {data: JSON.stringify(item)}, {reload: false});
+            $state.go('app.ticket_admission_detail', {data: JSON.stringify(item)});
 
         }
 
@@ -4760,7 +4768,7 @@ app
         console.log(paramsData);
 
         // @查询用户已购买景区门票详情 wechat/ticketorder/queryUserDoorTicketDetails
-        $myHttpService.post('api/ticketorder/queryUserDoorTicketDetails', {orderid: paramsData.orderid}, function(data) {
+        $myHttpService.post('api/product/queryUserProductTicketList', {orderid: paramsData.orderid}, function(data) {
 
             console.log("门票详情页：查询订单详情API返回的数据");
             console.log(data);
