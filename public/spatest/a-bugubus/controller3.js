@@ -718,16 +718,14 @@ app
         // @选择路线的自定义弹窗
         $scope.roadSelectModal = $ionicModal.fromTemplate('<ion-modal-view>'+
             '	  '+
-            '        <ion-header-bar class="bar bar-header modal-one" style="margin-top: 35%;box-shadow: none;" >'+
+            '        <ion-header-bar class="bar bar-header" style="margin-top: 35%;box-shadow: none;border-radius: 10px 10px 0 0;background: rgba(56, 54, 54, 0.49);" >'+
             '		'+
-            //    '		   <button class="button  button-balanced" ng-click="chooseScenicSpotTicket()" style="background: rgba(240, 248, 255, 0.09);color: #676464;">取消</>'+
-            '          <h1 class="title" style="font-weight: normal;color: #525151;"> 线路选择 </h1>'+
-            '          <button class="button button-balanced" ng-click="roadSelectModal.hide()" style="background: rgba(240, 248, 255, 0.09);color: rgba(103, 100, 100, 0.67);">取消</button>'+
+            '          <h1 class="title" style="font-weight: bold;color: #fafafa;"> 线路选择 </h1>'+
+            '          <span class="button" ng-click="roadSelectModal.hide()" style="background: none;color: #fafafa;">取消<i class="icon ion-close-round"></i></span>'+
             '		  '+
             '        </ion-header-bar>'+
             '		'+
             '        <ion-content class="padding" style="background: #ffffff;margin-top: 35%;" >'+
-            //    '		    <p style="text-align:center;font-size: 20px;"><span>{{ticketInfo.viewName}}</span></p>	'+
             '			<button class="button button-outline button-dark" style="min-width: 0;min-height: 0;height: 42px;margin: 2px 4px 15px 8px;font-size: 14px;padding: 0px 7px;" ng-repeat="item in roadLineData track by $index" ng-click="selectedRoadLine(item.viewaddress)">{{item.viewaddress}}</button> '+
             '			'+
             '        </ion-content>'+
@@ -1305,8 +1303,6 @@ app
 
 		// @进入产品页 流程为 1
         if(flowControll == 1) {
-
-			sessionStorage.setItem()
 
             $rootScope.jqztc_tab1_dateArr = []; // @不可用的日期数组 !!!
 
