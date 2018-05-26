@@ -257,7 +257,7 @@ app
 		// @一个全局的登录页
         $rootScope.appLoginOrRegisterModal = $ionicModal.fromTemplate('<ion-modal-view style="background: rgba(0, 0, 0, 0.84);">'+
 			'		'+
-			'        <ion-content style="background: #ffffff; width: 90%; padding: 5px; margin: 60px auto; box-shadow: rgba(204, 200, 200, 0.5) 1px 2px 7px 4px;">'+
+			'        <ion-content style="background: #ffffff; width: 90%; padding: 5px; margin: 60px auto;">'+
 
 			'			<div style="text-align: right;">'+
 			'						<i class="icon ion-ios-close-empty" style="font-size: 35px;margin: 0 8px;padding: 0 2px;" ng-click="appLoginOrRegister_close()"></i>' +
@@ -265,7 +265,7 @@ app
 
 			'			 <div>'+
 
-			'					<div class="row" style="color: #111;font-size: 20px;font-weight: 100;">'+
+			'					<div class="row" style="color: #111;font-size: 17px;">'+
 			'						<div class="col col-50" ng-style="appLoginFlowStyle">'+
 			'								1 <i class="icon ion-ios-checkmark-outline"></i>'+
 			'						</div>'+
@@ -276,7 +276,17 @@ app
 
 			'					<div class="row" ng-if="appLoginNext">'+
 			'						<div class="col">'+
-			'							<input type="text" placeholder="输入手机号" ng-model="appLoginInfo.phone" ng-change="appLoginPhoneCheck()" style="width: 100%;">'+
+			'							<input add-anime type="tel" placeholder="输入手机号" ng-model="appLoginInfo.phone" ng-change="appLoginPhoneCheck()" style="width: 100%;">'+
+			'							<div id="appLoginPhone" style="'+
+			'    								display: block;'+
+			'    								height: 5px;'+
+			'    								width: 0;'+
+			'   								background: -webkit-linear-gradient(left, rgb(240, 237, 221) 13%, rgb(139, 214, 237) 41%, rgb(214, 92, 196) 72%);  /* Firefox 4+ */'+
+			'    								background : -moz-linear-gradient(left, rgb(240, 237, 221) 13%, rgb(139, 214, 237) 41%, rgb(214, 92, 196) 72%);  /* Opera */'+
+			'    								background : -o-linear-gradient(left, rgb(240, 237, 221) 13%, rgb(139, 214, 237) 41%, rgb(214, 92, 196) 72%);  /* IE 10+ */'+
+			'    								background : -ms-linear-gradient(left, rgb(240, 237, 221) 13%, rgb(139, 214, 237) 41%, rgb(214, 92, 196) 72%);   /* W3C */'+
+			'    								background : -linear-gradient(left, rgb(240, 237, 221) 13%, rgb(139, 214, 237) 41%, rgb(214, 92, 196) 72%);'+
+			'							"></div>'+
 			'						</div>'+
 			'					</div>'+
 
@@ -295,15 +305,22 @@ app
 			'					<div class="row" ng-if="!appLoginNext">'+
 
 			'						<div class="col">'+
-			'							<input type="password" placeholder="输入密码，不低于6位" ng-model="appLoginInfo.password" ng-change="appLoginPasswordCheck(appLoginInfo.password)" style="width: 100%;">'+
+			'							<input add-anime2  type="password" placeholder="输入密码，不低于6位" ng-model="appLoginInfo.password" ng-change="appLoginPasswordCheck(appLoginInfo.password)" style="width: 100%;">'+
+			'							<div id="appLoginPassword" style="'+
+			'    								display: block;'+
+			'    								height: 5px;'+
+			'    								width: 0;'+
+			'   								background: -webkit-linear-gradient(left, rgb(182, 237, 0) 13%, rgb(178, 235, 103) 41%, rgb(23, 207, 133) 72%);  /* Firefox 4+ */'+
+			'    								background : -moz-linear-gradient(left, rgb(182, 237, 0) 13%, rgb(178, 235, 103) 41%, rgb(23, 207, 133) 72%);  /* Opera */'+
+			'    								background : -o-linear-gradient(left, rgb(182, 237, 0) 13%, rgb(178, 235, 103) 41%, rgb(23, 207, 133) 72%);  /* IE 10+ */'+
+			'    								background : -ms-linear-gradient(left, rgb(182, 237, 0) 13%, rgb(178, 235, 103) 41%, rgb(23, 207, 133) 72%);   /* W3C */'+
+			'    								background : -linear-gradient(left, rgb(182, 237, 0) 13%, rgb(178, 235, 103) 41%, rgb(23, 207, 133) 72%);'+
+			'							"></div>'+
 			'						</div>'+
-
 			'					</div>' +
-
 			'					<div class="padding" ng-if="!appLoginNext">'+
 			'						<button ng-disabled="appLoginBtn" ng-class="{true: \'appLoginNextBtn2\', false: \'appLoginNextBtn1\'}[appLoginBtn]" class="button button-block button-positive" ng-click="appLoginMethod()" style="border-radius: 0px;">登录</button>'+
 			'					</div>'+
-
             '			</div>'+
             '			'+
             '			'+
@@ -3570,7 +3587,6 @@ app
      */
     .controller('myplan', function($rootScope, $scope, $filter, $myHttpService, $state, $timeout, $ionicScrollDelegate) {
 
-
         /************************************************************ */
 
 		// @流程控制
@@ -3827,7 +3843,9 @@ app
                     $scope.$broadcast('scroll.infiniteScrollComplete');
                 });
             }
-        }
+		}
+
+		/************************************************************ */
 
         // @tab_nouse 未使用的票据 20张
         $scope.tab_nouse = function() { // @每次点击tab项时，就会执行一遍这个函数
@@ -3881,7 +3899,9 @@ app
                 $scope.$broadcast('scroll.refreshComplete');
             });
 
-        }
+		}
+
+		/************************************************************ */
 
         // @tab_refund 退款中的票据 20张
         $scope.tab_refund = function() { // @每次点击tab项时，就会执行一遍这个函数
@@ -3937,6 +3957,8 @@ app
 
         }
 
+		/************************************************************ */
+
         // @点击 未使用 车票进入 车票详情界面
         $scope.unusedTicketToDetail = function(item, i, $event) {
 
@@ -3986,7 +4008,23 @@ app
 
             $state.go('app.ticket_admission_detail', {data: JSON.stringify(item)});
 
-        }
+		}
+
+		/************************************************************ */
+
+		// @预处理工作，只会执行一次
+
+		$scope.$on("$ionicView.loaded", function(event, data) {
+
+			console.log("师法大梦川报告：我的行程页，$ionicView.loaded执行了");
+
+			$scope.tab_nouse();
+			$scope.tab_refund();
+
+		});
+
+		/************************************************************ */
+
 
     })
 

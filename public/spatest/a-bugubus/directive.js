@@ -34,7 +34,7 @@ app.directive('barcode', function($document) {
 // =====
 //过滤器，字面量转义输出
 app.filter('transfer', function() {
-    
+
     return function(input, fieldName) {
 
         if(fieldName == undefined) {
@@ -210,60 +210,60 @@ app.directive('qrcode', function() {
 //=====
 // 生成条星星指令
 // 使用方式 <span star rating-value="ratingVal" max="max" on-hover="onHover" on-leave="onLeave" readonly="{{readonly}}"></span>
-app.directive('star', function () { 
-  return {  
-    template: '<ul class="rating" ng-mouseleave="leave()">' +  
-        '<li ng-repeat="star in stars" ng-class="star" ng-click="click($index + 1)" ng-mouseover="over($index + 1)">' +  
-        '\u2605' +  
-        '</li>' +  
-        '</ul>',  
-    scope: {  
-      ratingValue: '=',  
-      max: '=',  
-      readonly: '@',  
-      onHover: '=',  
+app.directive('star', function () {
+  return {
+    template: '<ul class="rating" ng-mouseleave="leave()">' +
+        '<li ng-repeat="star in stars" ng-class="star" ng-click="click($index + 1)" ng-mouseover="over($index + 1)">' +
+        '\u2605' +
+        '</li>' +
+        '</ul>',
+    scope: {
+      ratingValue: '=',
+      max: '=',
+      readonly: '@',
+      onHover: '=',
       onLeave: '='
-    },  
-    controller: function($scope) {  
-      $scope.ratingValue = $scope.ratingValue || 0;  
-      $scope.max = $scope.max || 5;  
-      $scope.click = function(val) {  
-        if ($scope.readonly && $scope.readonly === 'true') {  
-          return;  
-        }  
-        $scope.ratingValue = val; 
-      };  
-      $scope.over = function(val) {  
-        $scope.onHover(val);  
-      };  
-      $scope.leave = function() {  
-        $scope.onLeave();  
-      }  
-    },  
+    },
+    controller: function($scope) {
+      $scope.ratingValue = $scope.ratingValue || 0;
+      $scope.max = $scope.max || 5;
+      $scope.click = function(val) {
+        if ($scope.readonly && $scope.readonly === 'true') {
+          return;
+        }
+        $scope.ratingValue = val;
+      };
+      $scope.over = function(val) {
+        $scope.onHover(val);
+      };
+      $scope.leave = function() {
+        $scope.onLeave();
+      }
+    },
     link: function (scope, elem, attrs) {  // elem指向被挂载的当前的元素
-      // elem.css("text-align", "center"); 
-      var updateStars = function () { 
-        scope.stars = [];  
-        for (var i = 0; i < scope.max; i++) {  
-          scope.stars.push({  
-            filled: i < scope.ratingValue  
-          });  
-        }  
-      };  
-      updateStars();  
-   
-      scope.$watch('ratingValue', function (oldVal, newVal) {  
-        if (oldVal) {  
-          updateStars();  
-        }  
-      });  
-      scope.$watch('max', function (oldVal, newVal) {  
-        if (newVal) {  
-          updateStars();  
-        }  
-      });  
-    }  
-  };  
+      // elem.css("text-align", "center");
+      var updateStars = function () {
+        scope.stars = [];
+        for (var i = 0; i < scope.max; i++) {
+          scope.stars.push({
+            filled: i < scope.ratingValue
+          });
+        }
+      };
+      updateStars();
+
+      scope.$watch('ratingValue', function (oldVal, newVal) {
+        if (oldVal) {
+          updateStars();
+        }
+      });
+      scope.$watch('max', function (oldVal, newVal) {
+        if (newVal) {
+          updateStars();
+        }
+      });
+    }
+  };
 });
 
 //=====
@@ -305,32 +305,32 @@ app.directive('my-ng-model', function() {
 
 //=====
 // 放大图片指令
-// enlargePic指令名称，写在需要用到的地方img中即可实现放大图片  
+// enlargePic指令名称，写在需要用到的地方img中即可实现放大图片
 // 使用方式 <div class="icon-arrow-title title-color-2" enlarge-pic />
-app.directive('enlargePic', function() { 
-    return {    
-        restrict: "AE",    
-        link: function(scope, elem, attrs) {    
+app.directive('enlargePic', function() {
+    return {
+        restrict: "AE",
+        link: function(scope, elem, attrs) {
             elem.bind('click', function($event) {
-                angular.element(document.querySelector(".mask"))[0].style.display = "block";    
-                angular.element(document.querySelector(".bigPic"))[0].src = attrs.src; 
-            })    
-        }    
-    }    
+                angular.element(document.querySelector(".mask"))[0].style.display = "block";
+                angular.element(document.querySelector(".bigPic"))[0].src = attrs.src;
+            })
+        }
+    }
 });
 
 //=====
 // 关闭图片指令
 // 使用方式 <div class="icon-arrow-title title-color-2" closePic />
-app.directive('closePic', function() {    
-    return {    
-        restrict: "AE",    
-        link: function(scope, elem) {    
-            elem.bind('click', function($event) {    
-                angular.element(document.querySelector(".mask"))[0].style.display = "none";    
-            })    
-        }    
-    }    
+app.directive('closePic', function() {
+    return {
+        restrict: "AE",
+        link: function(scope, elem) {
+            elem.bind('click', function($event) {
+                angular.element(document.querySelector(".mask"))[0].style.display = "none";
+            })
+        }
+    }
 });
 
 //=====
@@ -354,7 +354,7 @@ app.directive('errSrc', function() {
 app.directive('loadinganimation', function() {
     var directive = {
         restrict: 'EA',
-        replace: true, 
+        replace: true,
         scope: {
             infostr: '@'
         },
@@ -394,7 +394,7 @@ app.directive('loadinganimation', function() {
                         setTimeout(startLoading, 1000);
                         count++;
                     } else {
-                        loaded++;    
+                        loaded++;
                     }
                 } else {
                     if(count != 1) {
@@ -403,7 +403,7 @@ app.directive('loadinganimation', function() {
                     angular.element(angular.element( element.children()[2] ).children()[1]).css('top', (loaded*.89)+'%');
                     if(loaded==25) angular.element(angular.element(angular.element( element.children()[2] ).children()[0]).children()[2]).css('opacity', '0');
                     if(loaded==50) angular.element(angular.element(angular.element( element.children()[2] ).children()[0]).children()[1]).css('opacity', '0');
-                    if(loaded==75) angular.element(angular.element(angular.element( element.children()[2] ).children()[0]).children()[0]).css('opacity', '0');  
+                    if(loaded==75) angular.element(angular.element(angular.element( element.children()[2] ).children()[0]).children()[0]).css('opacity', '0');
                     if(loaded==100) {
                         angular.element(element.children()[0]).css('opacity', '0');
                         angular.element(element.children()[1]).css('opacity', '0');
@@ -412,7 +412,7 @@ app.directive('loadinganimation', function() {
                         setTimeout(startLoading, 1000);
                         count++;
                     } else {
-                        loaded++;    
+                        loaded++;
                     }
                 }
             }
@@ -439,12 +439,12 @@ app.directive('loadinganimation', function() {
 
 //=====
 // tag小标签
-// 
+//
 app.directive('myTag', function() {
 
     var directive = {
         restrict: 'A',
-        replace: true, 
+        replace: true,
         template: '<div class="btnfont"><span ng-repeat="t in tags track by $index" class="{{tag(t)}}">{{t}}</span></div>',
         scope: {
             myTags: '='
@@ -463,13 +463,75 @@ app.directive('myTag', function() {
                         return 'btnfontorange';
                     case '门票':
                         return 'btnfontblue';
-                    default: 
+                    default:
                         return 'btnfontred';
                 }
             }
         }
     };
     return directive;
+});
+
+//=====
+// addAnime1 动画
+//
+app.directive('addAnime', function() {
+    return {
+        restrict: "AE",
+        link: function(scope, elem, attrs) {
+
+			(function($) {
+
+				elem.bind('focus', function($event) {
+
+					console.log("师法大梦川报告：addAnime执行");
+
+					console.log(elem);
+
+					var appLoginPhone = anime({
+						targets: $('#appLoginPhone'),
+						width: '100%',
+						duration: 800,
+						easing: 'easeInOutQuad'
+					  });
+				})
+
+
+			})(document.querySelector.bind(document));
+
+        }
+    }
+});
+
+//=====
+// addAnime2 动画
+//
+app.directive('addAnime2', function() {
+    return {
+        restrict: "AE",
+        link: function(scope, elem, attrs) {
+
+			(function($) {
+
+				elem.bind('focus', function($event) {
+
+					console.log("师法大梦川报告：addAnime2执行");
+
+					console.log(elem);
+
+					var appLoginPhone = anime({
+						targets: $('#appLoginPassword'),
+						width: '100%',
+						duration: 800,
+						easing: 'easeInOutQuad'
+					  });
+				})
+
+
+			})(document.querySelector.bind(document));
+
+        }
+    }
 });
 
 /**
@@ -494,5 +556,5 @@ app.directive('myTag', function() {
  *   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
  *                     佛祖保佑        永无BUG
  *                     佛祖保佑        永无BUG
- * 
+ *
  */
