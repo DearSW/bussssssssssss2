@@ -189,27 +189,60 @@ router.post('/product/queryProduct', function (req, res, next) {
 		"code": 0,
 		"data": {
 			"product": {
-				"productid": "2017122614251275636623",
-				"productType": "门票",
-				"region": "贵阳",
-				"viewaddress": "息烽温泉&息烽温泉，全国著名八大温泉之一",
+				"productid": "2017123110213167379964",
+				"productType": "往返+门票",
+				"region": "贵州",
+				"viewaddress": "民和镇-清水塘",
 				"isPush": "true",
-				"productPrice": 100,
-				"productinfo": "用户须知：1.泡温泉之前，应取下佩戴的金属饰品，否则会与温泉里的矿物质产生化学反应，造成佩饰变色。2.空腹或太饱时请勿入浴， 以免出现头晕、呕吐、消化不良、疲倦等症状。3.高血压和心脑血管疾病患者，在规则服药或经医生允许的前提下，可以泡温泉，但以每次不超过20分钟为宜。并注意：入水前，先用温泉缓慢的擦拭身体，待适应后再进入，以免影响血管正常收缩；出水时，缓慢起身，以防因血管扩张、血压下降导致头昏眼花而跌倒，诱发脑中风或心肌梗塞。4.泡温泉时，应多喝水，随时补充流失的水份。5.泡温泉时，如果感觉身体不适，应马上离开，不可勉强继续。6.泡温泉后，人体水分大量蒸发，应多喝水补充。费用不含：温泉内其他消费（按摩 搓背等其他自费）",
-				"titleName": "息烽温泉直通车，一站直达",
-				"photoPath": "http://111.230.129.41:80/guizhoubus/12233_2017123110251444449900.jpg",
+				"productPrice": 198,
+				"productinfo": "蜿蜒曲折的乡间道路，穿梭如画",
+				"titleName": "民和镇-清水塘",
+				"photoPath": "http://111.230.129.41:80/guizhoubus/12233_2017123110213277881480.jpg",
+				"plans": [{
+						"bpid": "2017123110233260609516",
+						"lineid": "2017120516140110687149",
+						"linename": "民和镇-清水塘",
+						"productid": "2017123110213167379964",
+						"viewaddress": "蜿蜒曲折的乡间道路，穿梭如画",
+						"sequence": 0,
+						"relecode": "7838204520",
+						"bdidType": 1,
+						"drivetime": 120,
+						"departaddr": "民和镇",
+						"departName": "民和镇",
+						"arriveName": "清水塘",
+						"departtime": "10:00",
+						"bdid": "2017123110233250493160"
+					},
+					{
+						"bpid": "2017123110233283580177",
+						"lineid": "2017120516151142333854",
+						"linename": "清水塘-民和镇",
+						"productid": "2017123110213167379964",
+						"viewaddress": "蜿蜒曲折的乡间道路，穿梭如画",
+						"sequence": 1,
+						"relecode": "7838204520",
+						"bdidType": 1,
+						"drivetime": 120,
+						"departaddr": "清水塘",
+						"departName": "清水塘",
+						"arriveName": "民和镇",
+						"departtime": "17:00",
+						"bdid": "2017123110233259065940"
+					}
+				],
 				"viewInfo": {
 					"viewid": "2017120516324186464944",
-					"viewName": "息烽温泉",
-					"viewaddr": "贵阳市息烽温泉游客集散中心",
+					"viewName": "清水大塘",
+					"viewaddr": "清水大塘游客集散中心",
 					"viewType": "自然景观",
 					"viewPhoto": "23344_2017120516324170615263.jpg",
-					"viewintru": "息烽温泉是全国著名八大温泉之一，地处黔中，位于息烽城东北40公里的天台山脚下，海拔高度700米，四面环山。温泉水经国家鉴定为“含偏硅酸和锶的重碳酸钙型氡泉”，是世界少有，国内著名的优质天然医疗和饮用矿泉水之一，含有多种对人体有益的微量元素，并含有放射性元素氡，水温稳定在53-56οc，被誉为“与法兰西维琪温泉相伯仲”的优质热矿泉",
+					"viewintru": "清水大塘，山水则灵",
 					"viewPrices": [{
 						"viewPriceId": "2017120621145021818849",
 						"viewCoupon": 1,
 						"viewPrice": 100,
-						"viewPriceType": "成人温泉门票",
+						"viewPriceType": "成人门票",
 						"viewid": "2017120516324186464944",
 						"couponPrice": 100,
 						"tickID": "",
@@ -218,8 +251,8 @@ router.post('/product/queryProduct', function (req, res, next) {
 					"viewUrl": "http://111.230.129.41:80/guizhoubus/23344_2017120516324170615263.jpg",
 					"saleType": 0
 				},
-				"leftTickets": 1,
-				"totalTickets": 1
+				"leftTickets": 10,
+				"totalTickets": 20
 			},
 			"msg": "查询产品信息成功"
 		}

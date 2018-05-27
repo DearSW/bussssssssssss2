@@ -3588,6 +3588,21 @@ app
     .controller('myplan', function($rootScope, $scope, $filter, $myHttpService, $state, $timeout, $ionicScrollDelegate) {
 
         /************************************************************ */
+		// @预处理工作，只会执行一次
+
+		$scope.$on("$ionicView.loaded", function(event, data) {
+
+			console.log("师法大梦川报告：我的行程页，$ionicView.loaded执行");
+
+		});
+
+		$scope.$on("$ionicView.enter", function(event, data) {
+
+			console.log("师法大梦川报告：我的行程页，$ionicView.enter执行");
+
+		});
+
+        /************************************************************ */
 
 		// @流程控制
         if(sessionStorage.getItem("myplanCount") == null) { // @流程控制变量
@@ -3614,23 +3629,48 @@ app
 
 			$rootScope.myplan_focusIndex = index;
 
-			if(index == 1) {
-				// $scope.tab_all();
-			} else if(index == 2) {
-				$scope.tab_nouse();
-			} if(index == 3) {
-				$scope.tab_refund();
-			}
+			// if(index == 1) {
+			// } else if(index == 2) {
+			// } if(index == 3) {
+			// }
 
         }
 
-        /************************************************************ */
+		/************************************************************ */
+
+		var sysInfo = anime.timeline();
+
+		sysInfo
+			.add({
+				targets: document.getElementById('sysInfo'),
+				opacity: 1.0,
+				top: '100px',
+				duration: 1500,
+				easing: 'easeInOutQuad'
+			})
+			.add({
+				targets: document.getElementById('sysInfo'),
+				opacity: 0,
+				top: '0px',
+				duration: 500,
+				easing: 'easeInOutQuad'
+			})
+			.add({
+				targets: document.getElementById('sysInfo'),
+				opacity: 0,
+				top: '150px',
+				duration: 500,
+				easing: 'easeInOutQuad'
+			});
+
+		/************************************************************ */
+		// 模拟onLoad的初次执行效果
 
         $scope.ticketsInfoIsEmpty = false; // @当没有任何票信息时显现无票HTML，无票为 true；默认为有票 false
         $scope.jqztc_xdxcy_ticketsInfo_nouse_ticketsInfoIsEmpty = false;
         $scope.jqztc_xdxcy_ticketsInfo_refund_ticketsInfoIsEmpty = false;
 
-        if(myplanCount == 1) { // 模拟onLoad的初次执行效果
+        if(myplanCount == 1) {
 
             $rootScope.jqztc_xdxcy_ticketsInfo = []; // @tab_all 全部 车票集合数组
             $rootScope.jqztc_xdxcy_ticketsViewInfo = []; // @tab_all 全部 门票集合数组
@@ -3643,7 +3683,115 @@ app
 
             $rootScope.hasmore2 = false; // @首次进入页面时  关闭掉上拉加载行为 ion-infinite-scroll，false为关闭；true为开启
 
+			var requestData = {
+				userid: $rootScope.session.user.userInfo.userid,
+				offset: 0,
+				pagesize: 15,
+			};
+
+			$myHttpService.post('api/product/queryUserProductTicketList', requestData, function(data) {
+
+				var temp = data.userViewList.viewOrders.concat(data.userViewList.backViewOrders)
+				$rootScope.jqztc_xdxcy_ticketsInfo = temp;
+				$rootScope.jqztc_xdxcy_ticketsViewInfo = data.ticketOrders;
+
+				sysInfo.play();
+
+				if($rootScope.jqztc_xdxcy_ticketsInfo.length == 0 && $rootScope.jqztc_xdxcy_ticketsViewInfo.length == 0) {
+
+					$timeout(function() {
+						$scope.ticketsInfoIsEmpty = true;
+					}, 700);
+
+				}
+
+				$timeout(function() {
+
+					if( (temp.length + data.ticketOrders.length) < 15) {
+						$rootScope.hasmore2 = false;
+					} else {
+						$rootScope.hasmore2 = true;
+						$scope.pageCount = 2;
+					}
+
+				}, 1500);
+
+			}, function() {
+
+			});
+
+			var requestData2 = {
+                userid: $rootScope.session.user.userInfo.userid,
+                viewOrderStatus: 2,
+                offset: 0,
+                pagesize: 20,
+            };
+
+            // @订单列表 wechat/product/queryUserProductTicketList
+            $myHttpService.postNoLoad('api/product/queryUserProductTicketList', requestData2, function(data) {
+
+
+                if( (data.userViewList.length + data.ticketOrders.length) < 20) {
+                    $rootScope.jqztc_xdxcy_ticketsInfo_nouse_hasmore2 = false;
+                } else {
+                    $rootScope.jqztc_xdxcy_ticketsInfo_nouse_hasmore2 = true;
+                    $scope.jqztc_xdxcy_ticketsInfo_nouse_pageCount = 2;
+                }
+
+				var temp = data.userViewList.viewOrders.concat(data.userViewList.backViewOrders);
+
+                $rootScope.jqztc_xdxcy_ticketsInfo_nouse = temp;
+                $rootScope.jqztc_xdxcy_ticketsViewInfo_nouse = data.ticketOrders;
+
+                if($rootScope.jqztc_xdxcy_ticketsInfo_nouse.length == 0 && $rootScope.jqztc_xdxcy_ticketsViewInfo_nouse.length == 0) {
+
+                    $timeout(function() {
+                        $scope.jqztc_xdxcy_ticketsInfo_nouse_ticketsInfoIsEmpty = true;
+                    }, 700);
+
+                }
+
+            }, function() {
+
+			});
+
+            var requestData3 = {
+                userid: $rootScope.session.user.userInfo.userid,
+                viewOrderStatus: 4,
+                offset: 0,
+                pagesize: 20,
+			};
+
+            $myHttpService.postNoLoad('api/product/queryUserProductTicketList', requestData3, function(data) {
+
+
+                if( (data.userViewList.length + data.ticketOrders.length) < 20) {
+                    $rootScope.jqztc_xdxcy_ticketsInfo_refund_hasmore2 = false;
+                } else {
+                    $rootScope.jqztc_xdxcy_ticketsInfo_refund_hasmore2 = true;
+                    $scope.jqztc_xdxcy_ticketsInfo_refund_pageCount = 2;
+                }
+
+				var temp = data.userViewList.viewOrders.concat(data.userViewList.backViewOrders);
+
+                $rootScope.jqztc_xdxcy_ticketsInfo_refund = temp;
+                $rootScope.jqztc_xdxcy_ticketsViewInfo_refund = data.ticketOrders;
+
+                if($rootScope.jqztc_xdxcy_ticketsInfo_refund.length == 0 && $rootScope.jqztc_xdxcy_ticketsViewInfo_refund.length == 0) {
+
+                    $timeout(function() {
+                        $scope.jqztc_xdxcy_ticketsInfo_refund_ticketsInfoIsEmpty = true;
+                    }, 700);
+
+                }
+
+            }, function() {
+
+            });
+
         }
+
+		/************************************************************ */
 
         // @tab_all 全部的票据
         var run = false; // @防止在短时间内重复触发上拉加载请求函数的执行
@@ -3704,10 +3852,6 @@ app
 
         }
 
-		if(myplanCount == 1) {
-			$scope.tab_all();
-		}
-
         // @tab_all 票据信息 下拉刷新函数 15张
         $scope.refresh_tab_all = function() {
 
@@ -3744,11 +3888,8 @@ app
                     }, 700);
 
                 } else {
-                    layer.open({
-                        content: '刷新成功',
-                        skin: 'msg',
-                        time: 1
-                    });
+					console.log("hhhhhhheeerer");
+					sysInfo.restart();
                 }
 
                 if( (temp.length + data.ticketOrders.length) < 15) {
@@ -3756,7 +3897,7 @@ app
                 } else {
                     $rootScope.hasmore2 = true;
                     $scope.pageCount = 2;
-                }
+				}
 
             }, function() {
                 $scope.$broadcast('scroll.refreshComplete');
@@ -3824,11 +3965,7 @@ app
                         }, 700);
 
                     } else {
-                        layer.open({
-                            content: '加载成功',
-                            skin: 'msg',
-                            time: 1
-                        });
+						sysInfo.restart();
                     }
 
                     if ( (temp.length + data.ticketOrders.length) < 15) {
@@ -3937,10 +4074,10 @@ app
 
                 $scope.$broadcast('scroll.refreshComplete');
 
-                console.log("师法大梦川报告：我的行程页，未使用车票数组");
+                console.log("师法大梦川报告：我的行程页，退款中车票数组");
                 console.log($rootScope.jqztc_xdxcy_ticketsInfo_refund);
 
-                console.log("师法大梦川报告：我的行程页，未使用门票数组");
+                console.log("师法大梦川报告：我的行程页，退款中门票数组");
                 console.log($rootScope.jqztc_xdxcy_ticketsViewInfo_refund);
 
                 if($rootScope.jqztc_xdxcy_ticketsInfo_refund.length == 0 && $rootScope.jqztc_xdxcy_ticketsViewInfo_refund.length == 0) {
@@ -4009,19 +4146,6 @@ app
             $state.go('app.ticket_admission_detail', {data: JSON.stringify(item)});
 
 		}
-
-		/************************************************************ */
-
-		// @预处理工作，只会执行一次
-
-		$scope.$on("$ionicView.loaded", function(event, data) {
-
-			console.log("师法大梦川报告：我的行程页，$ionicView.loaded执行了");
-
-			$scope.tab_nouse();
-			$scope.tab_refund();
-
-		});
 
 		/************************************************************ */
 
